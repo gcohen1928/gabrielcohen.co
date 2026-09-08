@@ -1,119 +1,83 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Gabriel Cohen</title>
-    <meta name="description" content="Hey I'm Gabriel (Gabe) Cohen — builder and now the CTO of Nero.fan." />
-    <link rel="icon" type="image/png" href="/favicon.ico" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <style>
-      :root { --fg:#111; --muted:#666; --accent:#2559d6; --bg:#fff; --rule:#ddd; }
-      * { box-sizing: border-box; }
-      body { margin:0; font-family: "Times New Roman", Times, serif; color:var(--fg); background:var(--bg); line-height:1.7; }
-      main { max-width: 700px; margin: 0 auto; padding: 36px 20px 80px; }
-      header { margin-bottom: 24px; }
-      h1 { margin: 0 0 6px; font-size: 30px; letter-spacing: 0; }
-      .subtitle { color: var(--muted); margin:0 0 14px; }
-      nav.links { display:flex; gap:14px; margin-top:8px; flex-wrap:wrap; }
-      a { color: var(--accent); text-decoration: none; }
-      a:hover { text-decoration: underline; }
-      h2 { margin: 26px 0 12px; font-size: 20px; font-weight: 700; letter-spacing: 0; text-transform: none; }
-      .item { margin: 16px 0; }
-      .role { font-size: 18px; font-weight: 700; margin: 0; }
-      .meta { color: var(--muted); font-size: 14px; margin: 2px 0 10px; font-variant-numeric: tabular-nums; }
-      .item p { margin: 10px 0 0; }
-      section .item + .item { margin-top: 24px; }
-      footer { margin-top: 40px; color: var(--muted); font-size: 14px; }
-
-      /* optional: soft left-rail timeline for Work section */
-      .work.timeline { position: relative; padding-left: 22px; }
-      .work.timeline:before { content: ""; position: absolute; left: 6px; top: 40px; bottom: 0; width: 1px; background: var(--rule); }
-      .work.timeline > h2 { margin-left: -22px; }
-      .work.timeline .item { position: relative; padding-left: 22px; }
-      .work.timeline .item:before { content: ""; position: absolute; left: 0; top: .55em; width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--rule); background: #fff; }
-    </style>
-  </head>
-  <body>
-    <main>
-      <header>
-        <h1>Gabriel Cohen</h1>
-        <nav class="links">
-          <a href="https://www.linkedin.com/in/gabrielhcohen/" rel="me noopener" target="_blank">LinkedIn</a>
-          <a href="https://github.com/gcohen1928" rel="me noopener" target="_blank">GitHub</a>
-          <a href="https://www.nero.fan/" rel="noopener" target="_blank">Nero.fan</a>
-          <a href="mailto:gcohen1928@gmail.com" rel="noopener" target="_blank">Email</a>
-        </nav>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#24211d" />
+  <title>Gabriel Cohen — a little corner of the internet</title>
+  <meta name="description" content="Hey, I’m Gabe. Building Nero, playing guitar, and reading. Welcome to my little corner of the internet." />
+  <link rel="canonical" href="https://gabrielcohen.co/" />
+  <meta property="og:title" content="Gabriel Cohen" />
+  <meta property="og:description" content="Building Nero. Playing guitar. Reading." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://gabrielcohen.co/" />
+  <meta property="og:image" content="https://gabrielcohen.co/assets/room-desktop.webp" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preload" as="image" href="/assets/room-desktop.webp" media="(min-width: 701px) and (min-aspect-ratio: 1001/1000)" fetchpriority="high" />
+  <link rel="preload" as="image" href="/assets/room-mobile.webp" media="(max-width: 700px), (max-aspect-ratio: 1/1)" fetchpriority="high" />
+  <link rel="stylesheet" href="/assets/main.css" />
+  <script type="module" src="/assets/main.js"></script>
+</head>
+<body>
+  <main class="room" id="room" aria-label="Gabriel Cohen’s room">
+    <picture class="room-picture">
+      <source media="(max-width: 700px), (max-aspect-ratio: 1/1)" srcset="/assets/room-mobile.webp" />
+      <img id="room-image" src="/assets/room-desktop.webp" alt="A quiet room in warm evening light: a yellow Strat with a black pickguard, favorite books, plants, and a small monochrome Nero flame on a wooden bench." width="1500" height="1049" fetchpriority="high" decoding="async" />
+    </picture>
+    <div class="room-canvas" id="room-canvas" aria-hidden="true"></div>
+    <a class="wordmark" href="/" aria-label="Gabriel Cohen home">gabrielcohen.co</a>
+    <div class="scene-ui" id="scene-ui">
+      <header class="intro">
+        <h1>hey, i’m gabe.</h1>
+        <p>building <a href="https://www.nero.fan/" target="_blank" rel="noopener noreferrer">nero.</a> playing <button data-open="guitar-dialog">guitar.</button> <button data-open="books-dialog">reading.</button></p>
+        <a class="say-hi" href="mailto:gcohen1928@gmail.com">say hi <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
       </header>
-
-      <section>
-        <h2>About</h2>
-        <p>Welcome! I'm Gabe and I like to build websites and apps. Lately that's meant building <a href="https://www.nero.fan/" rel="noopener" target="_blank">nero.fan</a>,
-            a platform that helps artists make money on livestreams.</p>
-        <p>I recently wrapped up almost 1.5 years at Flatiron where I shipped clinical research products. I also launched 2 consumer apps and worked at a bunch of random startups in college and did research on autonomous vehicles.</p>
-      </section>
-
-      <section class="work timeline">  
-        <h2>My experiences so far</h2>
-
-        <div class="item">
-          <div class="role">CTO @ Nero</div>
-          <div class="meta">Spring 2025 – present</div>
-          <p>I built <a href="https://www.nero.fan/" rel="noopener" target="_blank">Nero.fan</a> where we're helping music artists make money on livestreams. I've scaled it to 600K+ MAU and we're currently processing $500K+ GMV per month.</p>
-        </div>
-
-        <div class="item">
-          <div class="role">SWE @ Flatiron Health</div>
-          <div class="meta">Summer 2024 - Winter 2025 (& intern 2023)</div>
-          <p>I shipped clinical research products to support clinical trials. Specifically, I worked on infrastructure and feature development for a fullstack patient management system.</p>
-          <p>After 8 months, I got my own team to build internal sales tools. I also led AI development initiatives across Flatiron.</p>
-        </div>
-
-        <div class="item">
-          <div class="role">SWE @ Random Startups</div>
-          <div class="meta">Throughout college</div>
-          <p>Built out web/mobile apps for <a href="https://tracxn.com/d/companies/daedalus/__4NOiqEy2jDbXg3S4nSjyvtQeg4fSTNIEiMtvLFfVjBs/" rel="noopener" target="_blank">Daedelus Finance</a> (Fintech Startup) and <a href="https://www.feniska.com/" rel="noopener" target="_blank">Feniska</a> (German Pet-Tech startup).</p>
-          <p>This was good experience in learning how to contribute and communicate within small teams.</p>
-        </div>
-
-        <div class="item">
-          <div class="role">AI Driving Researcher @ Technical University of Munichs</div>
-          <div class="meta">Summer 2022</div>
-          <p>Sophomore year internship. I helped translate traffic trajectories into semantic scenarios for autonomous vehicle testing and improved the existing evaluation loop. Fun project and it was increadible to spend time living in Germany</p>
-        </div>
-      </section>
-
-      <section>
-        <h2>What I like to do when I'm not working</h2>
-        <p>I'm an amateur guitarist and a member of the jewish-buddhist community. Spritiuality has become a larger part of my life recently - if you're curious, I resonate with <a href="https://www.reddit.com/r/Buddhism/comments/1htrm99/can_someone_please_explain_non_dualism_to_me/" rel="noopener" target="_blank">nondualism</a> and ideas that align with leaders like <a href="https://www.youtube.com/@AlanWattsOrg/videos" rel="noopener" target="_blank">Alan Watts</a>, <a href="https://dynamic.wakingup.com/guestpass/SCAA8D32B" rel="noopener" target="_blank">Sam Harris</a>, and <a href="https://www.youtube.com/watch?v=yddQJkts2Tc" rel="noopener" target="_blank">Joseph Goldstein</a>.</p>
-        <p>I also love reading random coding, buddhist, and fiction books - I'm currently reading The Secret History by Donna Tartt and just finished reading <a href="https://www.oreilly.com/library/view/unit-testing-principles/9781617296277/" rel="noopener" target="_blank">Unit Testing Principles, Practices, and Patterns</a> and I'm now applying those principles to my work by rewriting Nero's backend away from global singletons and towards a modular, dependency-injected architecture. I wish they made us read this in college (but even if they did, I probably would have skipped it).</p>
-      </section>
-
-      <section>
-        <h2>Random apps I made</h2>
-        <div class="item">
-          <div class="role"><a href="https://apps.apple.com/us/app/journal-ai-guided-journaling/id6739948348" target="_blank" rel="noopener">Journal AI</a></div>
-          <p>A journal that talks to you. iOS app with voice input, insights, and mood tracking.</p>
-        </div>
-        <div class="item">
-          <div class="role"><a href="https://apps.apple.com/us/app/thriftr-find-local-thrifts/id6670581786" target="_blank" rel="noopener">Thriftr</a></div>
-          <p>iOS app that helps you find good thrift spots in NYC.</p>
-        </div>
-      </section>
-
-      <section>
-        <h2>Research</h2>
-        <p>Paper from my time at TUM: <a href="https://gabrielcohen.co/paper.html">paper</a>.</p>
-      </section>
-
-      <footer>
-        <span>© <span id="year"></span> Gabriel Cohen</span>
-      </footer>
-    </main>
-    <script>
-      document.getElementById('year').textContent = new Date().getFullYear();
-    </script>
-  </body>
-  </html>
-
-
+      <div class="object-layer">
+      <button class="object guitar" data-open="guitar-dialog" aria-label="My yellow Fender Stratocaster"><span class="object-label">my strat</span></button>
+      <button class="object books" data-open="books-dialog" aria-label="Explore my four five-star books"><span class="object-label">on the shelf</span></button>
+      <a class="object nero" href="https://www.nero.fan/" target="_blank" rel="noopener noreferrer" aria-label="Visit Nero"><span class="nero-label">nero <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></span></a>
+      </div>
+    </div>
+    <footer class="room-footer">
+      <button class="subtle" data-open="about-dialog">a little more about me</button>
+      <button class="subtle motion-toggle" id="motion-toggle" aria-pressed="false" hidden>pause motion</button>
+    </footer>
+  </main>
+  <dialog id="about-dialog" aria-labelledby="about-title">
+    <button class="close" aria-label="Close about" data-close><svg aria-hidden="true"><use href="#close"/></svg></button>
+    <p class="eyebrow">make yourself at home</p>
+    <h2 id="about-title">hey, i’m gabe.</h2>
+    <p>I’m Gabriel Cohen. I build <a href="https://www.nero.fan/" target="_blank" rel="noopener noreferrer">Nero</a>, where we help music artists make money on livestreams.</p>
+    <p>Before that, I built clinical research products at Flatiron Health and worked on autonomous driving research in Munich.</p>
+    <p>Outside of work: guitar, books, and figuring things out.</p>
+    <nav class="links" aria-label="Find me elsewhere">
+      <a href="mailto:gcohen1928@gmail.com">email <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
+      <a href="https://github.com/gcohen1928" target="_blank" rel="me noopener noreferrer">github <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
+      <a href="https://www.linkedin.com/in/gabrielhcohen/" target="_blank" rel="me noopener noreferrer">linkedin <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
+      <a href="/paper.html">research <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
+    </nav>
+  </dialog>
+  <dialog id="guitar-dialog" aria-labelledby="guitar-title">
+    <button class="close" aria-label="Close guitar" data-close><svg aria-hidden="true"><use href="#close"/></svg></button>
+    <p class="eyebrow">away from the keyboard</p>
+    <h2 id="guitar-title">my mexican strat.</h2>
+    <p>Yellow body. Black pickguard. Humbucker, single-coil, humbucker.</p>
+    <p>I’m an amateur guitarist. Still learning, still playing.</p>
+  </dialog>
+  <dialog id="books-dialog" aria-labelledby="books-title">
+    <button class="close" aria-label="Close bookshelf" data-close><svg aria-hidden="true"><use href="#close"/></svg></button>
+    <p class="eyebrow">from my goodreads · 5 out of 5</p>
+    <h2 id="books-title">on the shelf.</h2>
+    <ul class="book-list">
+      <li><a href="https://www.goodreads.com/book/show/29044.The_Secret_History" target="_blank" rel="noopener noreferrer"><span><strong>The Secret History</strong><small>Donna Tartt</small></span><svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a></li>
+      <li><a href="https://www.goodreads.com/book/show/551520.The_Wisdom_of_Insecurity" target="_blank" rel="noopener noreferrer"><span><strong>The Wisdom of Insecurity</strong><small>Alan Watts</small></span><svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a></li>
+      <li><a href="https://www.goodreads.com/book/show/86524.The_Path_to_Power" target="_blank" rel="noopener noreferrer"><span><strong>The Path to Power</strong><small>Robert A. Caro</small></span><svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a></li>
+      <li><a href="https://www.goodreads.com/book/show/48927138-unit-testing" target="_blank" rel="noopener noreferrer"><span><strong>Unit Testing</strong><small>Vladimir Khorikov</small></span><svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a></li>
+    </ul>
+    <a class="text-link" href="https://www.goodreads.com/user/show/116748355" target="_blank" rel="noopener noreferrer">the rest of my goodreads <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
+  </dialog>
+  <noscript><aside class="no-script">A quiet, still version of the room. <a href="https://www.goodreads.com/user/show/116748355">My books</a> · <a href="mailto:gcohen1928@gmail.com">Say hi</a></aside></noscript>
+  <!-- Feather icons, MIT licensed: https://github.com/feathericons/feather -->
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon-defs" aria-hidden="true"><symbol id="arrow-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol><symbol id="close" viewBox="0 0 24 24"><path d="m18 6-12 12M6 6l12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol></svg>
+</body>
+</html>
