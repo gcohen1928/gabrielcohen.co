@@ -1,0 +1,4 @@
+# The vendored Three.js chunk contains upstream GLSL template strings.
+assets/room-*.js -whitespace linguist-generated=true
+assets/main.js linguist-generated=true
+assets/main.css linguist-generated=true
