@@ -4,79 +4,65 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#24211d" />
-  <title>Gabriel Cohen — a little corner of the internet</title>
-  <meta name="description" content="Hey, I’m Gabe. Building Nero, playing guitar, and reading. Welcome to my little corner of the internet." />
+  <title>Gabriel Cohen</title>
+  <meta name="description" content="Hey, I’m Gabe. I’m building Nero. Usually playing guitar or reading when I’m not." />
   <link rel="canonical" href="https://gabrielcohen.co/" />
   <meta property="og:title" content="Gabriel Cohen" />
-  <meta property="og:description" content="Building Nero. Playing guitar. Reading." />
+  <meta property="og:description" content="Hey, I’m Gabe. I’m building Nero. Usually playing guitar or reading when I’m not." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://gabrielcohen.co/" />
-  <meta property="og:image" content="https://gabrielcohen.co/assets/room-desktop.webp" />
+  <meta property="og:image" content="https://gabrielcohen.co/assets/room-preview-desktop.webp" />
   <link rel="icon" href="/favicon.ico" />
-  <link rel="preload" as="image" href="/assets/room-desktop.webp" media="(min-width: 701px) and (min-aspect-ratio: 1001/1000)" fetchpriority="high" />
+  <link rel="preload" as="image" href="/assets/room-preview-desktop.webp" media="(min-width: 701px) and (min-aspect-ratio: 1001/1000)" fetchpriority="high" />
   <link rel="preload" as="image" href="/assets/room-mobile.webp" media="(max-width: 700px), (max-aspect-ratio: 1/1)" fetchpriority="high" />
   <link rel="stylesheet" href="/assets/main.css" />
   <script type="module" src="/assets/main.js"></script>
 </head>
 <body>
-  <main class="room" id="room" aria-label="Gabriel Cohen’s room">
+  <main class="room" id="room" data-view="home" aria-label="Gabriel Cohen’s room">
+    <div id="room-world">
     <picture class="room-picture">
       <source media="(max-width: 700px), (max-aspect-ratio: 1/1)" srcset="/assets/room-mobile.webp" />
-      <img id="room-image" src="/assets/room-desktop.webp" alt="A quiet room in warm evening light: a yellow Strat with a black pickguard, favorite books, plants, and a small monochrome Nero flame on a wooden bench." width="1500" height="1049" fetchpriority="high" decoding="async" />
+      <img id="room-image" src="/assets/room-preview-desktop.webp" alt="A quiet room in warm evening light: a yellow Strat with a black pickguard, favorite books, plants, and a small monochrome Nero flame on a wooden bench." width="1500" height="1049" fetchpriority="high" decoding="async" />
     </picture>
+    </div>
+    <img id="focus-image" class="focus-image" alt="" aria-hidden="true" />
     <div class="room-canvas" id="room-canvas" aria-hidden="true"></div>
-    <a class="wordmark" href="/" aria-label="Gabriel Cohen home">gabrielcohen.co</a>
     <div class="scene-ui" id="scene-ui">
       <header class="intro">
-        <h1>hey, i’m gabe.</h1>
-        <p>building <a href="https://www.nero.fan/" target="_blank" rel="noopener noreferrer">nero.</a> playing <button data-open="guitar-dialog">guitar.</button> <button data-open="books-dialog">reading.</button></p>
-        <a class="say-hi" href="mailto:gcohen1928@gmail.com">say hi <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
+        <h1>hey, i'm gabe</h1>
+        <p>i'm a 23 year old living in San Francisco and building a music-tech company called nero.</p>
+        <nav class="intro-actions" aria-label="Explore my room">
+        <button class="say-hi" data-view="about">more about me <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></button>
+        </nav>
       </header>
-      <div class="object-layer">
-      <button class="object guitar" data-open="guitar-dialog" aria-label="My yellow Fender Stratocaster"><span class="object-label">my strat</span></button>
-      <button class="object books" data-open="books-dialog" aria-label="Explore my four five-star books"><span class="object-label">on the shelf</span></button>
-      <a class="object nero" href="https://www.nero.fan/" target="_blank" rel="noopener noreferrer" aria-label="Visit Nero"><span class="nero-label">nero <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></span></a>
+      <div class="object-layer" id="room-objects">
+      <button class="object television" id="open-tv" aria-label="Watch Gary Moore on the television"></button>
+      <button class="object guitar" data-view="guitar" aria-label="My yellow Fender Stratocaster"></button>
+      <button class="object books" data-view="books" aria-label="Some of my favorite books"></button>
+      <button class="object nero" data-view="nero" aria-label="What I’m building"></button>
       </div>
     </div>
-    <footer class="room-footer">
-      <button class="subtle" data-open="about-dialog">a little more about me</button>
-      <button class="subtle motion-toggle" id="motion-toggle" aria-pressed="false" hidden>pause motion</button>
-    </footer>
+
+    <button id="room-back" class="room-back" hidden>back to the room</button>
+    <div id="book-targets" aria-label="Books on the shelf" hidden></div>
+    <section id="books-view" class="room-detail books-detail" aria-labelledby="book-title" hidden>
+      <h2 id="book-title" tabindex="-1"></h2>
+      <p id="book-author"></p>
+      <div class="book-meta"><span id="book-rating"></span><a id="book-link" target="_blank" rel="noopener noreferrer">on goodreads <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a></div>
+    </section>
+    <section id="guitar-view" class="room-detail guitar-detail" aria-labelledby="guitar-title" hidden>
+      <h2 id="guitar-title" tabindex="-1">this is my yellow mexican strat</h2>
+      <p>i bought her used in the <a href="https://stores.guitarcenter.com/ny/carle-place/157156" target="_blank" rel="noopener noreferrer">carle place guitar center</a> a year after playing guitar.</p><p class="guitar-note">i love <a href="https://open.spotify.com/artist/23wr9RJZg0PmYvVFyNkQ4j" target="_blank" rel="noopener noreferrer">gary moore</a>, <a href="https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2" target="_blank" rel="noopener noreferrer">the beatles</a>, <a href="https://open.spotify.com/artist/0k17h0D3J5VfsdmQ1iZtE9" target="_blank" rel="noopener noreferrer">pink floyd</a>.</p><p class="solo-intro">here’s my favorite guitar solo of all time</p>
+      <button id="listen" class="listen-button">i love you more than you’ll ever know <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></button>
+
+    </section>
+    <section id="nero-view" class="room-detail nero-detail" aria-labelledby="nero-title" hidden><h2 id="nero-title" tabindex="-1">this is nero</h2><p>this is where most of my time is spent</p><p>we’re helping artists make money and go viral on livestreams</p><a href="https://www.nero.fan/" target="_blank" rel="noopener noreferrer">nero.fan <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a></section>
+    <section id="about-view" class="room-detail about-detail" aria-labelledby="about-title" hidden><h2 id="about-title" tabindex="-1">a bit more about me.</h2><p>i'm building nero, a platform that helps creators make money and go viral on livestreams.</p><p>before that, i worked on clinical research at flatiron health, started a few failed consumer apps, and did research on self-driving cars in munich.</p><p>outside of work, i’m learning how to play guitar, reading, and doing other shit that caught my attention (right now skiing and photography)</p><nav class="links" aria-label="Find me elsewhere"><a href="mailto:gcohen1928@gmail.com">email me</a><a href="https://github.com/gcohen1928" target="_blank" rel="me noopener noreferrer">github</a><a href="https://www.linkedin.com/in/gabrielhcohen/" target="_blank" rel="me noopener noreferrer">linkedin</a><a href="/paper.html">old research</a><a href="/photos.html">photos</a></nav></section>
+    <div id="music-controls" hidden><div id="tv-closeup"><img src="/assets/detail-tv.webp" alt="Vintage television on the window sill"><button id="tv-dial" aria-label="Next channel" title="Next channel"></button></div><div id="tv-video"><div id="player"></div></div><div class="tv-controls"><div class="channel-controls"><button id="channel-prev" aria-label="Previous channel">−</button><span id="channel-name" aria-live="polite"></span><button id="channel-next" aria-label="Next channel">+</button></div></div></div>
+
   </main>
-  <dialog id="about-dialog" aria-labelledby="about-title">
-    <button class="close" aria-label="Close about" data-close><svg aria-hidden="true"><use href="#close"/></svg></button>
-    <p class="eyebrow">make yourself at home</p>
-    <h2 id="about-title">hey, i’m gabe.</h2>
-    <p>I’m Gabriel Cohen. I build <a href="https://www.nero.fan/" target="_blank" rel="noopener noreferrer">Nero</a>, where we help music artists make money on livestreams.</p>
-    <p>Before that, I built clinical research products at Flatiron Health and worked on autonomous driving research in Munich.</p>
-    <p>Outside of work: guitar, books, and figuring things out.</p>
-    <nav class="links" aria-label="Find me elsewhere">
-      <a href="mailto:gcohen1928@gmail.com">email <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
-      <a href="https://github.com/gcohen1928" target="_blank" rel="me noopener noreferrer">github <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
-      <a href="https://www.linkedin.com/in/gabrielhcohen/" target="_blank" rel="me noopener noreferrer">linkedin <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
-      <a href="/paper.html">research <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
-    </nav>
-  </dialog>
-  <dialog id="guitar-dialog" aria-labelledby="guitar-title">
-    <button class="close" aria-label="Close guitar" data-close><svg aria-hidden="true"><use href="#close"/></svg></button>
-    <p class="eyebrow">away from the keyboard</p>
-    <h2 id="guitar-title">my mexican strat.</h2>
-    <p>Yellow body. Black pickguard. Humbucker, single-coil, humbucker.</p>
-    <p>I’m an amateur guitarist. Still learning, still playing.</p>
-  </dialog>
-  <dialog id="books-dialog" aria-labelledby="books-title">
-    <button class="close" aria-label="Close bookshelf" data-close><svg aria-hidden="true"><use href="#close"/></svg></button>
-    <p class="eyebrow">from my goodreads · 5 out of 5</p>
-    <h2 id="books-title">on the shelf.</h2>
-    <ul class="book-list">
-      <li><a href="https://www.goodreads.com/book/show/29044.The_Secret_History" target="_blank" rel="noopener noreferrer"><span><strong>The Secret History</strong><small>Donna Tartt</small></span><svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a></li>
-      <li><a href="https://www.goodreads.com/book/show/551520.The_Wisdom_of_Insecurity" target="_blank" rel="noopener noreferrer"><span><strong>The Wisdom of Insecurity</strong><small>Alan Watts</small></span><svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a></li>
-      <li><a href="https://www.goodreads.com/book/show/86524.The_Path_to_Power" target="_blank" rel="noopener noreferrer"><span><strong>The Path to Power</strong><small>Robert A. Caro</small></span><svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a></li>
-      <li><a href="https://www.goodreads.com/book/show/48927138-unit-testing" target="_blank" rel="noopener noreferrer"><span><strong>Unit Testing</strong><small>Vladimir Khorikov</small></span><svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a></li>
-    </ul>
-    <a class="text-link" href="https://www.goodreads.com/user/show/116748355" target="_blank" rel="noopener noreferrer">the rest of my goodreads <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
-  </dialog>
-  <noscript><aside class="no-script">A quiet, still version of the room. <a href="https://www.goodreads.com/user/show/116748355">My books</a> · <a href="mailto:gcohen1928@gmail.com">Say hi</a></aside></noscript>
+  <noscript><aside class="no-script"><a href="https://www.goodreads.com/user/show/116748355">My books</a> · <a href="mailto:gcohen1928@gmail.com">Say hi</a></aside></noscript>
   <!-- Feather icons, MIT licensed: https://github.com/feathericons/feather -->
   <svg xmlns="http://www.w3.org/2000/svg" class="icon-defs" aria-hidden="true"><symbol id="arrow-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol><symbol id="close" viewBox="0 0 24 24"><path d="m18 6-12 12M6 6l12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol></svg>
 </body>
