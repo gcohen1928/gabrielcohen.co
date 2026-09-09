@@ -1,4 +1,5 @@
 import './styles.css';
+import './mobile.css';
 import { coverUV } from './motion.js';
 import { books } from './books.js';
 import { cameraTransform, detailViews } from './camera.js';
@@ -15,9 +16,14 @@ guitarText.style.left=`${introRect.left-rect.left}px`;
 guitarText.style.top=`${introRect.top-rect.top}px`;
 guitarText.style.width=`${introRect.width}px`;
 const t=cameraTransform(room.classList.contains('watching')?'tv':view,rect.width,rect.height,mobile.matches,selected);world.style.transform=`translate(${t.x}px,${t.y}px) scale(${t.scale})`;
-if(!scene&&room.classList.contains('watching')){const w=Math.min(rect.width*.94,(rect.height-130)*1424/1104),h=w*1104/1424,left=(rect.width-w)/2,top=Math.max(35,(rect.height-h-80)/2);$('.tv-controls').classList.add('settled');$('.tv-controls').style.top=`${top+h*.90}px`;$('#tv-closeup').style.cssText=`left:${left}px;top:${top}px;width:${w}px;height:${h}px;opacity:1`;$('#tv-video').style.cssText=`left:${left+w*.151}px;top:${top+h*.214}px;width:${w*.510}px;height:${h*.518}px;opacity:1`;}
+if(!scene&&room.classList.contains('watching')){const w=Math.min(rect.width*.94,(rect.height-130)*1424/1104),h=w*1104/1424,left=(rect.width-w)/2,top=Math.max(35,(rect.height-h-80)/2);$('.tv-controls').classList.add('settled');$('.tv-controls').style.top=`${top+h*(mobile.matches?1.02:.90)}px`;$('#tv-closeup').style.cssText=`left:${left}px;top:${top}px;width:${w}px;height:${h}px;opacity:1`;$('#tv-video').style.cssText=`left:${left+w*.151}px;top:${top+h*.214}px;width:${w*.510}px;height:${h*.518}px;opacity:1`;}
 
 scene?.setView(room.classList.contains('watching')?'tv':view);}
+const shelf=document.createElement('div');shelf.className='mobile-shelf';shelf.setAttribute('aria-label','Swipe through books');
+shelf.innerHTML='<div class="mobile-shelf-inner"><img src="/assets/bench-unified.webp" alt="Books resting on the wooden bench" draggable="false"></div>';
+const mobileRects=[[.12,.22,.12,.46],[.23,.24,.078,.45],[.308,.235,.086,.35],[.314,.65,.25,.075],[.395,.324,.094,.26],[.489,.347,.077,.24],[.326,.585,.236,.065],[.568,.234,.098,.48]];
+books.forEach((book,i)=>{const button=document.createElement('button');button.type='button';button.setAttribute('aria-label',book.title);const [x,y,w,h]=mobileRects[i];button.style.cssText=`left:${x*100}%;top:${y*100}%;width:${w*100}%;height:${h*100}%`;button.addEventListener('click',()=>{selected=i;bookText()});button.addEventListener('focus',()=>{selected=i;bookText()});shelf.firstElementChild.append(button);});
+room.append(shelf);const hint=document.createElement('p');hint.className='mobile-shelf-hint';hint.textContent='swipe the shelf · tap a book';room.append(hint);
 const focusImage=$('#focus-image');let focusVersion=0;
 function loadFocus(){
   const version=++focusVersion;focusImage.classList.remove('ready');
@@ -43,7 +49,7 @@ function go(next,button){
   $('#scene-ui').inert=view!=='home';$('#scene-ui').setAttribute('aria-hidden',String(view!=='home'));
   for(const name of ['books','guitar','nero','about'])$(`#${name}-view`).hidden=name!==view;
   $('#room-back').hidden=view==='home';
-  $('#book-targets').hidden=view!=='books';if(view==='books')bookText();camera();loadFocus();
+  $('#book-targets').hidden=view!=='books';if(view==='books'){bookText();shelf.scrollLeft=80;}camera();loadFocus();
   if(view==='home')opener?.focus({preventScroll:true});else $(`#${view==='books'?'book':view}-title`)?.focus({preventScroll:true});
 }
 for(const button of document.querySelectorAll('button[data-view]')){

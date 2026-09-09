@@ -1,0 +1,53 @@
+@media(max-width:700px),(max-aspect-ratio:1/1),(max-height:500px) and (pointer:coarse){
+ .room{min-height:0;height:100svh}
+ .room #room-back{left:16px;top:max(16px,env(safe-area-inset-top));font-size:15px;z-index:8}
+ .room .intro{left:24px;right:24px;top:10%;width:auto;max-width:480px}
+ .room .intro h1{font-size:34px;line-height:1.18;margin-bottom:12px}
+ .room .intro p{font-size:16px;line-height:1.6;max-width:400px}
+ .room .intro .say-hi{font-size:16px;min-height:44px}
+ .room:not(.watching) #guitar-view,.room #nero-view,.room[data-renderer] #about-view{position:absolute;inset:92px 24px auto!important;width:auto!important;max-width:520px;height:auto;max-height:calc(100svh - 112px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;pointer-events:auto}
+ .room #guitar-view h2,.room #nero-view h2,.room[data-renderer] #about-view h2{position:static;width:auto;height:auto;clip-path:none;overflow:visible;white-space:normal;font:400 28px/1.2 Georgia;letter-spacing:-.4px;margin:0 0 18px}
+ .room #guitar-view>p,.room #guitar-view .guitar-note,.room #guitar-view .listen-button,.room #nero-view>p,.room #nero-view>a,.room[data-renderer] #about-view>p{position:static;width:auto;height:auto;clip-path:none;overflow:visible;white-space:normal;font:400 16px/1.55 Arial;max-width:none;margin:0 0 16px;color:inherit}
+ .room #guitar-view .listen-button{min-height:44px;margin:0;display:flex;line-height:1.4}
+ .room[data-renderer] #about-view{padding:20px;background:rgba(30,27,23,.88);border-radius:10px;inset:88px 16px auto!important;box-sizing:border-box;animation:detail-in 1100ms ease both}
+ .room[data-renderer] #about-view .links{position:static!important;left:auto!important;top:auto!important;width:auto!important;transform:none!important;opacity:1!important;max-width:none;margin:12px 0 0!important;gap:6px 22px!important;pointer-events:auto!important}
+ .room[data-renderer] #about-view .links a{font:16px/1.4 Arial;min-height:44px;pointer-events:auto}
+ .room #nero-view{padding-bottom:12px}
+ .room[data-view=books] .room-canvas,.room[data-view=books] #room-world,.room[data-view=books] #book-targets{visibility:hidden}
+ .room #books-view{inset:90px 24px auto;width:auto;max-width:none;display:block}
+ .room #books-view h2{font:28px/1.2 Georgia;margin:0 0 8px}
+ .room #books-view>p{font-size:15px;margin:0 0 10px}
+ .room #books-view .book-meta{font-size:15px;gap:4px 20px}
+ .mobile-shelf{display:none;position:absolute;left:0;right:0;top:285px;bottom:16px;overflow:auto;overscroll-behavior:contain;touch-action:pan-x pan-y;scrollbar-width:thin;animation:detail-in 1100ms ease both}
+ .room[data-view=books] .mobile-shelf{display:block}
+ .mobile-shelf-inner{position:relative;width:860px;height:376px}
+ .mobile-shelf img{display:block;width:100%;height:100%}
+ .mobile-shelf button{position:absolute;min-width:44px;min-height:44px;background:transparent;border-radius:4px}
+ .mobile-shelf button:focus-visible{outline:2px solid #c6bdab;outline-offset:2px}
+ .mobile-shelf-hint{display:none;position:absolute;top:248px;left:24px;margin:0;font-size:14px;color:var(--muted)}
+ .room[data-view=books] .mobile-shelf-hint{display:block}
+ .room.watching .room-canvas,.room.watching #room-world{opacity:.22}
+ #music-controls .tv-controls{left:16px;right:16px;width:auto;bottom:auto;transform:none;background:rgba(30,27,23,.9);border-radius:8px;padding:6px}
+ .channel-controls{display:grid!important;grid-template-columns:44px minmax(0,1fr) 44px;gap:6px!important;width:100%}
+ #channel-name{font-size:14px;line-height:1.4;text-align:center;overflow-wrap:anywhere}
+ .channel-controls button{width:44px;height:44px;min-height:44px}
+ .room .guitar{min-width:60px}.room .nero{min-width:44px;min-height:44px}
+}
+@media(max-width:700px) and (max-height:720px){
+ .room .intro{top:9%}.room .intro h1{font-size:30px}.room .intro p{font-size:15px}
+ .room:not(.watching) #guitar-view{background:rgba(30,27,23,.86);border-radius:10px;padding:16px;inset:82px 16px auto!important}
+ .room #guitar-view h2{font-size:25px}.room #guitar-view>p,.room #guitar-view .guitar-note,.room #guitar-view .listen-button{font-size:15px}
+ .mobile-shelf{top:260px}.mobile-shelf-hint{top:232px}.mobile-shelf-inner{width:740px;height:324px}
+}
+@media(min-width:701px) and (min-aspect-ratio:1001/1000){.mobile-shelf,.mobile-shelf-hint{display:none}}
+@media(max-width:700px),(max-aspect-ratio:1/1),(max-height:500px) and (pointer:coarse){
+ .room:not(.watching) #guitar-view{background:rgba(30,27,23,.86);border-radius:10px;padding:18px;inset:82px 16px auto!important;box-sizing:border-box}
+ .room.watching .room-canvas,.room.watching #room-world{opacity:0}
+}
+@media(max-width:700px),(max-aspect-ratio:1/1),(max-height:500px) and (pointer:coarse){
+ .room #guitar-view p a{display:inline;min-height:0;padding:0;line-height:inherit}
+ .mobile-shelf button{min-height:0}
+}
+
+@media(max-height:500px) and (pointer:coarse){.mobile-shelf{top:210px}.mobile-shelf-hint{top:180px}.room #books-view{top:74px}.room #books-view h2{font-size:23px}.room #books-view>p{display:none}.room .intro{top:12%;left:30%;max-width:440px}.room[data-view=books] .mobile-shelf{display:block}.room[data-view=books] .mobile-shelf-hint{display:block}}
+@media(max-height:500px) and (pointer:coarse){.room .intro{z-index:6;pointer-events:none}.room .intro .say-hi{pointer-events:auto}}

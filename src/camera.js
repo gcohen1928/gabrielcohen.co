@@ -1,7 +1,7 @@
 import { coverUV } from './motion.js';
 const views={
   desktop:{tv:[.144,.555,4.3,.5,.48],home:[.5,.5,1,.5,.5],guitar:[.46,.45,1.20,.5,.5],books:[.648,.535,2.65,.5,.47],nero:[.843,.552,4.6,.29,.56],about:[.7075,.37,1.35,.50,.51]},
-  mobile:{tv:[.112,.66,4.0,.5,.48],home:[.5,.5,1,.5,.5],guitar:[.46,.45,1.20,.5,.5],books:[.605,.649,3.25,.50,.618],nero:[.765,.65,4.2,.65,.65],about:[.60,.37,1.55,.50,.46]},
+  mobile:{tv:[.112,.66,4.0,.5,.48],home:[.5,.5,1,.5,.5],guitar:[.46,.55,1,.5,.66],books:[.605,.649,3.25,.50,.618],nero:[.765,.65,4.2,.65,.65],about:[.60,.37,1.55,.50,.46]},
 };
 export const detailViews = ['books', 'nero'];
 export const cameraEase = progress => {const p=Math.max(0,Math.min(1,progress));return p*p*p*(p*(p*6-15)+10);};
