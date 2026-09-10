@@ -255,3 +255,8 @@ html:has(#room),body:has(#room){height:100%;overflow:hidden}
 /* Keep navigation legible against both the wall and detailed objects. */
 .room .room-back{padding:9px 14px;min-height:40px;background:rgba(30,27,23,.72);border:1px solid rgba(198,189,171,.16);border-radius:7px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 2px 12px rgba(0,0,0,.12);transition:background-color 180ms ease,border-color 180ms ease}
 .room .room-back:hover,.room .room-back:focus-visible{background:rgba(30,27,23,.9);border-color:rgba(198,189,171,.35)}
+/* Keep wide desktop windows from cropping the room vertically. */
+@media(min-width:701px) and (min-aspect-ratio:17/10) and (pointer:fine){
+ .room{max-width:170svh;margin-inline:auto;container-type:inline-size}
+ .scene-ui{width:max(100cqw,142.9933svh);height:max(100svh,69.9333cqw)}
+}
