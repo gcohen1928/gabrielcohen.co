@@ -19,7 +19,7 @@ export async function createRoom(container) {
   const loader = new TextureLoader();
   let paint = createWallPaint(mobile.matches);
   const uniforms = {
-    uImage: { value: null },uCleanBench:{value:null},uUnifiedBench:{value:null},uSpines:{value:createSpineLettering()},
+    uPortrait:{value:0},uImage: { value: null },uCleanBench:{value:null},uUnifiedBench:{value:null},uSpines:{value:createSpineLettering()},
     uNeroSurface:{value:null},uNeroSurfaceReady:{value:0},uBooksSurface:{value:null},uBooksSurfaceReady:{value:0},uGuitarSurface:{value:null},uGuitarSurfaceReady:{value:0},uGuitarRegistration:{value:new Matrix3().set(...guitarRegistration)},
     uCover: { value: new Vector2(1, 1) },
     uCamera: { value: new Vector3(0, 0, 1) },
@@ -36,7 +36,7 @@ export async function createRoom(container) {
     vertexShader: `varying vec2 vUv;
       void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }`,
     fragmentShader: `precision highp float;
-      uniform sampler2D uImage;
+      uniform float uPortrait;uniform sampler2D uImage;
       uniform sampler2D uCleanBench;
       uniform sampler2D uUnifiedBench;
       uniform sampler2D uSpines;
@@ -70,7 +70,7 @@ export async function createRoom(container) {
         // One registered surface stays attached to the room for every camera view.
         vec2 benchUV=vec2(base.x,1.-base.y);
         float cleanMask=1.;
-        gl_FragColor.rgb=mix(gl_FragColor.rgb,texture2D(uCleanBench,base).rgb,cleanMask*uBooksSurfaceReady);
+        gl_FragColor.rgb=mix(gl_FragColor.rgb,texture2D(uCleanBench,base).rgb,cleanMask*uBooksSurfaceReady*(1.-uPortrait));
         vec3 registered=uGuitarRegistration*vec3(base.x,1.-base.y,1.);
         vec2 guitarUV=registered.xy/registered.z;
         // Exclude the window frame from the guitar detail: it belongs to the base room.
@@ -81,7 +81,7 @@ export async function createRoom(container) {
         vec2 neroUV=(vec2(base.x,1.-base.y)-vec2(.681,.461))/vec2(.22,.197);
         vec3 neroColor=texture2D(uNeroSurface,clamp(vec2(neroUV.x,1.-neroUV.y),.001,.999)).rgb;
         // One continuous photograph includes every book, the trophy and their shared tabletop.
-        vec2 unifiedUV=(vec2(base.x,1.-base.y)-vec2(.42,.3574833))/vec2(.58,.3622498);
+        vec2 unifiedUV=(vec2(base.x,1.-base.y)-mix(vec2(.42,.3574833),vec2(.414,.588),uPortrait))/mix(vec2(.58,.3622498),vec2(.523,.15237),uPortrait);
         // Keep the room's original wall above the objects; replace the shelf itself.
         float shelfTop=150./829.;
         if(unifiedUV.x<1.00000000) shelfTop=mix(150.0,150.0,clamp((unifiedUV.x*1897.-1519.0)/378.0,0.,1.))/829.;
@@ -109,6 +109,10 @@ export async function createRoom(container) {
         if(unifiedUV.x>.667 && unifiedUV.x<.80) shelfTop=.70;
         float shelfLeft=mix(.105,0.,smoothstep(.64,.75,unifiedUV.y));
         float unifiedMask=smoothstep(shelfLeft,shelfLeft+.018,unifiedUV.x)*smoothstep(shelfTop-.001,shelfTop+.002,unifiedUV.y)*(1.-smoothstep(.94,1.,unifiedUV.y));
+        if(uPortrait>.5){float erase=smoothstep(.456,.476,benchUV.x)*(1.-smoothstep(.763,.779,benchUV.x))*smoothstep(.565,.59,benchUV.y)*(1.-smoothstep(.691,.705,benchUV.y));gl_FragColor.rgb=mix(gl_FragColor.rgb,texture2D(uImage,vec2(base.x,base.y+.10)).rgb,erase);}
+        if(uPortrait>.5){float eraseTrophy=smoothstep(.766,.777,benchUV.x)*(1.-smoothstep(.834,.846,benchUV.x))*smoothstep(.607,.623,benchUV.y)*(1.-smoothstep(.698,.708,benchUV.y));gl_FragColor.rgb=mix(gl_FragColor.rgb,texture2D(uImage,vec2(base.x,base.y+.12)).rgb,eraseTrophy);}
+        if(uPortrait>.5 && unifiedUV.x>.667)shelfTop=.34;
+        if(uPortrait>.5)unifiedMask=smoothstep(.035,.12,unifiedUV.x)*(1.-smoothstep(.79,.815,unifiedUV.x))*smoothstep(shelfTop-.002,shelfTop+.003,unifiedUV.y)*(1.-smoothstep(.76,.94,unifiedUV.y));
         gl_FragColor.rgb=mix(gl_FragColor.rgb,texture2D(uUnifiedBench,clamp(vec2(unifiedUV.x,1.-unifiedUV.y),.001,.999)).rgb,unifiedMask*uBooksSurfaceReady);
         vec4 lettering=texture2D(uSpines,clamp(vec2(unifiedUV.x,1.-unifiedUV.y),.001,.999));
         gl_FragColor.rgb=mix(gl_FragColor.rgb,lettering.rgb,lettering.a*unifiedMask*uBooksSurfaceReady);
@@ -226,7 +230,7 @@ export async function createRoom(container) {
       renderer.initTexture(surface);uniforms.uNeroSurface.value=surface;
     }
     uniforms.uNeroSurfaceReady.value=mobile.matches?0:1;
-    uniforms.uBooksSurfaceReady.value=mobile.matches?0:1;
+    uniforms.uPortrait.value=mobile.matches?1:0;uniforms.uBooksSurfaceReady.value=1;
     uniforms.uGuitarSurfaceReady.value=mobile.matches?0:1;
     if (version !== textureVersion) { color.dispose(); return; }
     color.colorSpace = SRGBColorSpace;
@@ -260,7 +264,7 @@ export async function createRoom(container) {
       uniforms.uCamera.value.z = scale;
       if (progress === 1) flight = null;
     }
-    const entering=detailViews.includes(view)&&mobile.matches;
+    const entering=view==='nero'&&mobile.matches;
     const detailTarget=entering?(detailReady?cameraEase(progress):0):(wasDetail&&flight?flight.fromMix*(1.-cameraEase(progress)):0);
     uniforms.uDetailMix.value=detailTarget;
     uniforms.uPaintMix.value=damp(uniforms.uPaintMix.value,view==='about'&&!mobile.matches&&!matchMedia('(pointer: coarse)').matches?1:0,dt,7);
@@ -336,8 +340,9 @@ export async function createRoom(container) {
     if(view!=='tv'){
       if(document.querySelector('#room').classList.contains('tv-exiting')){
         const ease=cameraEase(progress);
-        overlay.style.opacity=String(1-cameraEase(Math.min(1,progress/.85)));
-        overlay.style.transform=`scale(${1-.22*ease})`;
+        const fade=mobile.matches?Math.max(0,Math.min(1,(progress-.18)/.82)):Math.min(1,progress/.85);
+        overlay.style.opacity=String(1-cameraEase(fade));
+        overlay.style.transform=`scale(${1-(mobile.matches?.12:.22)*ease})`;
       }
       return;
     }
@@ -360,10 +365,10 @@ export async function createRoom(container) {
       document.querySelectorAll('.book-target').forEach((button,i)=>{const [x,y,w,h]=boxes[i],a=project(x,y),b=project(x+w,y+h);button.style.cssText=`left:${a[0]}px;top:${a[1]}px;width:${b[0]-a[0]}px;height:${b[1]-a[1]}px;pointer-events:${flight?'none':'auto'}`;});
       return;
     }
-    const zoom=uniforms.uFocusZoom.value*uniforms.uDriftZoom.value;
-    const c=uniforms.uCamera.value,l=uniforms.uLanding.value,cover=uniforms.uDetailCover.value,d=uniforms.uDrift.value;
-    const project=(x,y)=>[(((x-.5)/cover.x*zoom+d.x-l.x)/l.z*c.z+c.x+.5)*width,(.5-(((.5-y)/cover.y*zoom+d.y-l.y)/l.z*c.z+c.y))*height];
-    document.querySelectorAll('.book-target').forEach((button,i)=>{const [x,y,w,h]=boxes[i],a=project(x,y),b=project(x+w,y+h);button.style.cssText=`left:${a[0]}px;top:${a[1]}px;width:${b[0]-a[0]}px;height:${b[1]-a[1]}px;pointer-events:${uniforms.uDetailMix.value>.98?'auto':'none'}`;});
+    const c=uniforms.uCamera.value,cover=uniforms.uCover.value;
+    const mobileBoxes=[[.477,.591,.057,.103],[.536,.593,.038,.103],[.575,.592,.045,.077],[.578,.683,.13,.014],[.621,.611,.048,.07],[.67,.616,.04,.065],[.584,.669,.124,.013],[.711,.592,.054,.103]].map(([x,y,w,h])=>[x,.588+(y-.541)*.15237/.217,w,h*.15237/.217]);
+    const project=(x,y)=>[((x-.5)/cover.x*c.z+c.x+.5)*width,((y-.5)/cover.y*c.z-c.y+.5)*height];
+    document.querySelectorAll('.book-target').forEach((button,i)=>{const [x,y,w,h]=mobileBoxes[i],a=project(x,y),b=project(x+w,y+h);button.style.cssText=`left:${a[0]}px;top:${a[1]}px;width:${b[0]-a[0]}px;height:${b[1]-a[1]}px;pointer-events:${flight?'none':'auto'}`;});
   }
 
   function preloadDetail(name) {

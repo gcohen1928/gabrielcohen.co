@@ -10,11 +10,11 @@ export function createWallPaint(mobile) {
   const section = document.querySelector('#about-view');
   ctx.fillStyle = '#ffffff';
   ctx.textBaseline = 'top';
-  ctx.font = `${mobile ? 126 : 112}px Georgia`;
+  ctx.font = `${mobile ? 126 : 112}px Lora`;
   ctx.fillText(section.querySelector('h2').textContent, 8, 8);
   let y = mobile ? 200 : 177;
   const size = mobile ? 74 : 56;
-  ctx.font = `${size}px Arial`;
+  ctx.font = `${size}px "DM Sans"`;
   for (const p of section.querySelectorAll(':scope > p')) {
     let line = '';
     for (const word of p.textContent.split(/\s+/)) {

@@ -7,6 +7,6 @@ for (const name of await readdir('assets')) {
 }
 await build({
   entryPoints: ['src/main.js'], outdir: 'assets', bundle: true,
-  splitting: true, format: 'esm', minify: true, target: ['es2022'],
+  external: ['/assets/fonts/*'], splitting: true, format: 'esm', minify: true, target: ['es2022'],
   entryNames: '[name]', chunkNames: '[name]-[hash]', legalComments: 'eof',
 });
