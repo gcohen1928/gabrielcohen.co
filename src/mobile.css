@@ -150,3 +150,15 @@
  .room .intro{top:18%;left:12%}
 }
 @media(min-width:500px) and (max-aspect-ratio:1/1){.room .intro{left:17%}}
+/* Leave room above the headstock when mobile browser controls reduce the viewport. */
+@media(max-width:450px){
+ .room .intro{top:13%;left:18%;right:6%}
+ .room .intro h1{font-size:32px;line-height:1.15;margin-bottom:12px}
+ .room .intro p{font-size:17px;line-height:1.45}
+ .room .intro .say-hi{font-size:17px;margin-top:10px;min-height:44px}
+}
+@media(max-width:450px) and (max-height:740px){
+ .room .intro{top:10%}
+ .room .intro h1{font-size:30px}
+ .room .intro p,.room .intro .say-hi{font-size:16px}
+}

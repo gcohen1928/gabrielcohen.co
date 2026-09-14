@@ -4184,7 +4184,10 @@ void main() {
         if(uPortrait>.5){float eraseTrophy=smoothstep(.766,.777,benchUV.x)*(1.-smoothstep(.834,.846,benchUV.x))*smoothstep(.607,.623,benchUV.y)*(1.-smoothstep(.698,.708,benchUV.y));gl_FragColor.rgb=mix(gl_FragColor.rgb,texture2D(uImage,vec2(base.x,base.y+.12)).rgb,eraseTrophy);}
         if(uPortrait>.5 && unifiedUV.x>.667)shelfTop=.34;
         if(uPortrait>.5)unifiedMask=smoothstep(.035,.12,unifiedUV.x)*(1.-smoothstep(.79,.815,unifiedUV.x))*smoothstep(shelfTop-.002,shelfTop+.003,unifiedUV.y)*(1.-smoothstep(.76,.94,unifiedUV.y));
-        gl_FragColor.rgb=mix(gl_FragColor.rgb,texture2D(uUnifiedBench,clamp(vec2(unifiedUV.x,1.-unifiedUV.y),.001,.999)).rgb,unifiedMask*uBooksSurfaceReady);
+        vec3 shelfColor=texture2D(uUnifiedBench,clamp(vec2(unifiedUV.x,1.-unifiedUV.y),.001,.999)).rgb;
+        float demonShade=smoothstep(.563,.574,unifiedUV.x)*(1.-smoothstep(.663,.671,unifiedUV.x))*smoothstep(.229,.244,unifiedUV.y)*(1.-smoothstep(.701,.718,unifiedUV.y));
+        shelfColor*=1.-.16*demonShade;
+        gl_FragColor.rgb=mix(gl_FragColor.rgb,shelfColor,unifiedMask*uBooksSurfaceReady);
         vec4 lettering=texture2D(uSpines,clamp(vec2(unifiedUV.x,1.-unifiedUV.y),.001,.999));
         gl_FragColor.rgb=mix(gl_FragColor.rgb,lettering.rgb,lettering.a*unifiedMask*uBooksSurfaceReady);
         // Restore native sculpture detail above its contact edge; keep the unified tabletop.
