@@ -3,7 +3,7 @@
 Gabe Cohen’s personal site. A plain, readable text column next to a 3D dithered Nero flame (built from `assets/nero-mark.png`) that you can spin by swiping across it. Canvas + vanilla JS, no libraries, no build step.
 
 - `index.html`: the homepage, self-contained (inline CSS and JS)
-- `photos.html`: photos (not linked from the homepage)
+- `photos.html`: a mosaic of photos (900px versions in `assets/photos/thumb/`); clicking one grows it from its tile to full screen
 - `paper.html`: the 2022 TUM research write-up
 - `assets/site.css`: styles for the photos and paper pages
 - `assets/fonts/`: Source Serif 4 and Martian Mono, both SIL Open Font License
