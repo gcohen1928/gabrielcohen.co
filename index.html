@@ -113,7 +113,7 @@
       const size = () => { setup(state); if (!state.visible || reduced) draw(state, performance.now()); };
       new ResizeObserver(size).observe(canvas);
       const pos = e => { const r = canvas.getBoundingClientRect(); state.mx = (e.clientX - r.left) / r.width; state.my = (e.clientY - r.top) / r.height; };
-      canvas.addEventListener('pointermove', e => { if (state.mx != null) state.vel = Math.max(-0.5, Math.min(0.5, (state.vel || 0) - (e.movementX || 0) * 0.004)); pos(e); state.onmove?.(); if (reduced) draw(state, performance.now()); });
+      canvas.addEventListener('pointermove', e => { if (state.mx != null) state.vel = Math.max(-0.14, Math.min(0.14, (state.vel || 0) - (e.movementX || 0) * 0.0012)); pos(e); state.onmove?.(); if (reduced) draw(state, performance.now()); });
       canvas.addEventListener('pointerleave', () => { state.mx = state.my = null; if (reduced) draw(state, performance.now()); });
       canvas.addEventListener('pointerdown', e => { pos(e); state.onclick?.(); if (reduced) draw(state, performance.now()); });
       let raf = 0;
@@ -157,7 +157,7 @@
         // Swipes spin it (with momentum); when it slows down it settles back facing front.
         const [ia, ib] = rotate(time);
         s.spin ??= 0; s.vel ??= 0;
-        s.spin += s.vel; s.vel *= 0.965;
+        s.spin += s.vel; s.vel *= 0.95;
         if (Math.abs(s.vel) < 0.004) {
           const home = Math.round(s.spin / (2 * Math.PI)) * 2 * Math.PI;
           s.spin += (home - s.spin) * 0.05;
