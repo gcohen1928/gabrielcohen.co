@@ -10,321 +10,269 @@
   <meta property="og:description" content="hey, i’m gabe. cto of nero in san francisco." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://gabrielcohen.co/" />
-  <meta name="theme-color" content="#0f0e0c" />
+  <meta name="theme-color" content="#ecebe6" />
   <link rel="icon" href="/favicon.ico" />
-  <link rel="preload" href="/assets/fonts/martian-mono.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/source-serif-4.woff2" as="font" type="font/woff2" crossorigin />
   <style>
-    @font-face {
-      font-family: "Martian Mono";
-      src: url("/assets/fonts/martian-mono.woff2") format("woff2");
-      font-weight: 100 800;
-      font-stretch: 75% 112.5%;
-      font-display: swap;
-    }
+    @font-face { font-family: "Source Serif"; src: url("/assets/fonts/source-serif-4.woff2") format("woff2"); font-weight: 200 900; font-display: swap; }
+    @font-face { font-family: "Source Serif"; src: url("/assets/fonts/source-serif-4-italic.woff2") format("woff2"); font-weight: 200 900; font-style: italic; font-display: swap; }
+    @font-face { font-family: "Martian Mono"; src: url("/assets/fonts/martian-mono.woff2") format("woff2"); font-weight: 100 800; font-stretch: 75% 112.5%; font-display: swap; }
+
     :root {
-      color-scheme: dark;
-      --bg: #0f0e0c;
-      --fg: #ece5d6;
-      --dim: #8a8376;
-      --yellow: #f2c230;
+      --paper: #ecebe6;
+      --ink: #161616;
+      --soft: #6e6c66;
+      --line: #c9c7bf;
     }
     * { box-sizing: border-box; }
-    html, body { height: 100%; }
     body {
       margin: 0;
-      min-height: 100svh;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      background: var(--bg);
-      color: var(--fg);
-      font: 400 clamp(0.95rem, 0.62rem + 1.15vw, 1.6rem)/1.45 "Martian Mono", ui-monospace, Menlo, monospace;
-      font-stretch: 87.5%;
+      background: var(--paper);
+      color: var(--ink);
+      font: 400 1.0625rem/1.55 "Source Serif", Georgia, serif;
       -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
     }
-    ::selection { background: var(--yellow); color: var(--bg); }
+    ::selection { background: var(--ink); color: var(--paper); }
+    a { color: inherit; text-decoration: underline 1px var(--line); text-underline-offset: 0.2em; }
+    a:hover, a:focus-visible { background: var(--ink); color: var(--paper); text-decoration: none; outline: none; }
+    .mono { font-family: "Martian Mono", ui-monospace, monospace; font-stretch: 87.5%; font-size: 0.6875rem; letter-spacing: 0.02em; line-height: 1.6; }
 
+    .wrap {
+      display: grid;
+      grid-template-columns: minmax(0, 25rem) minmax(0, 1fr);
+      gap: clamp(2rem, 6vw, 7rem);
+      max-width: 88rem;
+      margin: 0 auto;
+      padding: clamp(1.5rem, 4vw, 3.5rem);
+    }
+
+    /* Text column */
+    .text { position: sticky; top: clamp(1.5rem, 4vw, 3.5rem); align-self: start; }
+    h1 { margin: 0 0 2.5rem; font-size: 1.0625rem; font-weight: 600; }
+    .lede { margin: 0 0 2.5rem; font-size: 1.375rem; line-height: 1.35; letter-spacing: -0.005em; }
+    dl { margin: 0; display: grid; grid-template-columns: 5.5rem 1fr; gap: 0.65rem 1rem; }
+    dt { color: var(--soft); padding-top: 0.2rem; }
+    dd { margin: 0; }
+    dd span { color: var(--soft); }
+    cite { font-style: italic; }
+
+    /* Pieces */
+    .pieces {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: clamp(2.5rem, 5vw, 5rem) clamp(1rem, 3vw, 3rem);
+      align-items: start;
+    }
+    figure { margin: 0; }
+    .p1 { grid-column: 1 / -1; max-width: calc(100svh - 7rem); }
+    .p2 { grid-column: 1 / span 4; }
+    .p3 { grid-column: 4 / span 3; margin-top: -2rem; }
     canvas {
-      position: fixed;
-      inset: 0;
+      display: block;
       width: 100%;
-      height: 100%;
-      pointer-events: none;
+      aspect-ratio: 1;
+      image-rendering: pixelated;
+      touch-action: pan-y;
+      cursor: crosshair;
     }
+    .p2 canvas { aspect-ratio: 4 / 3; }
+    figcaption { display: flex; justify-content: space-between; gap: 1rem; margin-top: 0.8rem; padding-top: 0.6rem; border-top: 1px solid var(--line); color: var(--soft); }
+    figcaption b { color: var(--ink); font-weight: 600; }
 
-    .bar, .foot {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 1rem;
-      padding: 1.5rem clamp(1rem, 4vw, 3rem);
-      color: var(--dim);
-      font-size: 0.75rem;
-      letter-spacing: 0.02em;
-    }
-    .bar strong { color: var(--fg); font-weight: 600; }
-    button {
-      font: inherit;
-      color: inherit;
-      background: none;
-      border: 0;
-      padding: 0.25rem 0;
-      cursor: pointer;
-    }
-    button[aria-pressed="true"] { color: var(--yellow); }
+    footer { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--line); color: var(--soft); }
 
-    .staff {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: clamp(1.1rem, 3.2vh, 2.4rem);
-      padding: 1rem clamp(1rem, 4vw, 3rem);
-    }
-    .row {
-      position: relative;
-      padding: 0 0 0.55em clamp(2.4rem, 6vw, 5.5rem);
-    }
-    .row p { margin: 0; max-width: 46em; }
-    .tune {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      transform: translateY(50%);
-      padding-right: 0.4em;
-      background: var(--bg);
-      color: var(--yellow);
-      font-weight: 700;
-      font-stretch: 100%;
-      line-height: 1;
-    }
-    .w { display: inline-block; will-change: transform; }
-
-    a {
-      color: inherit;
-      text-decoration: underline 0.08em var(--yellow);
-      text-underline-offset: 0.25em;
-    }
-    a:hover, a:focus-visible { background: var(--yellow); color: var(--bg); text-decoration: none; outline: none; }
-    .fret { color: var(--yellow); }
-
-    .foot { transition: opacity 0.6s; }
-    .foot .hint.gone { opacity: 0; }
-
-    @media (max-width: 640px) {
-      .foot { flex-direction: column; gap: 0.25rem; }
+    @media (max-width: 860px) {
+      .wrap { grid-template-columns: minmax(0, 1fr); }
+      .text { position: static; }
+      .pieces { grid-template-columns: minmax(0, 1fr); }
+      .p1, .p2, .p3 { grid-column: 1; margin-top: 0; max-width: none; }
     }
   </style>
 </head>
 <body>
-  <header class="bar">
-    <strong>gabe cohen</strong>
-    <button id="sound" type="button" aria-pressed="false">sound: off</button>
-  </header>
+  <div class="wrap">
+    <section class="text">
+      <h1>gabe cohen</h1>
+      <p class="lede">hey, i’m gabe. i’m 23, i live in san francisco, and i’m the cto of <a href="https://www.nero.fan/">nero</a>, where we help artists make money and go viral on livestreams.</p>
+      <dl>
+        <dt>now</dt>
+        <dd>cto, <a href="https://www.nero.fan/">nero</a> <span>2025–</span></dd>
+        <dt>before</dt>
+        <dd>software engineer, flatiron health <span>2023–25</span><br />a few failed consumer apps<br />self-driving research, tu munich <span>2022</span> · <a href="/paper.html">paper</a></dd>
+        <dt>off hours</dt>
+        <dd>guitar, fiction, skiing</dd>
+        <dt>reading</dt>
+        <dd><cite>the secret history</cite>, <cite>east of eden</cite>, <cite>disgrace</cite> · <a href="https://www.goodreads.com/user/show/116748355">more</a></dd>
+        <dt>elsewhere</dt>
+        <dd><a href="mailto:gcohen1928@gmail.com">email</a> · <a href="https://github.com/gcohen1928" rel="me">github</a> · <a href="https://www.linkedin.com/in/gabrielhcohen/" rel="me">linkedin</a></dd>
+      </dl>
+    </section>
 
-  <main class="staff" id="staff">
-    <div class="row"><span class="tune" aria-hidden="true">e</span><p>hey, i’m gabe.</p></div>
-    <div class="row"><span class="tune" aria-hidden="true">B</span><p>23, living in san francisco.</p></div>
-    <div class="row"><span class="tune" aria-hidden="true">G</span><p>cto of <a href="https://www.nero.fan/">nero</a>. we help artists make money and go viral on livestreams.</p></div>
-    <div class="row"><span class="tune" aria-hidden="true">D</span><p>before that: flatiron health, a few failed apps, and self-driving car research in <a href="/paper.html">munich</a>.</p></div>
-    <div class="row"><span class="tune" aria-hidden="true">A</span><p>otherwise reading fiction, skiing, and learning guitar on a yellow strat. favorite solo starts at <a class="fret" href="https://www.youtube.com/watch?v=rlgjWuQPaEQ&amp;t=390s">6:30</a>.</p></div>
-    <div class="row"><span class="tune" aria-hidden="true">E</span><p><a href="mailto:gcohen1928@gmail.com">email</a> · <a href="https://github.com/gcohen1928" rel="me">github</a> · <a href="https://www.linkedin.com/in/gabrielhcohen/" rel="me">linkedin</a> · <a href="https://www.goodreads.com/user/show/116748355">books</a></p></div>
-  </main>
+    <main class="pieces" aria-label="Three small interactive drawings">
+      <figure class="p1">
+        <canvas id="torus" aria-label="A slowly turning torus, drawn in dithered black and white. Moving the cursor over it moves the light."></canvas>
+        <figcaption class="mono"><span><b>no. 1</b> torus, one bit</span><span>move to relight</span></figcaption>
+      </figure>
+      <figure class="p2">
+        <canvas id="field" aria-label="A field of short black strokes that drift like iron filings and swirl around the cursor."></canvas>
+        <figcaption class="mono"><span><b>no. 2</b> field</span><span>it leans toward you</span></figcaption>
+      </figure>
+      <figure class="p3">
+        <canvas id="pond" aria-label="A grid of dots that ripples outward wherever you click."></canvas>
+        <figcaption class="mono"><span><b>no. 3</b> pond</span><span>click it</span></figcaption>
+      </figure>
+    </main>
 
-  <footer class="foot">
-    <span class="hint" id="hint">run your cursor across the strings</span>
-    <span>standard tuning</span>
-  </footer>
-
-  <canvas id="strings" aria-hidden="true"></canvas>
+    <footer class="mono"><span>gabrielcohen.co</span><span>san francisco</span></footer>
+  </div>
 
   <script>
   (() => {
-    const canvas = document.getElementById('strings');
-    const ctx = canvas.getContext('2d');
-    const rows = [...document.querySelectorAll('.row')];
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    const hint = document.getElementById('hint');
-    const touch = matchMedia('(hover: none)').matches;
-    if (touch) hint.textContent = 'drag your finger across the strings';
+    const INK = [22, 22, 22], PAPER = [236, 235, 230];
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Top to bottom, like tab: high e down to low E.
-    const NOTES = [329.63, 246.94, 196.0, 146.83, 110.0, 82.41];
-    const GAUGE = [0.9, 1.0, 1.2, 1.6, 2.0, 2.5];
-    const N = 180, MODES = 10;
-    const strings = NOTES.map((freq, i) => ({
-      freq, gauge: GAUGE[i], y: 0, pos: new Float32Array(N), plucks: [], words: [],
-      // Visual fundamental: slowed way down from the real pitch so the eye can follow it.
-      hz: 4 + (5 - i) * 1.1,
-    }));
-    // Wrap every word in a span so it can ride its string.
-    rows.forEach((row, i) => {
-      const walk = node => {
-        for (const child of [...node.childNodes]) {
-          if (child.nodeType === 3) {
-            const frag = document.createDocumentFragment();
-            for (const part of child.textContent.split(/(\s+)/)) {
-              if (!part) continue;
-              if (/^\s+$/.test(part)) { frag.append(part); continue; }
-              const w = document.createElement('span');
-              w.className = 'w'; w.textContent = part; frag.append(w);
-            }
-            child.replaceWith(frag);
-          } else if (child.nodeType === 1 && child.tagName === 'A') {
-            child.classList.add('w');
-          } else if (child.nodeType === 1) walk(child);
-        }
+    // Runs draw(t) every frame while the canvas is on screen; once if motion is reduced.
+    function piece(canvas, setup, draw) {
+      const state = { canvas, ctx: canvas.getContext('2d'), mx: null, my: null, visible: false };
+      const size = () => { setup(state); if (!state.visible || reduced) draw(state, performance.now()); };
+      new ResizeObserver(size).observe(canvas);
+      const pos = e => { const r = canvas.getBoundingClientRect(); state.mx = (e.clientX - r.left) / r.width; state.my = (e.clientY - r.top) / r.height; };
+      canvas.addEventListener('pointermove', e => { pos(e); state.onmove?.(); if (reduced) draw(state, performance.now()); });
+      canvas.addEventListener('pointerleave', () => { state.mx = state.my = null; if (reduced) draw(state, performance.now()); });
+      canvas.addEventListener('pointerdown', e => { pos(e); state.onclick?.(); if (reduced) draw(state, performance.now()); });
+      let raf = 0;
+      const loop = t => { draw(state, t); raf = requestAnimationFrame(loop); };
+      new IntersectionObserver(([en]) => {
+        state.visible = en.isIntersecting;
+        if (reduced) return;
+        if (en.isIntersecting && !raf) raf = requestAnimationFrame(loop);
+        if (!en.isIntersecting && raf) { cancelAnimationFrame(raf); raf = 0; }
+      }).observe(canvas);
+      return state;
+    }
+
+    // 8x8 Bayer matrix for ordered dithering.
+    const BAYER = (() => {
+      const m = [[0]];
+      let b = m;
+      for (let n = 1; n < 8; n *= 2) {
+        const next = [];
+        for (let y = 0; y < n * 2; y++) { next[y] = []; for (let x = 0; x < n * 2; x++) next[y][x] = 4 * b[y % n][x % n] + [[0, 2], [3, 1]][Math.floor(y / n)][Math.floor(x / n)]; }
+        b = next;
+      }
+      return b.flat().map(v => (v + 0.5) / 64);
+    })();
+
+    // No. 1: a raymarched torus, shaded, then dithered to one bit. The cursor is the light.
+    piece(document.getElementById('torus'), s => {
+      const w = s.canvas.clientWidth;
+      s.px = Math.max(2, Math.round(w / 190));
+      s.w = Math.round(w / s.px); s.h = s.w;
+      s.canvas.width = s.w; s.canvas.height = s.h;
+      s.img = s.ctx.createImageData(s.w, s.h);
+      s.lx = 0.6; s.ly = -0.5;
+    }, (s, t) => {
+      if (!s.img) return;
+      const { w, h, img } = s, d = img.data, time = t / 1000;
+      const tx = s.mx == null ? 0.6 + 0.3 * Math.sin(time * 0.3) : (s.mx - 0.5) * 3;
+      const ty = s.my == null ? -0.5 : (s.my - 0.5) * 3;
+      s.lx += (tx - s.lx) * 0.08; s.ly += (ty - s.ly) * 0.08;
+      let lx = s.lx, ly = -s.ly, lz = -1.1; const ll = Math.hypot(lx, ly, lz); lx /= ll; ly /= ll; lz /= ll;
+      const a = time * 0.35, b = time * 0.23, ca = Math.cos(a), sa = Math.sin(a), cb = Math.cos(b), sb = Math.sin(b);
+      const R = 1, r = 0.42;
+      const sdf = (x, y, z) => {
+        const y1 = y * ca - z * sa, z1 = y * sa + z * ca;
+        const x2 = x * cb - z1 * sb, z2 = x * sb + z1 * cb;
+        const q = Math.hypot(x2, y1) - R;
+        return Math.hypot(q, z2) - r;
       };
-      walk(row.querySelector('p'));
-      strings[i].row = row;
+      for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) {
+        const u = (px / w - 0.5) * 2, v = (0.5 - py / h) * 2;
+        let dx = u * 0.62, dy = v * 0.62, dz = 1; const dl = Math.hypot(dx, dy, dz); dx /= dl; dy /= dl; dz /= dl;
+        let lum = 0;
+        // Skip rays that miss the bounding sphere.
+        const oz = -3.4, bb = oz * dz, cc = oz * oz - 2.1;
+        if (bb * bb - cc > 0) {
+          let dist = -bb - Math.sqrt(bb * bb - cc), hit = false;
+          for (let i = 0; i < 48; i++) {
+            const k = sdf(dx * dist, dy * dist, oz + dz * dist);
+            if (k < 0.002) { hit = true; break; }
+            dist += k; if (dist > 6) break;
+          }
+          if (hit) {
+            const x = dx * dist, y = dy * dist, z = oz + dz * dist, e = 0.003, c0 = sdf(x, y, z);
+            let nx = sdf(x + e, y, z) - c0, ny = sdf(x, y + e, z) - c0, nz = sdf(x, y, z + e) - c0;
+            const nl = Math.hypot(nx, ny, nz); nx /= nl; ny /= nl; nz /= nl;
+            const diff = Math.max(0, nx * lx + ny * ly + nz * lz);
+            const rim = Math.pow(1 - Math.abs(nx * dx + ny * dy + nz * dz), 3);
+            lum = 0.06 + 0.9 * diff + 0.25 * rim;
+          }
+        }
+        const on = lum > BAYER[(px & 7) + (py & 7) * 8];
+        const o = (py * w + px) * 4, col = on ? PAPER : INK;
+        d[o] = col[0]; d[o + 1] = col[1]; d[o + 2] = col[2]; d[o + 3] = 255;
+      }
+      s.ctx.putImageData(img, 0, 0);
     });
 
-    let W = 0, H = 0, dpr = 1;
-    function layout() {
-      dpr = Math.min(devicePixelRatio || 1, 2);
-      W = innerWidth; H = innerHeight;
-      canvas.width = W * dpr; canvas.height = H * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      for (const s of strings) {
-        for (const el of s.row.querySelectorAll('.w')) el.style.transform = '';
-        const r = s.row.getBoundingClientRect();
-        s.y = r.bottom + scrollY;
-        s.words = [...s.row.querySelectorAll('.w')].map(el => {
-          const b = el.getBoundingClientRect();
-          return { el, i: Math.round(((b.left + b.width / 2) / W) * (N - 1)), lift: (r.bottom - b.bottom) };
-        });
-      }
-      draw();
-    }
-
-    // A plucked string is a sum of decaying harmonics (a triangle released from rest).
-    let running = false;
-    function step(t) {
-      let live = false;
-      for (const s of strings) {
-        s.pos.fill(0);
-        s.plucks = s.plucks.filter(p => t - p.t0 < 2600);
-        for (const p of s.plucks) {
-          const age = (t - p.t0) / 1000;
-          for (let n = 1; n <= MODES; n++) {
-            const a = p.coef[n] * Math.exp(-age * (0.9 + n * 0.35)) * Math.cos(2 * Math.PI * s.hz * n * age);
-            if (Math.abs(a) < 0.01) continue;
-            for (let i = 1; i < N - 1; i++) s.pos[i] += a * Math.sin(n * Math.PI * i / (N - 1));
-          }
-          live = true;
-        }
-      }
-      return live;
-    }
-
-    function draw() {
-      ctx.clearRect(0, 0, W, H);
-      const top = scrollY;
-      for (const s of strings) {
-        const y0 = s.y - top;
-        if (y0 < -40 || y0 > H + 40) continue;
-        let amp = 0;
-        for (let i = 0; i < N; i += 8) amp = Math.max(amp, Math.abs(s.pos[i]));
-        const glow = Math.min(amp / 5, 1);
+    // No. 2: short strokes on a slow flow field; near the cursor they curl around it.
+    piece(document.getElementById('field'), s => {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      s.cw = s.canvas.clientWidth; s.ch = s.canvas.clientHeight;
+      s.canvas.width = s.cw * dpr; s.canvas.height = s.ch * dpr;
+      s.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      s.canvas.style.imageRendering = 'auto';
+      s.fx = 0.5; s.fy = 0.5; s.pull = 0;
+    }, (s, t) => {
+      const { ctx, cw, ch } = s, time = t / 1000, gap = Math.max(14, cw / 34);
+      if (s.mx != null) { s.fx += (s.mx - s.fx) * 0.12; s.fy += (s.my - s.fy) * 0.12; }
+      s.pull += ((s.mx != null ? 1 : 0) - s.pull) * 0.05;
+      ctx.fillStyle = `rgb(${PAPER})`; ctx.fillRect(0, 0, cw, ch);
+      ctx.strokeStyle = `rgb(${INK})`; ctx.lineCap = 'round';
+      const cx = s.fx * cw, cy = s.fy * ch, sigma = cw * 0.18;
+      for (let y = gap / 2; y < ch; y += gap) for (let x = gap / 2; x < cw; x += gap) {
+        let ang = Math.sin(x * 0.009 + time * 0.25) * 1.4 + Math.cos(y * 0.011 - time * 0.18) * 1.4 + Math.sin((x + y) * 0.004 + time * 0.1);
+        const ddx = x - cx, ddy = y - cy, w = s.pull * Math.exp(-(ddx * ddx + ddy * ddy) / (2 * sigma * sigma));
+        const swirl = Math.atan2(ddy, ddx) + Math.PI / 2;
+        ang = Math.atan2((1 - w) * Math.sin(ang) + w * Math.sin(swirl), (1 - w) * Math.cos(ang) + w * Math.cos(swirl));
+        const len = gap * (0.3 + 0.35 * w);
+        ctx.lineWidth = 1.1 + 1.4 * w;
         ctx.beginPath();
-        ctx.moveTo(0, y0);
-        for (let i = 1; i < N; i++) ctx.lineTo((i / (N - 1)) * W, y0 + s.pos[i]);
-        ctx.lineWidth = s.gauge;
-        ctx.strokeStyle = `rgb(${138 + 104 * glow}, ${131 + 63 * glow}, ${118 - 70 * glow})`;
+        ctx.moveTo(x - Math.cos(ang) * len, y - Math.sin(ang) * len);
+        ctx.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len);
         ctx.stroke();
-        if (!reduced.matches) for (const w of s.words) {
-          const d = s.pos[Math.min(Math.max(w.i, 0), N - 1)];
-          w.el.style.transform = Math.abs(d) < 0.05 ? '' : `translateY(${(d * 0.7).toFixed(2)}px)`;
-        }
       }
-    }
-
-    function loop(t) {
-      const live = step(t);
-      draw();
-      if (live) requestAnimationFrame(loop); else running = false;
-    }
-    function kick() { if (!running) { running = true; requestAnimationFrame(loop); } }
-
-    function pluck(s, x, strength) {
-      const p = Math.min(Math.max(x / W, 0.04), 0.96);
-      const h = Math.max(-26, Math.min(26, strength));
-      const coef = [0];
-      for (let n = 1; n <= MODES; n++) coef[n] = (2 * h / (n * n * Math.PI * Math.PI * p * (1 - p))) * Math.sin(n * Math.PI * p);
-      s.plucks.push({ t0: performance.now(), coef });
-      if (s.plucks.length > 4) s.plucks.shift();
-      sound(s, Math.min(Math.abs(h) / 26, 1));
-      hint.classList.add('gone');
-      kick();
-    }
-
-    // Pluck any string the pointer crosses between two samples.
-    let last = null;
-    function move(x, y) {
-      y += scrollY;
-      if (last) {
-        const dy = y - last.y;
-        for (const s of strings) {
-          if ((last.y - s.y) * (y - s.y) < 0) {
-            const t = (s.y - last.y) / dy;
-            pluck(s, last.x + (x - last.x) * t, Math.sign(dy) * Math.max(5, Math.min(Math.abs(dy) * 1.2, 26)));
-          }
-        }
-      }
-      last = { x, y };
-    }
-    addEventListener('pointermove', e => { if (e.pointerType === 'mouse') move(e.clientX, e.clientY); }, { passive: true });
-    addEventListener('touchmove', e => { const t = e.touches[0]; move(t.clientX, t.clientY); }, { passive: true });
-    addEventListener('touchstart', e => { const t = e.touches[0]; last = { x: t.clientX, y: t.clientY + scrollY }; }, { passive: true });
-    document.addEventListener('mouseleave', () => { last = null; });
-
-    // Sound: Karplus-Strong plucks, synthesized once per string, only after opt-in.
-    let audio = null, buffers = [];
-    const btn = document.getElementById('sound');
-    btn.addEventListener('click', () => {
-      const on = btn.getAttribute('aria-pressed') !== 'true';
-      btn.setAttribute('aria-pressed', String(on));
-      btn.textContent = on ? 'sound: on' : 'sound: off';
-      if (on && !audio) {
-        audio = new (window.AudioContext || window.webkitAudioContext)();
-        buffers = strings.map(s => {
-          const rate = audio.sampleRate, len = Math.floor(rate * 2.2);
-          const buf = audio.createBuffer(1, len, rate), out = buf.getChannelData(0);
-          const period = Math.round(rate / s.freq), line = new Float32Array(period);
-          for (let i = 0; i < period; i++) line[i] = Math.random() * 2 - 1;
-          for (let i = 0, p = 0; i < len; i++, p = (p + 1) % period) {
-            const next = line[(p + 1) % period];
-            out[i] = line[p];
-            line[p] = 0.4985 * (line[p] + next);
-          }
-          return buf;
-        });
-      }
-      if (on) { audio.resume(); strum(); }
     });
-    function sound(s, v) {
-      if (!audio || btn.getAttribute('aria-pressed') !== 'true') return;
-      const src = audio.createBufferSource(), gain = audio.createGain();
-      src.buffer = buffers[strings.indexOf(s)];
-      gain.gain.value = 0.12 + 0.3 * v;
-      src.connect(gain).connect(audio.destination);
-      src.start();
-    }
 
-    function strum() {
-      strings.forEach((s, i) => setTimeout(() => pluck(s, W * 0.7, 7), i * 60));
-    }
-
-    addEventListener('resize', layout);
-    addEventListener('scroll', () => { if (!running) draw(); }, { passive: true });
-    document.fonts.ready.then(() => {
-      layout();
-      if (!reduced.matches) setTimeout(() => { strum(); hint.classList.remove('gone'); }, 450);
+    // No. 3: a dot grid; clicks (and the odd passing cursor) drop ripples into it.
+    const pond = piece(document.getElementById('pond'), s => {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      s.cw = s.canvas.clientWidth; s.ch = s.canvas.clientHeight;
+      s.canvas.width = s.cw * dpr; s.canvas.height = s.ch * dpr;
+      s.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      s.canvas.style.imageRendering = 'auto';
+      s.ripples = s.ripples || [];
+    }, (s, t) => {
+      const { ctx, cw, ch } = s, gap = Math.max(11, cw / 26), now = t / 1000;
+      if (!reduced && (!s.lastDrip || now - s.lastDrip > 3.2)) { s.lastDrip = now; s.ripples.push({ x: 0.2 + Math.random() * 0.6, y: 0.2 + Math.random() * 0.6, t0: now, a: 0.6 }); }
+      s.ripples = s.ripples.filter(r => now - r.t0 < 4);
+      ctx.fillStyle = `rgb(${PAPER})`; ctx.fillRect(0, 0, cw, ch);
+      ctx.fillStyle = `rgb(${INK})`;
+      for (let y = gap / 2; y < ch; y += gap) for (let x = gap / 2; x < cw; x += gap) {
+        let amp = 0;
+        for (const r of s.ripples) {
+          const age = now - r.t0, d = Math.hypot(x - r.x * cw, y - r.y * ch), front = age * cw * 0.28;
+          amp += r.a * Math.exp(-((d - front) ** 2) / (2 * (gap * 1.3) ** 2)) * Math.exp(-age * 0.9);
+        }
+        const rad = Math.max(0.6, gap * (0.07 + 0.45 * Math.min(amp, 1.1)));
+        ctx.beginPath(); ctx.arc(x, y, rad, 0, Math.PI * 2); ctx.fill();
+      }
     });
-    layout();
+    pond.onclick = () => pond.ripples.push({ x: pond.mx, y: pond.my, t0: performance.now() / 1000, a: 1 });
+    pond.onmove = () => {
+      const now = performance.now() / 1000;
+      if (!pond.lastMove || now - pond.lastMove > 0.35) { pond.lastMove = now; pond.ripples.push({ x: pond.mx, y: pond.my, t0: now, a: 0.35 }); }
+    };
   })();
   </script>
 </body>

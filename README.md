@@ -1,12 +1,12 @@
 # gabrielcohen.co
 
-Gabe Cohen’s personal site. The homepage is a guitar tab: six strings (e B G D A E) with a line of bio on each. Move the cursor or a finger across them to pluck; the words ride the strings. `sound: on` plays each string (Karplus–Strong, synthesized in the browser, no audio files). No build step.
+Gabe Cohen’s personal site. A plain, readable text column next to three small interactive drawings (a dithered 1-bit torus lit by the cursor, a flow field that curls around it, a dot pond that ripples on click). Canvas + vanilla JS, no libraries, no build step.
 
-- `index.html`: the homepage, self-contained (inline CSS and ~150 lines of JS)
+- `index.html`: the homepage, self-contained (inline CSS and JS)
 - `photos.html`: photos (not linked from the homepage)
 - `paper.html`: the 2022 TUM research write-up
 - `assets/site.css`: styles for the photos and paper pages
-- `assets/fonts/`: Martian Mono (homepage) and Source Serif 4 (other pages), both SIL Open Font License
+- `assets/fonts/`: Source Serif 4 and Martian Mono, both SIL Open Font License
 
 ## Development
 
