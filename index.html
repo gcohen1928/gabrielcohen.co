@@ -3,68 +3,129 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#24211d" />
   <title>Gabriel Cohen</title>
-  <meta name="description" content="Hey, I’m Gabe. I’m building Nero. Usually playing guitar or reading when I’m not." />
+  <meta name="description" content="I’m Gabe, CTO of Nero in San Francisco. Guitar, fiction, and photos when I’m not working." />
   <link rel="canonical" href="https://gabrielcohen.co/" />
   <meta property="og:title" content="Gabriel Cohen" />
-  <meta property="og:description" content="Hey, I’m Gabe. I’m building Nero. Usually playing guitar or reading when I’m not." />
+  <meta property="og:description" content="I’m Gabe, CTO of Nero in San Francisco. Guitar, fiction, and photos when I’m not working." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://gabrielcohen.co/" />
-  <meta property="og:image" content="https://gabrielcohen.co/assets/room-preview-desktop.webp" />
+  <meta property="og:image" content="https://gabrielcohen.co/assets/og.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#fcfbf8" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#141312" media="(prefers-color-scheme: dark)" />
   <link rel="icon" href="/favicon.ico" />
-  <link rel="preload" as="image" href="/assets/room-preview-desktop.webp" media="(min-width: 701px) and (min-aspect-ratio: 1001/1000)" fetchpriority="high" />
-  <link rel="preload" as="image" href="/assets/room-preview-mobile.webp" media="(max-width: 700px), (max-aspect-ratio: 1/1)" fetchpriority="high" />
-  <link rel="stylesheet" href="/assets/main.css" />
-  <script type="module" src="/assets/main.js"></script>
+  <link rel="preload" href="/assets/fonts/source-serif-4.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/site.css" />
 </head>
 <body>
-  <main class="room" id="room" data-view="home" aria-label="Gabriel Cohen’s room">
-    <div id="room-world">
-    <picture class="room-picture">
-      <source media="(max-width: 700px), (max-aspect-ratio: 1/1)" srcset="/assets/room-preview-mobile.webp" />
-      <img id="room-image" src="/assets/room-preview-desktop.webp" alt="A quiet room in warm evening light: a yellow Strat with a black pickguard, favorite books, plants, and a small monochrome Nero flame on a wooden bench." width="1500" height="1049" fetchpriority="high" decoding="async" />
-    </picture>
-    </div>
-    <img id="focus-image" class="focus-image" alt="" aria-hidden="true" />
-    <div class="room-canvas" id="room-canvas" aria-hidden="true"></div>
-    <div class="scene-ui" id="scene-ui">
-      <header class="intro">
-        <h1>hey, i'm gabe</h1>
-        <p>i'm a 23 year old living in San Francisco and building a music-tech company called nero.</p>
-        <nav class="intro-actions" aria-label="Explore my room">
-        <button class="say-hi" data-view="about">more about me <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></button>
-        </nav>
-      </header>
-      <div class="object-layer" id="room-objects">
-      <button class="object television" id="open-tv" aria-label="Watch Gary Moore on the television"></button>
-      <button class="object guitar" data-view="guitar" aria-label="My yellow Fender Stratocaster"></button>
-      <button class="object books" data-view="books" aria-label="Some of my favorite books"></button>
-      <button class="object nero" data-view="nero" aria-label="What I’m building"></button>
+  <div class="page">
+    <header class="top">
+      <a class="name" href="/">Gabriel Cohen</a>
+      <nav aria-label="Elsewhere">
+        <a href="mailto:gcohen1928@gmail.com">Email</a>
+        <a href="https://github.com/gcohen1928" rel="me">GitHub</a>
+        <a href="https://www.linkedin.com/in/gabrielhcohen/" rel="me">LinkedIn</a>
+      </nav>
+    </header>
+
+    <main>
+      <p class="lede">I’m Gabe. I’m 23, I live in San Francisco, and I’m the CTO of <a href="https://www.nero.fan/">Nero</a>, where we help music artists make money and go viral on livestreams. When I’m not working, I’m usually playing guitar, reading fiction, or walking around with a camera.</p>
+
+      <figure class="hero">
+        <a href="/photos.html#R0009307"><img src="/assets/photos/R0009307.webp" width="1600" height="1067" alt="Looking down at my boots on a yellow sidewalk panel stenciled with the word HOLE." fetchpriority="high" /></a>
+        <figcaption>Somewhere I shouldn’t step. More photos below.</figcaption>
+      </figure>
+
+      <div class="sections">
+        <section class="row" aria-labelledby="now">
+          <h2 id="now">Now</h2>
+          <div>
+            <p>Most of my time goes to <a href="https://www.nero.fan/">Nero</a>. I built nero.fan and have scaled it to 600K+ monthly users; we’re processing $500K+ in GMV a month.</p>
+          </div>
+        </section>
+
+        <section class="row" aria-labelledby="before">
+          <h2 id="before">Before</h2>
+          <ul class="list">
+            <li>
+              <span class="when">2023–25</span>
+              <div>
+                <span class="what">Flatiron Health</span>, software engineer
+                <p>Shipped clinical research products that support clinical trials, starting with infrastructure and features for a full-stack patient management system. After eight months I got my own team building internal sales tools, and I led AI development work across the company. Started as an intern in 2023.</p>
+              </div>
+            </li>
+            <li>
+              <span class="when">College</span>
+              <div>
+                <span class="what">Startups</span>
+                <p>Built web and mobile apps for <a href="https://tracxn.com/d/companies/daedalus/__4NOiqEy2jDbXg3S4nSjyvtQeg4fSTNIEiMtvLFfVjBs/">Daedalus Finance</a>, a fintech startup, and <a href="https://www.feniska.com/">Feniska</a>, a German pet-tech startup. Also started a few consumer apps of my own that didn’t work out.</p>
+              </div>
+            </li>
+            <li>
+              <span class="when">2022</span>
+              <div>
+                <span class="what">Technical University of Munich</span>, research
+                <p>Turned drone footage of German intersections into semantic scenarios for testing self-driving cars, and improved how those simulations were evaluated. <a href="/paper.html">Read the paper</a>.</p>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <section class="row" aria-labelledby="reading">
+          <h2 id="reading">Reading</h2>
+          <div>
+            <p>Mostly fiction. Some books I’ve loved over the past year:</p>
+            <ul class="list books">
+              <li><a href="https://www.goodreads.com/book/show/29044.The_Secret_History"><cite>The Secret History</cite></a> <span class="by">— Donna Tartt</span></li>
+              <li><a href="https://www.goodreads.com/book/show/6192.Disgrace"><cite>Disgrace</cite></a> <span class="by">— J. M. Coetzee</span></li>
+              <li><a href="https://www.goodreads.com/book/show/40607194-east-of-eden"><cite>East of Eden</cite></a> <span class="by">— John Steinbeck</span></li>
+              <li><a href="https://www.goodreads.com/book/show/60384452-demon-copperhead"><cite>Demon Copperhead</cite></a> <span class="by">— Barbara Kingsolver</span></li>
+              <li><a href="https://www.goodreads.com/book/show/77566.Hyperion"><cite>Hyperion</cite></a> <span class="by">— Dan Simmons</span></li>
+              <li><a href="https://www.goodreads.com/book/show/86524.The_Path_to_Power"><cite>The Path to Power</cite></a> <span class="by">— Robert A. Caro</span></li>
+              <li><a href="https://www.goodreads.com/book/show/551520.The_Wisdom_of_Insecurity"><cite>The Wisdom of Insecurity</cite></a> <span class="by">— Alan Watts</span></li>
+              <li><a href="https://www.goodreads.com/book/show/48927138-unit-testing"><cite>Unit Testing</cite></a> <span class="by">— Vladimir Khorikov. I wish they’d made us read this in college.</span></li>
+            </ul>
+            <p class="more"><a href="https://www.goodreads.com/user/show/116748355">Everything else on Goodreads</a></p>
+          </div>
+        </section>
+
+        <section class="row" aria-labelledby="guitar">
+          <h2 id="guitar">Guitar</h2>
+          <div>
+            <p>I play a yellow Mexican Strat that I bought used at the <a href="https://stores.guitarcenter.com/ny/carle-place/157156">Carle Place Guitar Center</a>, about a year after I started. I mostly listen to <a href="https://open.spotify.com/artist/23wr9RJZg0PmYvVFyNkQ4j">Gary Moore</a>, <a href="https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2">the Beatles</a>, and <a href="https://open.spotify.com/artist/0k17h0D3J5VfsdmQ1iZtE9">Pink Floyd</a>.</p>
+            <p>My favorite guitar solo is Gary Moore on <a href="https://www.youtube.com/watch?v=rlgjWuQPaEQ&amp;t=390s">“I Love You More Than You’ll Ever Know”</a>. It starts at 6:30.</p>
+          </div>
+        </section>
+
+        <section class="row wide" aria-labelledby="photos">
+          <h2 id="photos">Photos</h2>
+          <div class="grid">
+            <a href="/photos.html#R0000065"><img src="/assets/photos/small/R0000065.webp" width="800" height="533" loading="lazy" alt="A brick wall lit red by a car’s taillight on a dusk sidewalk." /></a>
+            <a href="/photos.html#R0000079"><img src="/assets/photos/small/R0000079.webp" width="800" height="533" loading="lazy" alt="A cat silhouetted in a lit window at night." /></a>
+            <a href="/photos.html#R0009319"><img src="/assets/photos/small/R0009319.webp" width="800" height="533" loading="lazy" alt="A white dog and a golden retriever meeting on a sunny park lawn." /></a>
+            <a href="/photos.html#R0000067"><img src="/assets/photos/small/R0000067.webp" width="800" height="533" loading="lazy" alt="Bay windows of a dark house against a deep blue evening sky." /></a>
+            <a href="/photos.html#R0009266"><img src="/assets/photos/small/R0009266.webp" width="800" height="533" loading="lazy" alt="A van painted as the Mystery Machine, seen up close under blue sky." /></a>
+            <a href="/photos.html#R0009326-preview"><img src="/assets/photos/small/R0009326-preview.webp" width="800" height="533" loading="lazy" alt="Lit front steps of a Victorian house at night." /></a>
+            <a href="/photos.html#R0009301"><img src="/assets/photos/small/R0009301.webp" width="800" height="533" loading="lazy" alt="An empty concrete alley between a block wall and a building, in hard sun." /></a>
+            <a href="/photos.html#R0009331-preview"><img src="/assets/photos/small/R0009331-preview.webp" width="800" height="533" loading="lazy" alt="The rounded corner of an old building glowing orange at night." /></a>
+            <a href="/photos.html#R0009339-preview"><img src="/assets/photos/small/R0009339-preview.webp" width="800" height="533" loading="lazy" alt="A red pickup truck parked in front of a lit house at night." /></a>
+          </div>
+        </section>
+
+        <section class="row" aria-labelledby="contact">
+          <h2 id="contact">Contact</h2>
+          <div>
+            <p>Email is best: <a href="mailto:gcohen1928@gmail.com">gcohen1928@gmail.com</a>. I’m also on <a href="https://github.com/gcohen1928" rel="me">GitHub</a> and <a href="https://www.linkedin.com/in/gabrielhcohen/" rel="me">LinkedIn</a>.</p>
+          </div>
+        </section>
       </div>
-    </div>
+    </main>
 
-    <button id="room-back" class="room-back" hidden>back to the room</button>
-    <div id="book-targets" aria-label="Books on the shelf" hidden></div>
-    <section id="books-view" class="room-detail books-detail" aria-labelledby="book-title" hidden>
-      <div class="shelf-intro"><h3>on my shelf</h3><p>these are some of the books i’ve read in the past year and really enjoyed. i mostly like reading fiction.</p></div>
-      <h2 id="book-title" tabindex="-1"></h2>
-      <p id="book-author"></p>
-      <div class="book-meta"><span id="book-rating"></span><a id="book-link" target="_blank" rel="noopener noreferrer">on goodreads <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a></div>
-    </section>
-    <section id="guitar-view" class="room-detail guitar-detail" aria-labelledby="guitar-title" hidden>
-      <h2 id="guitar-title" tabindex="-1">this is my yellow mexican strat</h2>
-      <p>i bought her used in the <a href="https://stores.guitarcenter.com/ny/carle-place/157156" target="_blank" rel="noopener noreferrer">carle place guitar center</a> a year after playing guitar.</p><p class="guitar-note">i love <a href="https://open.spotify.com/artist/23wr9RJZg0PmYvVFyNkQ4j" target="_blank" rel="noopener noreferrer">gary moore</a>, <a href="https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2" target="_blank" rel="noopener noreferrer">the beatles</a>, <a href="https://open.spotify.com/artist/0k17h0D3J5VfsdmQ1iZtE9" target="_blank" rel="noopener noreferrer">pink floyd</a>.</p>
-      <button id="listen" class="listen-button">here’s my favorite guitar solo <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></button>
-
-    </section>
-    <section id="nero-view" class="room-detail nero-detail" aria-labelledby="nero-title" hidden><h2 id="nero-title" tabindex="-1">this is nero</h2><p>this is where most of my time is spent</p><p>we’re helping artists make money and go viral on livestreams</p><a href="https://www.nero.fan/" target="_blank" rel="noopener noreferrer">nero.fan <svg class="arrow" aria-hidden="true"><use href="#arrow-up-right"/></svg></a></section>
-    <section id="about-view" class="room-detail about-detail" aria-labelledby="about-title" hidden><h2 id="about-title" tabindex="-1">a bit more about me.</h2><p>i'm building nero, a platform that helps creators make money and go viral on livestreams.</p><p>before that, i worked on clinical research at flatiron health, started a few failed consumer apps, and did research on self-driving cars in munich.</p><p>outside of work, i’m learning how to play guitar, reading, and doing other shit that caught my attention (right now skiing and photography)</p><nav class="links" aria-label="Find me elsewhere"><a href="mailto:gcohen1928@gmail.com">email me</a><a href="https://github.com/gcohen1928" target="_blank" rel="me noopener noreferrer">github</a><a href="https://www.linkedin.com/in/gabrielhcohen/" target="_blank" rel="me noopener noreferrer">linkedin</a><a href="/paper.html">old research</a><a href="/photos.html">photos</a></nav></section>
-    <div id="music-controls" hidden><div id="tv-closeup"><img src="/assets/detail-tv.webp" alt="Vintage television on the window sill"><button id="tv-dial" aria-label="Next channel" title="Next channel"></button></div><div id="tv-video"><div id="player"></div></div><div class="tv-controls"><div class="channel-controls"><button id="channel-prev" aria-label="Previous channel">−</button><span id="channel-name" aria-live="polite"></span><button id="channel-next" aria-label="Next channel">+</button></div></div></div>
-
-  </main>
-  <noscript><aside class="no-script"><a href="https://www.goodreads.com/user/show/116748355">My books</a> · <a href="mailto:gcohen1928@gmail.com">Say hi</a></aside></noscript>
-  <!-- Feather icons, MIT licensed: https://github.com/feathericons/feather -->
-  <svg xmlns="http://www.w3.org/2000/svg" class="icon-defs" aria-hidden="true"><symbol id="arrow-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol><symbol id="close" viewBox="0 0 24 24"><path d="m18 6-12 12M6 6l12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol></svg>
+    <footer class="foot">
+      <span>Gabriel Cohen, San Francisco</span>
+      <span>Updated September 2026</span>
+    </footer>
+  </div>
 </body>
 </html>
