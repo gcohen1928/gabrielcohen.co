@@ -143,6 +143,8 @@
       return b.flat().map(v => (v + 0.5) / 64);
     })();
 
+    const START = performance.now();
+
     // Raymarches a signed distance field, shades it, and dithers it to one bit. The cursor is the light.
     function raymarched(canvas, { sdf, rotate, bound, zoom = 0.62 }) {
       return piece(canvas, s => {
@@ -154,7 +156,7 @@
         s.lx ??= 0.6; s.ly ??= -0.5;
       }, (s, t) => {
         if (!s.img || !sdf.ready) return;
-        const { w, h, img } = s, d = img.data, time = t / 1000;
+        const { w, h, img } = s, d = img.data, time = (t - START) / 1000;
         const tx = s.mx == null ? 0.6 + 0.3 * Math.sin(time * 0.3) : (s.mx - 0.5) * 3;
         const ty = s.my == null ? -0.5 : (s.my - 0.5) * 3;
         s.lx += (tx - s.lx) * 0.08; s.ly += (ty - s.ly) * 0.08;
@@ -257,7 +259,7 @@
       nero.half = half * 1.45;
       nero.ready = true;
     }).catch(() => {});
-    raymarched(document.getElementById('nero'), { sdf: nero, bound: 1.5, zoom: 0.6, rotate: t => [Math.sin(t * 0.5) * 0.25, t * 0.6] });
+    raymarched(document.getElementById('nero'), { sdf: nero, bound: 1.5, zoom: 0.6, rotate: t => [Math.sin(t * 0.37) * 0.12, -Math.sin(t * 0.5) * 0.75] });
 
   })();
   </script>
