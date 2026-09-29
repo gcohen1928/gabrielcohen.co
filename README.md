@@ -1,13 +1,12 @@
 # gabrielcohen.co
 
-Gabe Cohen’s personal site. Plain HTML and one stylesheet: no JavaScript, no build step.
+Gabe Cohen’s personal site. The homepage is a guitar tab: six strings (e B G D A E) with a line of bio on each. Move the cursor or a finger across them to pluck; the words ride the strings. `sound: on` plays each string (Karplus–Strong, synthesized in the browser, no audio files). No build step.
 
-- `index.html`: the whole homepage (now, before, reading, guitar, photos, contact)
-- `photos.html`: full-size photos; the homepage grid links to each by id
+- `index.html`: the homepage, self-contained (inline CSS and ~150 lines of JS)
+- `photos.html`: photos (not linked from the homepage)
 - `paper.html`: the 2022 TUM research write-up
-- `assets/site.css`: shared styles, light and dark
-- `assets/photos/`: originals (1600px); `assets/photos/small/` holds the 800px grid versions
-- `assets/fonts/`: Source Serif 4, variable (SIL Open Font License, see `OFL.txt`)
+- `assets/site.css`: styles for the photos and paper pages
+- `assets/fonts/`: Martian Mono (homepage) and Source Serif 4 (other pages), both SIL Open Font License
 
 ## Development
 
@@ -17,11 +16,6 @@ Requires Node.js 22 or newer.
 npm run dev    # http://localhost:4173
 npm test       # checks local links, anchors, image alt text and sizes
 ```
-
-## Adding a photo
-
-1. Put a 1600px-wide WebP in `assets/photos/` and an 800px copy in `assets/photos/small/`.
-2. Add a `<figure id="NAME">` to `photos.html` and a thumbnail link to the grid in `index.html`, both with real alt text.
 
 ## Publishing
 
