@@ -10,29 +10,42 @@
   <meta property="og:description" content="CTO of Nero in San Francisco. Previously a software engineer at Flatiron Health." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://gabrielcohen.co/" />
+  <meta property="og:site_name" content="Gabriel Cohen" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "ProfilePage",
-      "url": "https://gabrielcohen.co/",
-      "mainEntity": {
-        "@type": "Person",
-        "@id": "https://gabrielcohen.co/#gabriel-cohen",
-        "name": "Gabriel Cohen",
-        "alternateName": "Gabe Cohen",
-        "description": "CTO of Nero in San Francisco",
-        "url": "https://gabrielcohen.co/",
-        "worksFor": {
-          "@type": "Organization",
-          "name": "Nero",
-          "url": "https://www.nero.fan/"
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://gabrielcohen.co/#website",
+          "name": "Gabriel Cohen",
+          "alternateName": "Gabe Cohen",
+          "url": "https://gabrielcohen.co/"
         },
-        "sameAs": [
-          "https://github.com/gcohen1928",
-          "https://www.linkedin.com/in/gabrielhcohen/",
-          "https://x.com/gabecoh"
-        ]
-      }
+        {
+          "@type": "ProfilePage",
+          "url": "https://gabrielcohen.co/",
+          "isPartOf": { "@id": "https://gabrielcohen.co/#website" },
+          "mainEntity": {
+            "@type": "Person",
+            "@id": "https://gabrielcohen.co/#gabriel-cohen",
+            "name": "Gabriel Cohen",
+            "alternateName": "Gabe Cohen",
+            "description": "CTO of Nero in San Francisco",
+            "url": "https://gabrielcohen.co/",
+            "worksFor": {
+              "@type": "Organization",
+              "name": "Nero",
+              "url": "https://www.nero.fan/"
+            },
+            "sameAs": [
+              "https://github.com/gcohen1928",
+              "https://www.linkedin.com/in/gabrielhcohen/",
+              "https://x.com/gabecoh"
+            ]
+          }
+        }
+      ]
     }
   </script>
   <meta name="theme-color" content="#ecebe6" />
