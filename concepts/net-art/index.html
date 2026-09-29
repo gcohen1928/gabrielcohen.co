@@ -1,0 +1,721 @@
+<!doctype html>
+<!--
+   _______________________________________________
+  |  o                                            |
+  |    ##   ##   #####   ##       ######          |
+  |    ##   ##  ##   ##  ##       ##              |
+  |    #######  ## | ##  ##       #####           |
+  |    ##   ##  ##   ##  ##       ##              |
+  |    ##   ##   #####   #######  ######          |
+  |  o                                            |
+  |_______________________________________________|
+         ||                                ||
+        _||_  you are standing on it.     _||_
+
+  the photos are underneath.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gabe</title>
+<meta name="description" content="Gabe Cohen: CTO of Nero, in San Francisco. Guitar, fiction, photographs.">
+<meta name="theme-color" content="#e6b544">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23e6b544' fill-rule='evenodd' d='M0 0h32v32H0zM16 8.5a7.5 7.5 0 1 0 0 15a7.5 7.5 0 1 0 0-15z'/%3E%3C/svg%3E">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="preload" href="fonts/martian-mono.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face { font-family: "Martian Mono"; src: url(fonts/martian-mono.woff2) format("woff2"); font-weight: 100 800; font-stretch: 75% 112.5%; font-display: swap; }
+@font-face { font-family: "Xanh Mono"; src: url(fonts/xanh-mono-italic.woff2) format("woff2"); font-style: italic; font-weight: 400; font-display: swap; }
+
+:root {
+  --plate: #e6b544;      /* the panel, and the strat */
+  --ink: #141210;        /* the pickguard, and the paint */
+  --cream: #efe3c4;      /* the pickups */
+  --g: 32px;
+  --mono: "Martian Mono", ui-monospace, Menlo, Consolas, monospace;
+  --note: "Xanh Mono", ui-serif, Georgia, serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { background: var(--ink); overflow-x: clip; }
+body {
+  margin: 0; background: var(--plate); color: var(--ink);
+  font: 400 15px/1.6 var(--mono); font-stretch: 87.5%;
+  -webkit-font-smoothing: antialiased; overflow-x: clip;
+}
+a { color: inherit; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .18em; }
+a:hover { background: var(--ink); color: var(--plate); text-decoration: none; }
+a, button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+::selection { background: var(--ink); color: var(--plate); }
+p { margin: 0 0 1em; }
+figure { margin: 0; }
+.note { font-family: var(--note); font-style: italic; font-size: 1.12em; letter-spacing: 0; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ================= the panel =================
+   each .plate is a sheet of yellow. under it, pinned to the window, is one photograph.
+   every .hole in a plate is cut through its panel (script draws the panel as an svg mask). */
+.plate { position: relative; isolation: isolate; padding: 0 var(--g); background: var(--plate); }
+.under { position: absolute; inset: 0; z-index: -2; clip: rect(0, auto, auto, 0); background: var(--ink); display: none; pointer-events: none; }
+.world {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh;
+  object-fit: cover; object-position: var(--fx, 50%) var(--fy, 50%); max-width: none;
+}
+.panel { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: -1; overflow: visible; pointer-events: none; filter: drop-shadow(0 2px 1.4px rgba(20,12,0,.55)); }
+@media (min-aspect-ratio: 1/1) {
+  .hero .world { width: max(100%, 218vh); height: auto; aspect-ratio: 3 / 2; left: 50%; top: -6.8vh; translate: -50% 0; }
+}
+/* the rating holes look straight up into the alley's patch of sky */
+#reading > .under > .world { width: 343vh; height: auto; aspect-ratio: 3 / 2; top: 0; left: calc(var(--g) + 54px - 171.6vh); }
+.js .plate.lit { background: none; }
+.js .plate.lit > .under { display: block; }
+.js .plate.lit:not(.near) > .under { visibility: hidden; }
+.hole { display: block; }
+/* no script: the holes still show their photo, just not pinned */
+html:not(.js) .hole { background: var(--bg) center / cover var(--ink); }
+
+/* ================= top line ================= */
+.bar {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: baseline; gap: 16px;
+  margin: 0 calc(-1 * var(--g)); padding: 14px var(--g); font-size: 13px; border-bottom: 2px solid var(--ink);
+}
+.bar .me { font-weight: 700; text-decoration: none; }
+.bar .me:hover { background: none; color: inherit; text-decoration: underline; }
+.clock { font-variant-numeric: tabular-nums; text-align: center; white-space: nowrap; }
+.bar nav { justify-self: end; display: flex; gap: 18px; }
+
+/* ================= hero ================= */
+.hero { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; }
+.lede { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--g); padding-top: 32px; align-items: start; }
+.intro { grid-column: 1 / 7; margin: 0; font-size: clamp(22px, 2.35vw, 34px); line-height: 1.32; font-stretch: 100%; font-weight: 500; letter-spacing: -.01em; }
+.legend { grid-column: 9 / 13; }
+.legend img { display: block; width: 100%; height: auto; }
+figcaption { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 12px; padding-top: 8px; }
+figcaption .note { font-size: 15px; }
+.trail { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+.trail .hole { position: absolute; width: 38px; height: 38px; border-radius: 50%; }
+/* three holes already punched, over the two lit doorways under the panel (the photo is sized in vh, so these are too) */
+.t1 { left: calc(50% - 50.8vh - 19px); top: calc(35.1vh - 19px); }
+.t2 { left: calc(50% - 30.9vh - 19px); top: calc(40.7vh - 19px); }
+.t3 { left: calc(50% - 46.7vh - 19px); top: calc(47.1vh - 19px); }
+.try { position: absolute; left: calc(50% - 30.9vh + 36px); top: calc(40.7vh - 10px); margin: 0; font-size: 12px; white-space: nowrap; }
+.try .touch { display: none; }
+@media (hover: none) { .try .mouse { display: none; } .try .touch { display: inline; } }
+.name {
+  margin: auto 0 0 -.035em; padding: 0 0 .06em;
+  font: 800 min(calc((100vw - 2 * var(--g)) / 2.93), 48vh)/.92 var(--mono); font-stretch: 112.5%;
+  letter-spacing: -.05em; white-space: nowrap; color: var(--ink);
+}
+.name .cut { display: inline-block; }
+.name .bl { display: inline-block; width: 0; height: 0; }
+.js .lit .name { color: transparent; }
+.js .lit .name::selection, .js .lit .name *::selection { color: transparent; background: rgba(20,18,16,.25); }
+@media (max-height: 780px) and (min-width: 761px) { .name { font-size: min(calc((100vw - 2 * var(--g)) / 2.93), 42vh); } }
+
+/* ================= labels ================= */
+.label { display: flex; align-items: center; gap: 10px; margin: 0; padding: 34px 0 0; font-size: 12px; font-weight: 400; letter-spacing: .02em; }
+.label a { text-decoration: none; padding: 1px 4px; margin-left: -4px; display: inline-flex; align-items: center; gap: 10px; }
+.label .hole { width: 11px; height: 11px; border-radius: 50%; }
+.big { font-size: clamp(21px, 2.2vw, 32px); line-height: 1.32; font-stretch: 100%; font-weight: 500; letter-spacing: -.01em; }
+
+/* ================= now ================= */
+.nowgrid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--g); align-items: center; padding: 30px 0 120px; }
+.nowgrid .text { grid-column: 1 / 7; }
+.nowgrid .text p:last-child { margin: 0; }
+.nowgrid .slot { grid-column: 7 / 13; height: clamp(220px, 23vw, 330px); border-radius: 999px; margin-top: 70px; }
+
+/* ================= before ================= */
+.jobs { display: grid; grid-template-columns: repeat(12, 1fr); gap: 0 var(--g); list-style: none; margin: 0; padding: 30px 0 130px; }
+.job { font-size: 14.5px; }
+.job h3 { font-size: 22px; line-height: 1.2; font-weight: 700; font-stretch: 100%; margin: 8px 0 12px; }
+.job .when { font-size: 12px; display: inline-block; border: 2px solid var(--ink); padding: 2px 8px; }
+.job:nth-child(1) { grid-column: 1 / 5; grid-row: 1; }
+.job:nth-child(2) { grid-column: 5 / 9; grid-row: 1 / 3; margin-top: 130px; }
+.job:nth-child(3) { grid-column: 9 / 13; grid-row: 1 / 4; margin-top: 260px; }
+/* a die-cut vent: ten slats */
+.vent { grid-column: 5 / 9; grid-row: 3; display: flex; justify-content: space-between; height: 300px; margin-top: 56px; }
+.vent .hole { width: 24px; border-radius: 999px; }
+
+/* ================= off + guitar ================= */
+.statement { font-size: clamp(26px, 3.6vw, 54px); line-height: 1.16; font-weight: 600; font-stretch: 100%; letter-spacing: -.02em; margin: 0; padding-top: 30px; max-width: 24em; }
+.band { height: 38vh; min-height: 220px; max-height: 420px; margin: 70px 0 0; border-radius: 4px; }
+#guitar { padding-top: 90px; }
+.guard { position: relative; background: var(--ink); color: var(--cream); margin: 22px calc(-1 * var(--g)) 0; padding: 40px var(--g) 36px; overflow: hidden; }
+.guard a:hover { background: var(--cream); color: var(--ink); }
+.guard :focus-visible { outline-color: var(--cream); }
+.guard .spec { max-width: 40em; }
+.guard .spec p:last-child { margin: 0; }
+.screw { position: absolute; width: 11px; height: 11px; border-radius: 50%; background: #b9b09c; box-shadow: inset 0 -2px 0 rgba(0,0,0,.35); }
+.screw::after { content: ""; position: absolute; left: 2px; right: 2px; top: 50%; height: 1.5px; margin-top: -.75px; background: rgba(0,0,0,.55); transform: rotate(var(--r, 30deg)); }
+.neck { position: relative; height: 300px; margin-top: 20px; }
+.pu { position: absolute; top: 6%; bottom: 6%; background: var(--cream); border-radius: 10px; }
+.pu.h { width: 78px; } .pu.s { width: 38px; border-radius: 19px; }
+.p1 { left: 58%; } .p2 { left: 70.5%; } .p3 { left: 80%; }
+.pu.h::after { content: ""; position: absolute; top: 8px; bottom: 8px; left: 50%; width: 2px; margin-left: -1px; background: rgba(20,18,16,.16); }
+.pu i { position: absolute; width: 10px; height: 10px; border-radius: 50%; left: 50%; margin: -5px 0 0 -5px; background: #8f8674; box-shadow: inset 0 1px 1px rgba(0,0,0,.4); }
+.pu.h i.a { left: 30%; } .pu.h i.b { left: 70%; }
+.strings { position: absolute; top: 0; bottom: 0; left: calc(-1 * var(--g)); right: calc(-1 * var(--g)); }
+.string { position: absolute; left: 0; right: 0; height: 22px; margin-top: -11px; padding: 0; border: 0; background: none; appearance: none; }
+.string::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: var(--w, 1.5px); background: #d4cebf; transform: translateY(-50%); box-shadow: 0 1px 0 rgba(0,0,0,.6); }
+.string.buzz::before { animation: buzz .9s cubic-bezier(.2,.6,.3,1); }
+@keyframes buzz { 0%{transform:translateY(-50%)} 10%{transform:translateY(-250%)} 20%{transform:translateY(150%)} 30%{transform:translateY(-180%)} 42%{transform:translateY(100%)} 56%{transform:translateY(-110%)} 70%{transform:translateY(20%)} 100%{transform:translateY(-50%)} }
+.pluck { position: absolute; left: 46px; bottom: 10px; font-size: 12px; color: #9d978a; margin: 0; }
+.tunes { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--g); padding: 44px 0 120px; }
+.tunes .solo { grid-column: 1 / 7; }
+.tunes .solo .t { font-weight: 800; font-stretch: 112.5%; font-size: clamp(72px, 9.5vw, 140px); line-height: .9; letter-spacing: -.04em; display: block; width: fit-content; margin: 12px 0 18px; text-decoration: none; }
+.tunes .more { grid-column: 8 / 13; }
+.small { font-size: 12px; margin: 0 0 8px; }
+.tunes ul { list-style: none; margin: 0; padding: 0; }
+.tunes li { padding: 10px 0; border-top: 2px solid var(--ink); display: flex; justify-content: space-between; gap: 12px; }
+.tunes li:last-child { border-bottom: 2px solid var(--ink); }
+
+/* ================= reading ================= */
+#reading .lead-in { margin: 30px 0 0; font-size: clamp(22px, 2vw, 28px); }
+.shelf { list-style: none; margin: 22px 0 0; padding: 0; }
+.shelf li { display: grid; grid-template-columns: 124px minmax(0, 1fr) auto; column-gap: 24px; align-items: center; padding: 13px 0 12px; border-top: 2px solid var(--ink); }
+.shelf li:last-child { border-bottom: 2px solid var(--ink); }
+.stars { display: flex; gap: 7px; }
+.stars .hole, .stars .ring { width: 16px; height: 16px; border-radius: 50%; flex: none; }
+.stars .ring { box-shadow: inset 0 0 0 2px var(--ink); }
+.stars .none { font-size: 11px; line-height: 16px; letter-spacing: .02em; }
+.shelf .bk { display: flex; align-items: baseline; gap: 14px; min-width: 0; }
+.shelf .bk a { font-size: clamp(17px, 1.6vw, 22px); font-weight: 600; font-stretch: 100%; }
+.shelf .dots { flex: 1; border-bottom: 2px dotted var(--ink); min-width: 20px; transform: translateY(-5px); }
+.shelf .by { font-size: 13px; white-space: nowrap; }
+.readnote { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--g); margin-top: 22px; padding-bottom: 110px; font-size: 14px; }
+.readnote p:first-child { grid-column: 1 / 8; }
+.readnote p:last-child { grid-column: 9 / 13; }
+
+/* ================= photos: windows with their own photograph pinned behind ================= */
+#photos { padding-bottom: 120px; }
+.sheet { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--g); row-gap: 88px; margin-top: 34px; align-items: end; }
+.pw a { display: block; text-decoration: none; }
+.pw a:hover { background: none; }
+.pw a:focus-visible { outline-offset: 6px; }
+.win { display: block; position: relative; height: var(--h, 420px); clip-path: inset(0 round var(--r, 4px)); background: var(--ink); }
+.win::after { content: ""; position: absolute; inset: 0; border-radius: var(--r, 4px); box-shadow: inset 0 2px 2px rgba(20,12,0,.55); pointer-events: none; }
+.win.round { --r: 50%; aspect-ratio: 1; height: auto; clip-path: circle(50%); }
+.win.pill { --r: 999px; clip-path: inset(0 round 999px); }
+.win .world { left: var(--wl, 0px); width: var(--ww, 100%); }
+.js .pw:not(.near) .world { visibility: hidden; }
+html:not(.js) .win { background: var(--bg) center / cover var(--ink); }
+html:not(.js) .win img { display: none; }
+.pw a:hover + figcaption span:first-child, .pw a:focus-visible + figcaption span:first-child { background: var(--ink); color: var(--plate); }
+.q1 { grid-column: 1 / 8;  --h: 500px; }
+.q2 { grid-column: 8 / 12; }
+.q3 { grid-column: 1 / 5;  --h: 600px; }
+.q4 { grid-column: 5 / 12; --h: 420px; align-self: start; margin-top: 120px; }
+.q5 { grid-column: 1 / 13; --h: 290px; }
+.q6 { grid-column: 1 / 5; }
+.q7 { grid-column: 6 / 9;  --h: 540px; }
+.q8 { grid-column: 10 / 13; --h: 540px; align-self: start; }
+.q9 { grid-column: 4 / 11; --h: 460px; }
+
+/* the lifted photograph */
+.lift { position: fixed; inset: 0; z-index: 50; background: transparent; cursor: zoom-out; }
+.lift img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--fx, 50%) var(--fy, 50%); }
+.lift img.fit { object-fit: contain; opacity: 0; transition: opacity .35s; background: var(--ink); }
+.lift.fitted img.fit { opacity: 1; }
+.lift .cap { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 12px var(--g); background: var(--plate); font-size: 12px; opacity: 0; transition: opacity .2s; }
+.lift.open .cap { opacity: 1; }
+.lift .cap .note { font-size: 15px; }
+.lift button { font: inherit; background: none; border: 0; padding: 0; color: inherit; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .18em; }
+
+/* ================= email ================= */
+#email { padding-bottom: 0; }
+.addr { display: block; width: fit-content; margin: 26px 0 0 -.02em; font-size: min(5.2vw, 80px); line-height: 1.1; font-weight: 700; font-stretch: 100%; letter-spacing: -.035em; text-decoration-thickness: .06em; text-underline-offset: .14em; }
+.post { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--g); align-items: end; padding: 64px 0 96px; }
+.elsewhere { grid-column: 1 / 7; display: flex; flex-wrap: wrap; gap: 12px 36px; font-size: clamp(17px, 1.6vw, 22px); font-weight: 600; font-stretch: 100%; margin: 0; }
+.letters { grid-column: 8 / 13; text-decoration: none; display: block; }
+.letters:hover { background: none; color: inherit; }
+.letters .word { display: block; text-align: center; font-size: 12px; letter-spacing: .5em; margin-bottom: 12px; padding-left: .5em; }
+.letters .hole { height: 58px; border-radius: 999px; }
+.letters:focus-visible { outline-offset: 8px; }
+.colophon { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--g); margin: 0 calc(-1 * var(--g)); padding: 18px var(--g) 30px; border-top: 2px solid var(--ink); font-size: 12px; }
+.colophon p { grid-column: span 6; margin: 0; }
+.colophon p:last-child { text-align: right; }
+.colophon button, .tag button { font: inherit; color: inherit; background: none; border: 0; padding: 0; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .18em; }
+.colophon button:hover { background: var(--ink); color: var(--plate); text-decoration: none; }
+
+/* ================= the punch ================= */
+.lens { position: fixed; left: 0; top: 0; width: 38px; height: 38px; border-radius: 50%; overflow: hidden; pointer-events: none; z-index: 40; opacity: 0; transition: opacity .1s; }
+.lens img { position: absolute; left: 0; top: 0; object-fit: cover; max-width: none; }
+.lens::after { content: ""; position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 2px 2px rgba(20,12,0,.6); }
+.lens.on { opacity: 1; }
+/* the chad: the bit of yellow you just punched out */
+.chad { position: fixed; left: 0; top: 0; width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 50%; background: var(--plate); box-shadow: inset 0 -2px 0 rgba(90,60,0,.35), 0 2px 3px rgba(20,12,0,.3); pointer-events: none; z-index: 41; }
+.tag { position: fixed; right: 14px; bottom: 14px; z-index: 45; background: var(--ink); color: var(--plate); font-size: 12px; padding: 8px 12px 9px; display: flex; gap: 12px; align-items: baseline; }
+.tag[hidden] { display: none; }
+.tag { transition: opacity .3s, visibility .3s; }
+.tag.away { opacity: 0; visibility: hidden; }
+.tag button:hover { background: var(--plate); color: var(--ink); text-decoration: none; }
+.tag :focus-visible { outline-color: var(--plate); }
+
+/* ================= phone ================= */
+@media (max-width: 760px) {
+  :root { --g: 16px; }
+  body { font-size: 14px; }
+  .bar { grid-template-columns: 1fr auto; row-gap: 3px; padding: 12px var(--g) 10px; font-size: 12px; }
+  .bar .clock { grid-column: 1 / -1; grid-row: 2; text-align: left; }
+  .clock .far { display: none; }
+  .bar nav { gap: 13px; }
+  .lede { grid-template-columns: 1fr; padding-top: 20px; }
+  .intro { grid-column: 1; font-size: 21px; }
+  .trail { position: relative; height: 262px; order: 2; }
+  .hero { position: relative; }
+  .hero .lede { display: contents; }
+  .intro { padding-top: 22px; }
+  .t1 { left: 86.6%; top: 61px; } .t2 { left: 63.4%; top: 129px; } .t3 { left: 41%; top: 171px; }
+  .try { left: auto; top: auto; }
+  .try { position: static; order: 2; margin: -76px 0 0; align-self: flex-start; }
+  .name { order: 3; margin-top: 40px; font-size: calc((100vw - 2 * var(--g)) / 2.93); }
+  .legend { order: 4; grid-column: 1; margin: 18px 0 26px; }
+  .nowgrid, .jobs, .tunes, .readnote, .sheet, .post, .colophon { grid-template-columns: 1fr; }
+  .nowgrid { padding-bottom: 90px; }
+  .nowgrid .text, .nowgrid .slot { grid-column: 1; }
+  .nowgrid .slot { height: 150px; margin-top: 8px; }
+  .job:nth-child(n) { grid-column: 1; grid-row: auto; margin-top: 0; }
+  .jobs { row-gap: 36px; padding-bottom: 90px; }
+  .vent { grid-column: 1; grid-row: auto; height: 150px; margin: 0; }
+  .vent .hole { width: 20px; }
+  .band { height: 220px; min-height: 0; margin-top: 44px; }
+  #guitar { padding-top: 64px; }
+  .neck { height: 220px; }
+  .pu.h { width: 50px; } .pu.s { width: 26px; }
+  .p1 { left: 34%; } .p2 { left: 59%; } .p3 { left: 76%; }
+  .pu i { width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; }
+  .tunes .solo, .tunes .more { grid-column: 1; }
+  .tunes { padding-bottom: 90px; }
+  .shelf li { grid-template-columns: 1fr; row-gap: 8px; }
+  .shelf .bk { flex-direction: column; gap: 2px; }
+  .shelf .dots { display: none; }
+  .readnote p:first-child, .readnote p:last-child { grid-column: 1; }
+  .readnote { gap: 0; padding-bottom: 80px; }
+  .sheet { row-gap: 44px; }
+  .sheet .pw { grid-column: 1; margin-top: 0; align-self: auto; }
+  .q1 { --h: 300px; } .q3 { --h: 460px; } .q4 { --h: 300px; }
+  .q5 { --h: 170px; } .q7 { --h: 460px; } .q8 { --h: 300px; } .q9 { --h: 320px; }
+  .addr { font-size: calc((100vw - 2 * var(--g)) / 13.6); }
+  .post { padding: 48px 0 72px; gap: 40px; }
+  .elsewhere, .letters { grid-column: 1; }
+  .letters { grid-row: 1; }
+  .letters .hole { height: 48px; }
+  .colophon { gap: 6px; }
+  .colophon p { grid-column: 1; }
+  .colophon p:last-child { text-align: left; }
+}
+/* portrait tablets: the truck sits mid-screen, so the name moves up to meet it */
+@media (min-width: 761px) and (max-aspect-ratio: 1/1) {
+  .hero .lede { display: contents; }
+  .intro { order: 1; padding-top: 34px; height: 170px; max-width: 22em; }
+  .trail { position: relative; order: 2; height: 230px; }
+  .t1 { left: 1%; top: 60px; } .t2 { left: 16.5%; top: 100px; } .t3 { left: 3.2%; top: 150px; }
+  .try { order: 2; left: calc(16.5% + 90px); top: 327px; }
+  .name { order: 3; margin-top: 8px; }
+  .legend { order: 4; align-self: flex-end; width: 56%; margin: 26px 0 34px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .string.buzz::before { animation: none; }
+  .lift img.fit, .lift .cap { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<main>
+  <section class="plate hero" id="top" style="--bg:url(/assets/photos/small/R0009339-preview.webp);--fx:52%;--fy:62%">
+    <div class="under"><img class="world" src="/assets/photos/R0009339-preview.webp" srcset="/assets/photos/small/R0009339-preview.webp 800w, /assets/photos/R0009339-preview.webp 1600w" sizes="(max-aspect-ratio: 3/2) 150vh, 100vw" fetchpriority="high" alt="Under the panel: a red pickup truck parked in front of a lit house at night."></div>
+    <header class="bar">
+      <a class="me" href="#top">gabriel cohen</a>
+      <span class="clock">sf <time id="sf">--:--</time><span class="far" id="off-by"></span></span>
+      <nav aria-label="elsewhere">
+        <a href="mailto:gcohen1928@gmail.com">email</a>
+        <a href="https://github.com/gcohen1928">github</a>
+        <a href="https://www.linkedin.com/in/gabrielhcohen/">linkedin</a>
+      </nav>
+    </header>
+    <div class="lede">
+      <p class="intro">hey, i’m gabe. i’m 23, i live in san francisco, and i’m the cto of <a href="https://www.nero.fan/">nero</a>.</p>
+      <figure class="legend">
+        <img src="/assets/photos/small/R0009307.webp" srcset="/assets/photos/small/R0009307.webp 800w, /assets/photos/R0009307.webp 1600w" sizes="(max-width: 760px) 100vw, 27vw" width="800" height="533" alt="Looking down at my boots on a yellow sidewalk panel stenciled with the word HOLE.">
+        <figcaption><span>R0009307</span><span class="note">my boots, a yellow panel, HOLE</span></figcaption>
+      </figure>
+      <div class="trail" aria-hidden="true"><i class="hole t1"></i><i class="hole t2"></i><i class="hole t3"></i></div>
+      <p class="try"><span class="mouse">click the yellow.</span><span class="touch">tap the yellow.</span></p>
+    </div>
+    <h1 class="name"><span class="cut">gabe</span><span class="bl"></span></h1>
+  </section>
+
+  <section class="plate" id="now" style="--bg:url(/assets/photos/small/R0009266.webp);--fx:64%">
+    <div class="under"><img class="world" data-src="R0009266" alt="Under the panel: a van painted as the Mystery Machine, close up, under a blue sky."></div>
+    <h2 class="label"><a href="#now"><i class="hole" aria-hidden="true"></i>gabrielcohen.co/#now</a></h2>
+    <div class="nowgrid">
+      <div class="text">
+        <p class="big">cto of <a href="https://www.nero.fan/">nero</a>, since spring 2025. we’re helping artists make money and go viral on livestreams.</p>
+        <p>i built nero.fan and scaled it to 600k+ monthly users. it processes $500k+ gmv a month (as of early 2026).</p>
+        <p>this is where most of my time is spent.</p>
+      </div>
+      <i class="hole slot" aria-hidden="true"></i>
+    </div>
+  </section>
+
+  <section class="plate" id="before" style="--bg:url(/assets/photos/small/R0009319.webp);--fx:42%">
+    <div class="under"><img class="world" data-src="R0009319" data-size="small" alt="Under the panel: a white dog and a golden retriever meeting on a sunny park lawn."></div>
+    <h2 class="label"><a href="#before"><i class="hole" aria-hidden="true"></i>gabrielcohen.co/#before</a></h2>
+    <ol class="jobs">
+      <li class="job">
+        <span class="when">summer 2024 – winter 2025</span>
+        <h3>flatiron health</h3>
+        <p>software engineer (intern in 2023). shipped clinical research products supporting clinical trials, and infrastructure and features for a full-stack patient management system.</p>
+        <p>after 8 months i got my own team building internal sales tools. led ai development initiatives across flatiron.</p>
+      </li>
+      <li class="job">
+        <span class="when">college</span>
+        <h3>daedalus finance, feniska</h3>
+        <p>built web and mobile apps for <a href="https://tracxn.com/d/companies/daedalus/__4NOiqEy2jDbXg3S4nSjyvtQeg4fSTNIEiMtvLFfVjBs/">daedalus finance</a>, a fintech startup, and <a href="https://www.feniska.com/">feniska</a>, a german pet-tech startup.</p>
+        <p>started a few failed consumer apps.</p>
+      </li>
+      <li class="job">
+        <span class="when">summer 2022</span>
+        <h3>technical university of munich</h3>
+        <p>research on self-driving cars: translated traffic trajectories from drone footage of german intersections into semantic scenarios for autonomous-vehicle testing, and improved the evaluation loop. <a href="/paper.html">read the paper</a>.</p>
+        <p>it was incredible to spend time living in germany.</p>
+      </li>
+      <li class="vent" aria-hidden="true"><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i></li>
+    </ol>
+  </section>
+
+  <section class="plate" id="off" style="--bg:url(/assets/photos/small/R0000065.webp);--fx:64%;--fy:40%">
+    <div class="under"><img class="world" data-src="R0000065" alt="Under the panel: a brick wall lit red by a car’s taillight, on a sidewalk at dusk."></div>
+    <h2 class="label"><a href="#off"><i class="hole" aria-hidden="true"></i>gabrielcohen.co/#off</a></h2>
+    <p class="statement">learning how to play <a href="#guitar">guitar</a>, <a href="#reading">reading</a>, and doing other shit that caught my attention (right now skiing and <a href="#photos">photography</a>).</p>
+    <i class="hole band" aria-hidden="true"></i>
+
+    <h2 class="label" id="guitar"><a href="#guitar"><i class="hole" aria-hidden="true"></i>gabrielcohen.co/#guitar</a></h2>
+    <div class="guard">
+      <div class="spec">
+        <p class="big">a yellow mexican fender stratocaster. black pickguard, cream hsh pickups.</p>
+        <p>i bought her used in the <a href="https://stores.guitarcenter.com/ny/carle-place/157156">carle place guitar center</a>, a year after playing guitar.</p>
+      </div>
+      <div class="neck" id="neck">
+        <div class="pu h p1"></div>
+        <div class="pu s p2"></div>
+        <div class="pu h p3"></div>
+        <div class="strings" id="strings" role="group" aria-label="six strings"></div>
+      </div>
+      <p class="pluck" aria-hidden="true">the strings work.</p>
+      <i class="screw" style="left:1.4%;top:14px;--r:20deg"></i><i class="screw" style="left:33%;top:14px;--r:80deg"></i><i class="screw" style="left:66%;top:14px;--r:-30deg"></i><i class="screw" style="right:1.4%;top:14px;--r:50deg"></i>
+      <i class="screw" style="left:1.4%;bottom:14px;--r:-60deg"></i><i class="screw" style="left:50%;bottom:14px;--r:10deg"></i><i class="screw" style="right:1.4%;bottom:14px;--r:95deg"></i>
+    </div>
+    <div class="tunes">
+      <div class="solo">
+        <p class="small">favorite guitar solo</p>
+        <a class="t" href="https://www.youtube.com/watch?v=rlgjWuQPaEQ&amp;t=390s" aria-label="6:30 into I Love You More Than You’ll Ever Know, by Gary Moore">6:30</a>
+        <p>gary moore, “i love you more than you’ll ever know.” start at 6:30.</p>
+      </div>
+      <div class="more">
+        <p class="small">also</p>
+        <ul>
+          <li><a href="https://www.youtube.com/watch?v=JmsUkutNnI0&amp;t=195s">still got the blues</a><span>gary moore</span></li>
+          <li><a href="https://www.youtube.com/watch?v=hIiuv6PwkdQ">parisienne walkways (live)</a><span>gary moore</span></li>
+        </ul>
+        <p style="margin-top:22px">loves <a href="https://open.spotify.com/artist/23wr9RJZg0PmYvVFyNkQ4j">gary moore</a>, <a href="https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2">the beatles</a>, <a href="https://open.spotify.com/artist/0k17h0D3J5VfsdmQ1iZtE9">pink floyd</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="plate" id="reading" style="--bg:url(/assets/photos/small/R0009301.webp);--fx:18%">
+    <div class="under"><img class="world" data-src="R0009301" data-size="small" alt="Under the panel: an empty concrete alley between a block wall and a building, in hard sun."></div>
+    <h2 class="label"><a href="#reading"><i class="hole" aria-hidden="true"></i>gabrielcohen.co/#reading</a></h2>
+    <p class="note lead-in">i mostly like reading fiction. books i loved in the past year:</p>
+    <ol class="shelf">
+      <li><span class="stars" role="img" aria-label="5 out of 5"><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i></span><span class="bk"><a href="https://www.goodreads.com/book/show/29044.The_Secret_History">the secret history</a><span class="dots"></span><span class="by">donna tartt</span></span></li>
+      <li><span class="stars" role="img" aria-label="5 out of 5"><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i></span><span class="bk"><a href="https://www.goodreads.com/book/show/551520.The_Wisdom_of_Insecurity">the wisdom of insecurity</a><span class="dots"></span><span class="by">alan watts</span></span></li>
+      <li><span class="stars" role="img" aria-label="5 out of 5"><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i></span><span class="bk"><a href="https://www.goodreads.com/book/show/86524.The_Path_to_Power">the path to power</a><span class="dots"></span><span class="by">robert a. caro</span></span></li>
+      <li><span class="stars" role="img" aria-label="5 out of 5"><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i></span><span class="bk"><span><a href="https://www.goodreads.com/book/show/48927138-unit-testing">unit testing: principles, practices, and patterns</a>*</span><span class="dots"></span><span class="by">vladimir khorikov</span></span></li>
+      <li><span class="stars"><span class="none">unrated</span></span><span class="bk"><a href="https://www.goodreads.com/book/show/40607194-east-of-eden">east of eden</a><span class="dots"></span><span class="by">john steinbeck</span></span></li>
+      <li><span class="stars" role="img" aria-label="5 out of 5"><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i></span><span class="bk"><a href="https://www.goodreads.com/book/show/6192.Disgrace">disgrace</a><span class="dots"></span><span class="by">j. m. coetzee</span></span></li>
+      <li><span class="stars" role="img" aria-label="4 out of 5"><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="hole"></i><i class="ring"></i></span><span class="bk"><a href="https://www.goodreads.com/book/show/77566.Hyperion">hyperion</a><span class="dots"></span><span class="by">dan simmons</span></span></li>
+      <li><span class="stars"><span class="none">unrated</span></span><span class="bk"><a href="https://www.goodreads.com/book/show/60384452-demon-copperhead">demon copperhead</a><span class="dots"></span><span class="by">barbara kingsolver</span></span></li>
+    </ol>
+    <div class="readnote">
+      <p>* “i wish they made us read this in college (but even if they did, i probably would have skipped it).”</p>
+      <p>more on <a href="https://www.goodreads.com/user/show/116748355">goodreads</a>.</p>
+    </div>
+  </section>
+
+  <section class="plate" id="photos" style="--bg:url(/assets/photos/small/R0009326-preview.webp);--fx:60%">
+    <div class="under"><img class="world" data-src="R0009326-preview" data-size="small" alt="Under the panel: the lit front steps of a Victorian house at night."></div>
+    <h2 class="label"><a href="#photos"><i class="hole" aria-hidden="true"></i>gabrielcohen.co/#photos</a></h2>
+    <div class="sheet">
+      <figure class="pw q1" style="--fx:52%;--fy:60%;--bg:url(/assets/photos/small/R0009339-preview.webp)"><a href="/assets/photos/R0009339-preview.webp"><span class="win"><img class="world" data-src="R0009339-preview" alt="A red pickup truck parked in front of a lit house at night."></span></a><figcaption><span>R0009339</span><span class="note">red pickup</span></figcaption></figure>
+      <figure class="pw q2" style="--fx:70%;--bg:url(/assets/photos/small/R0000079.webp)"><a href="/assets/photos/R0000079.webp"><span class="win round"><img class="world" data-src="R0000079" alt="A cat silhouetted in a lit window at night."></span></a><figcaption><span>R0000079</span><span class="note">cat, window</span></figcaption></figure>
+      <figure class="pw q3" style="--fx:36%;--bg:url(/assets/photos/small/R0000067.webp)"><a href="/assets/photos/R0000067.webp"><span class="win"><img class="world" data-src="R0000067" alt="Bay windows of a dark house against a deep blue evening sky."></span></a><figcaption><span>R0000067</span><span class="note">bay windows, blue</span></figcaption></figure>
+      <figure class="pw q4" style="--fx:44%;--bg:url(/assets/photos/small/R0009319.webp)"><a href="/assets/photos/R0009319.webp"><span class="win"><img class="world" data-src="R0009319" alt="A white dog and a golden retriever meeting on a sunny park lawn."></span></a><figcaption><span>R0009319</span><span class="note">two dogs, meeting</span></figcaption></figure>
+      <figure class="pw q5" style="--fx:62%;--fy:30%;--bg:url(/assets/photos/small/R0009266.webp)"><a href="/assets/photos/R0009266.webp"><span class="win pill"><img class="world" data-src="R0009266" alt="Close-up of a van painted as the Mystery Machine, under a blue sky."></span></a><figcaption><span>R0009266</span><span class="note">the mystery machine</span></figcaption></figure>
+      <figure class="pw q6" style="--fx:42%;--bg:url(/assets/photos/small/R0009331-preview.webp)"><a href="/assets/photos/R0009331-preview.webp"><span class="win round"><img class="world" data-src="R0009331-preview" alt="The rounded corner of an old building glowing orange at night."></span></a><figcaption><span>R0009331</span><span class="note">a corner, glowing</span></figcaption></figure>
+      <figure class="pw q7" style="--fx:47%;--bg:url(/assets/photos/small/R0000065.webp)"><a href="/assets/photos/R0000065.webp"><span class="win"><img class="world" data-src="R0000065" alt="A brick wall lit red by a car’s taillight on a sidewalk at dusk."></span></a><figcaption><span>R0000065</span><span class="note">taillight on brick</span></figcaption></figure>
+      <figure class="pw q8" style="--fx:64%;--bg:url(/assets/photos/small/R0009301.webp)"><a href="/assets/photos/R0009301.webp"><span class="win pill"><img class="world" data-src="R0009301" alt="An empty concrete alley between a block wall and a building, in hard sun."></span></a><figcaption><span>R0009301</span><span class="note">alley, hard sun</span></figcaption></figure>
+      <figure class="pw q9" style="--fx:60%;--bg:url(/assets/photos/small/R0009326-preview.webp)"><a href="/assets/photos/R0009326-preview.webp"><span class="win"><img class="world" data-src="R0009326-preview" alt="The lit front steps of a Victorian house at night."></span></a><figcaption><span>R0009326</span><span class="note">front steps, lit</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="plate" id="email" style="--bg:url(/assets/photos/small/R0009331-preview.webp);--fx:44%">
+    <div class="under"><img class="world" data-src="R0009331-preview" alt="Under the panel: the rounded corner of an old building glowing orange at night."></div>
+    <h2 class="label"><a href="#email"><i class="hole" aria-hidden="true"></i>gabrielcohen.co/#email</a></h2>
+    <a class="addr" href="mailto:gcohen1928@gmail.com">gcohen1928@gmail.com</a>
+    <div class="post">
+      <p class="elsewhere"><a href="https://github.com/gcohen1928">github</a> <a href="https://www.linkedin.com/in/gabrielhcohen/">linkedin</a> <a href="https://www.goodreads.com/user/show/116748355">goodreads</a></p>
+      <a class="letters" href="mailto:gcohen1928@gmail.com" aria-label="email gcohen1928@gmail.com"><span class="word" aria-hidden="true">letters</span><i class="hole" aria-hidden="true"></i></a>
+    </div>
+    <footer class="colophon">
+      <p>you’ve made <span id="count">0 holes</span>.<span id="patchwrap" hidden> <button type="button" id="patch">patch them</button></span></p>
+      <p>one html file, two fonts (martian mono, xanh mono), no frameworks. view source.</p>
+    </footer>
+  </section>
+</main>
+
+<div class="tag" id="tag" hidden><span id="tagn">1 hole</span><button type="button" id="patch2">patch</button></div>
+
+<script>
+(() => {
+  const D = document, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const NS = 'http://www.w3.org/2000/svg', P = '/assets/photos/';
+
+  /* ---- san francisco clock ---- */
+  const sf = D.getElementById('sf'), offBy = D.getElementById('off-by');
+  const fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', hour: 'numeric', minute: '2-digit' });
+  const wall = (tz) => new Date(new Date().toLocaleString('en-US', tz ? { timeZone: tz } : {})).getTime();
+  function tick() {
+    sf.textContent = fmt.format(new Date()).toLowerCase();
+    const h = Math.round((wall() - wall('America/Los_Angeles')) / 18e5) / 2;
+    offBy.textContent = h ? ` (you’re ${Math.abs(h)}h ${h > 0 ? 'ahead' : 'behind'})` : '';
+  }
+  tick(); setInterval(tick, 10000);
+
+  /* ---- worlds: the photo pinned under each plate, loaded when you get close ---- */
+  const SIZES = '(max-aspect-ratio: 3/2) 150vh, 100vw';
+  function load(img) {
+    const n = img.dataset.src; if (!n || img.getAttribute('src')) return;
+    if (img.dataset.size === 'small') { img.src = P + 'small/' + n + '.webp'; return; }
+    img.sizes = SIZES; img.srcset = `${P}small/${n}.webp 800w, ${P}${n}.webp 1600w`; img.src = P + n + '.webp';
+  }
+  const near = new IntersectionObserver((es) => es.forEach(e => {
+    e.target.classList.toggle('near', e.isIntersecting);
+    if (e.isIntersecting) e.target.querySelectorAll('img.world').forEach(load);
+  }), { rootMargin: '90% 0px' });
+
+  /* ---- the panel: yellow, with every .hole cut out of it ---- */
+  const plates = [...D.querySelectorAll('.plate')];
+  const KEY = 'gabe.holes';
+  let holes = [];
+  try { holes = JSON.parse(localStorage.getItem(KEY) || '[]').filter(h => h && h.s && D.getElementById(h.s)); } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(holes)); } catch (e) {} };
+  const f = (n) => Math.round(n * 10) / 10;
+  const BRIDGE = { g: 0.02, a: -0.03, b: 0.06, e: 0.0 };   /* stencil bridges: the counters would fall out without them */
+
+  function stencil(cut, pr) {
+    const t = cut.firstChild, fs = parseFloat(getComputedStyle(cut).fontSize);
+    const base = cut.parentNode.querySelector('.bl').getBoundingClientRect().top - pr.top;
+    const xs = [], r = D.createRange();
+    let bridges = '';
+    for (let i = 0; i < t.length; i++) {
+      r.setStart(t, i); r.setEnd(t, i + 1);
+      const b = r.getBoundingClientRect(), x = b.left - pr.left, adv = b.width + fs * .05;
+      xs.push(f(x));
+      const cx = x + adv / 2 + (BRIDGE[t.data[i]] || 0) * fs, w = fs * .052;
+      bridges += `<rect x="${f(cx - w / 2)}" y="${f(base - fs)}" width="${f(w)}" height="${f(fs * 1.4)}" fill="#fff"/>`;
+    }
+    return `<text x="${xs.join(' ')}" y="${f(base)}" fill="#000" style="font-family:'Martian Mono';font-weight:800;font-size:${fs}px;font-stretch:112.5%">${t.data}</text>` + bridges;
+  }
+  function build(plate) {
+    const pr = plate.getBoundingClientRect(), W = plate.offsetWidth, H = plate.offsetHeight;
+    let svg = plate.querySelector(':scope > .panel');
+    if (!svg) { svg = D.createElementNS(NS, 'svg'); svg.setAttribute('class', 'panel'); svg.setAttribute('aria-hidden', 'true'); plate.prepend(svg); }
+    const id = 'm-' + plate.id;
+    let s = `<defs><mask id="${id}" maskUnits="userSpaceOnUse" x="-10" y="-10" width="${W + 20}" height="${H + 20}"><rect x="-10" y="-10" width="${W + 20}" height="${H + 20}" fill="#fff"/>`;
+    if (plate !== plates[0]) s += `<rect x="0" y="0" width="${W}" height="3" fill="#000"/>`;  /* the seam between two plates */
+    plate.querySelectorAll('.hole').forEach(h => {
+      const b = h.getBoundingClientRect(); if (!b.width || !b.height) return;
+      let rad = getComputedStyle(h).borderTopLeftRadius;
+      rad = rad.endsWith('%') ? parseFloat(rad) / 100 * b.width : parseFloat(rad) || 0;
+      rad = Math.min(rad, b.width / 2, b.height / 2);
+      s += `<rect x="${f(b.left - pr.left)}" y="${f(b.top - pr.top)}" width="${f(b.width)}" height="${f(b.height)}" rx="${f(rad)}" fill="#000"/>`;
+    });
+    plate.querySelectorAll('.cut').forEach(c => { s += stencil(c, pr); });
+    s += `<g class="punched">`;
+    holes.forEach(h => { if (h.s === plate.id) s += `<circle cx="${f(h.x * W)}" cy="${h.y}" r="19" fill="#000"/>`; });
+    s += `</g></mask></defs><rect x="-2" y="-2" width="${W + 4}" height="${H + 4}" mask="url(#${id})" style="fill:var(--plate)"/>`;
+    svg.innerHTML = s;
+    plate.classList.add('lit');
+  }
+  const dirty = new Set(); let raf = 0;
+  const later = (p) => { dirty.add(p); if (!raf) raf = requestAnimationFrame(() => { raf = 0; dirty.forEach(build); dirty.clear(); }); };
+  plates.forEach(p => { build(p); near.observe(p); });
+  const ro = new ResizeObserver(es => es.forEach(e => later(e.target.closest('.plate') || e.target)));
+  plates.forEach(p => ro.observe(p));
+  D.querySelectorAll('.name, .hole.slot, .vent, .hole.band').forEach(n => ro.observe(n));
+  D.fonts && D.fonts.ready.then(() => plates.forEach(later));
+  addEventListener('load', () => plates.forEach(later));
+  D.querySelectorAll('.pw').forEach(w => near.observe(w));
+  const wins = [...D.querySelectorAll('.win')];
+  const align = () => wins.forEach(w => { const b = w.getBoundingClientRect(); w.style.setProperty('--wl', f(b.left) + 'px'); w.style.setProperty('--ww', f(b.width) + 'px'); });
+  align(); const ro2 = new ResizeObserver(() => requestAnimationFrame(align)); wins.forEach(w => ro2.observe(w));
+
+  /* ---- guitar: pickups + strings ---- */
+  const neck = D.getElementById('neck'), strings = D.getElementById('strings');
+  const notes = [['high e', 329.63, 1], ['b', 246.94, 1.2], ['g', 196, 1.5], ['d', 146.83, 1.9], ['a', 110, 2.3], ['low e', 82.41, 2.8]];
+  const ys = [0.2, 0.32, 0.44, 0.56, 0.68, 0.8];
+  neck.querySelectorAll('.pu').forEach(pu => {
+    for (const c of pu.classList.contains('h') ? ['a', 'b'] : ['']) for (const y of ys) {
+      const i = D.createElement('i'); i.className = c; i.style.top = ((y - 0.06) / 0.88 * 100) + '%'; pu.append(i);
+    }
+  });
+  let ctx = null;
+  function pluck(fr) {
+    ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+    const sr = ctx.sampleRate, n = Math.round(sr / fr), len = sr * 2.4;
+    const buf = ctx.createBuffer(1, len, sr), d = buf.getChannelData(0), ring = new Float32Array(n);
+    for (let i = 0; i < n; i++) ring[i] = Math.random() * 2 - 1;
+    for (let i = 0, p = 0; i < len; i++, p = (p + 1) % n) { const nx = (p + 1) % n; d[i] = ring[p]; ring[p] = 0.4985 * (ring[p] + ring[nx]); }
+    const src = ctx.createBufferSource(), g = ctx.createGain(); g.gain.value = 0.35;
+    src.buffer = buf; src.connect(g).connect(ctx.destination); src.start();
+  }
+  notes.forEach(([name, fr, w], k) => {
+    const b = D.createElement('button');
+    b.type = 'button'; b.className = 'string'; b.style.top = ys[k] * 100 + '%'; b.style.setProperty('--w', w + 'px');
+    b.setAttribute('aria-label', 'pluck the ' + name + ' string');
+    const buzz = () => { b.classList.remove('buzz'); void b.offsetWidth; b.classList.add('buzz'); };
+    b.addEventListener('click', () => { buzz(); pluck(fr); });
+    b.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse' && e.buttons === 1) { buzz(); pluck(fr); } });
+    strings.append(b);
+  });
+
+  /* ---- the punch: your holes, kept in this browser ---- */
+  const count = D.getElementById('count'), tag = D.getElementById('tag'), tagn = D.getElementById('tagn');
+  function label() {
+    const n = holes.length, w = n + (n === 1 ? ' hole' : ' holes');
+    count.textContent = w; tagn.textContent = w; tag.hidden = !n; D.getElementById('patchwrap').hidden = !n;
+    D.title = n ? `gabe (${w})` : 'gabe';
+  }
+  label();
+  /* the tag steps aside when the footer (which has its own patch link) is on screen; on touch screens it also fades after a while */
+  let footOn = false, idle = 0; const touch = matchMedia('(hover: none)').matches;
+  const tagView = () => tag.classList.toggle('away', footOn || (touch && !idle));
+  const wake = () => { if (!touch) return tagView(); clearTimeout(idle); idle = setTimeout(() => { idle = 0; tagView(); }, 6000); tagView(); };
+  new IntersectionObserver(es => { footOn = es[0].isIntersecting; tagView(); }).observe(D.querySelector('.colophon'));
+  if (holes.length) wake(); else tagView();
+  /* empty yellow = inside a plate, not on a link, a photo, the pickguard, or any line of text */
+  const BLANK = '.plate, .lede, .nowgrid, .jobs, .tunes, .readnote, .sheet, .post, .trail, .text, .solo, .more';
+  const SOLID = 'a, button, .guard, img, figure, .win, .hole, .stars, .tag, .lens, .when';
+  const rg = D.createRange();
+  function onText(t, x, y) {
+    rg.selectNodeContents(t);
+    for (const q of rg.getClientRects()) if (x > q.left - 3 && x < q.right + 3 && y > q.top - 3 && y < q.bottom + 3) return true;
+    return false;
+  }
+  function blankAt(t, x, y) {
+    const plate = t && t.closest && t.closest('.plate');
+    if (!plate || t.closest(SOLID)) return null;
+    return t.matches(BLANK) && !t.matches('.text, .solo, .more') ? plate : (onText(t, x, y) ? null : plate);
+  }
+  let down = null;
+  addEventListener('pointerdown', (e) => { down = e.button === 0 ? { x: e.clientX, y: e.clientY, t: e.timeStamp } : null; }, { passive: true });
+  D.addEventListener('click', (e) => {
+    const d = down; down = null;
+    if (!d || e.button !== 0 || e.detail > 1 || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 5 || e.timeStamp - d.t > 600) return;
+    const sel = getSelection(); if (sel && !sel.isCollapsed) return;
+    const plate = blankAt(e.target, e.clientX, e.clientY); if (!plate) return;
+    const r = plate.getBoundingClientRect();
+    const h = { s: plate.id, x: +((e.clientX - r.left) / r.width).toFixed(4), y: Math.round(e.clientY - r.top) };
+    holes.push(h); if (holes.length > 99) { const old = holes.shift(); later(D.getElementById(old.s)); }
+    save(); label(); wake();
+    const g = plate.querySelector('.panel .punched'); if (!g) return;
+    const c = D.createElementNS(NS, 'circle');
+    c.setAttribute('cx', f(h.x * r.width)); c.setAttribute('cy', h.y); c.setAttribute('fill', '#000'); c.setAttribute('r', reduce ? 19 : 3);
+    g.append(c);
+    if (!reduce) {
+      const t0 = performance.now(); const step = (t) => { const k = Math.min(1, (t - t0) / 140); c.setAttribute('r', f(3 + 16 * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step);
+      const chad = D.createElement('i'); chad.className = 'chad'; chad.setAttribute('aria-hidden', 'true'); D.body.append(chad);
+      const dx = (Math.random() - .5) * 120, spin = (Math.random() - .5) * 540, fall = innerHeight - e.clientY + 60;
+      chad.animate([
+        { transform: `translate(${e.clientX}px, ${e.clientY}px) rotate(0deg) scaleY(1)` },
+        { transform: `translate(${e.clientX + dx * .3}px, ${e.clientY + 14}px) rotate(${spin * .2}deg) scaleY(.5)`, offset: .18 },
+        { transform: `translate(${e.clientX + dx}px, ${e.clientY + fall}px) rotate(${spin}deg) scaleY(.15)` }
+      ], { duration: 520 + fall * .5, easing: 'cubic-bezier(.45,0,.9,.6)' }).onfinish = () => chad.remove();
+    }
+  });
+  function patch() {
+    const had = new Set(holes.map(h => h.s)); holes = []; save(); label();
+    const done = () => had.forEach(id => later(D.getElementById(id)));
+    const cs = D.querySelectorAll('.panel .punched circle');
+    if (reduce || !cs.length) return done();
+    const t0 = performance.now(); const step = (t) => { const k = Math.min(1, (t - t0) / 180); cs.forEach(c => c.setAttribute('r', f(19 * (1 - k * k)))); k < 1 ? requestAnimationFrame(step) : done(); }; requestAnimationFrame(step);
+  }
+  D.getElementById('patch').addEventListener('click', patch);
+  D.getElementById('patch2').addEventListener('click', patch);
+
+  /* the cursor is a hole punch: over empty yellow, you can already see what's under it */
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const lens = D.createElement('div'); lens.className = 'lens'; lens.setAttribute('aria-hidden', 'true');
+    const li = D.createElement('img'); li.alt = ''; lens.append(li); D.body.append(lens);
+    let cur = null, on = false;
+    D.addEventListener('pointermove', (e) => {
+      const plate = blankAt(e.target, e.clientX, e.clientY), w = plate && plate.querySelector(':scope > .under > .world');
+      const ok = !!(w && w.currentSrc);
+      if (ok !== on) { on = ok; lens.classList.toggle('on', on); D.body.style.cursor = on ? 'crosshair' : ''; }
+      if (!ok) return;
+      if (w !== cur) { cur = w; li.src = w.currentSrc; li.style.objectPosition = getComputedStyle(w).objectPosition; }
+      const wb = w.getBoundingClientRect();
+      li.style.width = wb.width + 'px'; li.style.height = wb.height + 'px';
+      const x = e.clientX - 19, y = e.clientY - 19;
+      lens.style.transform = `translate(${x}px, ${y}px)`; li.style.transform = `translate(${wb.left - x}px, ${wb.top - y}px)`;
+    }, { passive: true });
+    D.documentElement.addEventListener('pointerleave', () => { on = false; lens.classList.remove('on'); D.body.style.cursor = ''; });
+    addEventListener('scroll', () => { if (on) { on = false; lens.classList.remove('on'); D.body.style.cursor = ''; } }, { passive: true });
+  }
+
+  /* ---- a photo window, widened to the whole screen: it was under there all along ---- */
+  let lifted = null;
+  D.querySelectorAll('.pw a').forEach(a => a.addEventListener('click', (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const img = a.querySelector('img.world'); if (!img || !img.currentSrc) return;
+    e.preventDefault();
+    const win = a.querySelector('.win'), b = win.getBoundingClientRect(), cs = getComputedStyle(a.closest('.pw'));
+    const vw = innerWidth, vh = innerHeight, round = win.classList.contains('round') ? b.width / 2 : win.classList.contains('pill') ? Math.min(b.width, b.height) / 2 : 4;
+    const box = D.createElement('div'); box.className = 'lift'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', img.alt);
+    box.style.setProperty('--fx', cs.getPropertyValue('--fx') || '50%'); box.style.setProperty('--fy', cs.getPropertyValue('--fy') || '50%');
+    const cap = a.nextElementSibling;
+    box.innerHTML = `<img alt="" src="${img.currentSrc}"><img class="fit" alt="${img.alt}" src="${P}${img.dataset.src}.webp"><div class="cap">${cap ? cap.innerHTML : ''}<button type="button">close</button></div>`;
+    const from = `inset(${f(b.top)}px ${f(vw - b.right)}px ${f(vh - b.bottom)}px ${f(b.left)}px round ${f(round)}px)`;
+    const wb = img.getBoundingClientRect(), pic = box.firstChild;
+    const fromBox = { left: f(wb.left) + 'px', width: f(wb.width) + 'px', top: f(wb.top) + 'px', height: f(wb.height) + 'px' }, full = { left: '0px', width: vw + 'px', top: '0px', height: vh + 'px' };
+    box.style.clipPath = from; D.body.append(box);
+    const close = () => {
+      if (!lifted) return; lifted = null; removeEventListener('keydown', key);
+      const end = () => { box.remove(); a.focus({ preventScroll: true }); };
+      if (reduce || !box.animate) return end();
+      box.classList.remove('open', 'fitted');
+      pic.animate([full, fromBox], { duration: 320, easing: 'cubic-bezier(.5,0,.2,1)', fill: 'forwards' });
+      box.animate([{ clipPath: 'inset(0px round 0px)' }, { clipPath: from }], { duration: 320, easing: 'cubic-bezier(.5,0,.2,1)' }).onfinish = end;
+    };
+    const key = (ev) => { if (ev.key === 'Escape') close(); if (ev.key === 'Tab') { ev.preventDefault(); box.querySelector('button').focus(); } };
+    lifted = box; addEventListener('keydown', key);
+    box.addEventListener('click', close);
+    const opened = () => {
+      box.style.clipPath = 'none'; box.classList.add('open');
+      if (Math.abs(vw / vh - 1.5) > .22) box.classList.add('fitted');
+      box.querySelector('button').focus({ preventScroll: true });
+    };
+    if (reduce || !box.animate) return opened();
+    pic.animate([fromBox, full], { duration: 480, easing: 'cubic-bezier(.6,0,.15,1)' });
+    box.animate([{ clipPath: from }, { clipPath: 'inset(0px round 0px)' }], { duration: 480, easing: 'cubic-bezier(.6,0,.15,1)' }).onfinish = opened;
+  }));
+
+  console.log('%cHOLE', 'font: 800 48px monospace; background:#e6b544; color:#141210; padding:4px 16px');
+})();
+</script>
+</body>
+</html>

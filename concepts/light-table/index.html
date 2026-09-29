@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gabe Cohen</title>
+<meta name="description" content="Gabriel Cohen: CTO of Nero, in San Francisco. Work, books, guitar and photographs, laid out on a light table.">
+<meta name="theme-color" content="#2a5543">
+<link rel="icon" href="/favicon.ico">
+<link rel="preload" href="fonts/libre-franklin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/libertinus-mono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/big-shoulders-text.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* Libre Franklin, Libertinus Mono, Big Shoulders Text: SIL Open Font License */
+@font-face { font-family: "Franklin"; src: url(fonts/libre-franklin.woff2) format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Typewriter"; src: url(fonts/libertinus-mono.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Dymo"; src: url(fonts/big-shoulders-text.woff2) format("woff2"); font-weight: 100 900; font-display: swap; }
+
+:root {
+  --mat: #2a5543;
+  --mat-deep: #1f4334;
+  --grid: rgba(212, 236, 219, .14);
+  --grid-major: rgba(212, 236, 219, .27);
+  --mat-ink: rgba(226, 238, 196, .62);
+  --card: #fbf9f1;
+  --board: #f6f4ec;
+  --ink: #221f1b;
+  --ink-soft: #57524a;
+  --ribbon: #b3261e;          /* red half of a two-colour typewriter ribbon */
+  --rule: rgba(84, 132, 196, .36);
+  --rule-red: rgba(212, 58, 66, .62);
+  --nonphoto: rgba(84, 186, 222, .62);
+  --wax: #c9291f;             /* china marker */
+  --tape: rgba(239, 229, 196, .9);
+  --noise: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  color-scheme: light;
+  --u: 1px;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--mat);
+  color: var(--ink);
+  font-family: "Typewriter", "Courier New", monospace;
+  font-synthesis: none;
+  overflow-x: hidden;
+}
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+:focus-visible { outline: 2px solid #ffd84a; outline-offset: 3px; }
+.card :focus-visible, .paper :focus-visible { outline-color: var(--ribbon); }
+
+/* ---------- the cutting mat ---------------------------------------- */
+.table { container-type: inline-size; width: 100%; max-width: 1680px; margin: 0 auto; position: relative; overflow-x: clip; }
+.surface {
+  --u: 1px;
+  --cell: 26px;
+  position: relative;
+  background:
+    linear-gradient(90deg, rgba(8, 20, 14, .34), transparent 16%, transparent 84%, rgba(8, 20, 14, .34)),
+    radial-gradient(70% 900px at 50% 0, rgba(255, 255, 240, .05), transparent),
+    var(--noise),
+    linear-gradient(to right, var(--grid-major) 1px, transparent 1px) 0 0 / calc(var(--cell) * 5) calc(var(--cell) * 5),
+    linear-gradient(to bottom, var(--grid-major) 1px, transparent 1px) 0 0 / calc(var(--cell) * 5) calc(var(--cell) * 5),
+    linear-gradient(to right, var(--grid) 1px, transparent 1px) 0 0 / var(--cell) var(--cell),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px) 0 0 / var(--cell) var(--cell),
+    var(--mat);
+  background-blend-mode: normal, normal, soft-light, normal, normal, normal, normal, normal;
+}
+.rulers, .cuts { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.rulers span {
+  position: absolute; font: 600 10px/1 "Dymo", sans-serif; letter-spacing: .04em; color: var(--mat-ink);
+  transform: translate(-50%, 0);
+}
+.rulers .l { transform: translate(0, -50%); }
+.cuts line { stroke: rgba(232, 246, 236, .11); stroke-width: 1; }
+.mat-print {
+  position: absolute; pointer-events: none; font: 600 10px/1 "Dymo", sans-serif; letter-spacing: .28em;
+  text-transform: uppercase; color: var(--mat-ink); white-space: nowrap;
+}
+
+/* ---------- shared object behaviour ------------------------------- */
+.obj { position: relative; }
+.lifted { cursor: grabbing; }
+
+/* masking tape */
+.tape {
+  position: absolute; z-index: 3; width: calc(104 * var(--u)); height: calc(30 * var(--u));
+  min-width: 70px; min-height: 22px;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.08) 0 2px, transparent 2px 5px),
+    var(--noise), var(--tape);
+  background-blend-mode: normal, soft-light, normal;
+  box-shadow: 0 1px 1px rgba(40, 30, 10, .22);
+  clip-path: polygon(0 6%, 4% 0, 7% 9%, 10% 2%, 90% 0, 93% 8%, 97% 1%, 100% 10%, 99% 92%, 96% 100%, 92% 90%, 88% 98%, 12% 100%, 8% 91%, 4% 99%, 1% 90%);
+  pointer-events: none;
+}
+
+/* Dymo embossed label tape */
+.dymo {
+  display: inline-block; margin: 0; position: relative; z-index: 4;
+  font: 700 max(13px, calc(17 * var(--u)))/1 "Dymo", sans-serif;
+  letter-spacing: .2em; text-transform: uppercase; text-decoration: none;
+  padding: .5em .7em .46em .9em;
+  color: rgba(244, 243, 236, .94);
+  background:
+    linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0) 38%, rgba(0,0,0,.2)),
+    var(--dymo, #141517);
+  border-radius: 2px;
+  text-shadow: 0 -1px 0 rgba(0,0,0,.6), 0 1px 0 rgba(255,255,255,.22), 0 0 1px rgba(255,255,255,.5);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 2px 3px rgba(0,0,0,.45);
+  clip-path: polygon(0 0, 100% 0, 99.2% 100%, .6% 100%);
+  transform: rotate(var(--lr, -1.5deg));
+}
+.dymo.t-red { --dymo: #b3221c; }
+.dymo.t-blue { --dymo: #1f3f86; }
+a.dymo:hover { filter: brightness(1.18); }
+
+/* ---------- typed paper: index cards ----------------------------- */
+.card {
+  --fs: max(13.5px, calc(16 * var(--u)));
+  --lh: max(22px, calc(26 * var(--u)));
+  --pad: calc(var(--lh) * .9);
+  --body: calc(var(--pad) + var(--lh) * 1.45);
+  position: relative;
+  padding: var(--pad) max(18px, calc(34 * var(--u))) var(--lh);
+  font-size: var(--fs); line-height: var(--lh);
+  color: var(--ink);
+  background:
+    linear-gradient(var(--rule-red), var(--rule-red)) no-repeat 0 calc(var(--pad) + var(--lh) * 1.12) / 100% 2px,
+    repeating-linear-gradient(to bottom, transparent 0 calc(var(--lh) - 1px), var(--rule) calc(var(--lh) - 1px) var(--lh))
+      no-repeat 0 calc(var(--body) - var(--lh) * .2) / 100% calc(100% - var(--body) + var(--lh) * .2),
+    var(--noise), var(--card);
+  background-blend-mode: normal, normal, soft-light, normal;
+  box-shadow: 0 1px 1px rgba(0,0,0,.28), 0 calc(14 * var(--u)) calc(24 * var(--u)) calc(-10 * var(--u)) rgba(0,0,0,.55);
+}
+.card .typed { filter: url(#ink); }
+.card h3, .card .head {
+  margin: 0 0 calc(var(--lh) * .45); font: inherit; font-size: var(--fs); line-height: var(--lh);
+  text-transform: uppercase; letter-spacing: .06em;
+  display: flex; justify-content: space-between; gap: 1ch; flex-wrap: wrap;
+}
+.card p, .card ul { margin: 0; }
+.card .greet { text-transform: none; letter-spacing: 0; }
+.card p + p, .card p + ul, .card ul + p { margin-top: var(--lh); }
+.card ul { list-style: none; padding: 0 0 0 2ch; }
+.card li { text-indent: -2ch; }
+.card li::before { content: "- "; }
+.red { color: var(--ribbon); }
+.card a, .paper a, .slip a { text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.card a:hover, .paper a:hover { color: var(--ribbon); }
+.card > .dymo, .paper > .dymo { position: absolute; left: max(12px, calc(26 * var(--u))); top: calc(-16 * var(--u)); top: min(-12px, calc(-16 * var(--u))); }
+.card.has-label { padding-top: calc(var(--pad) + 4px); }
+
+/* a half sheet of bond paper, torn off the bottom of the page */
+.card.sheet { background: none; box-shadow: none; filter: drop-shadow(0 1px 1px rgba(0,0,0,.25)) drop-shadow(0 calc(12 * var(--u)) calc(12 * var(--u)) rgba(0,0,0,.35)); padding-bottom: calc(var(--lh) * 1.6); }
+.card.sheet::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: var(--noise), #fdfdfa; background-blend-mode: soft-light, normal;
+  clip-path: polygon(0 0, 100% 0, 100% 97%, 96% 98.4%, 92% 97.2%, 87% 99%, 83% 97.6%, 78% 98.8%, 72% 97.3%, 67% 99.2%, 61% 97.8%, 56% 98.6%, 50% 97.1%, 45% 99%, 39% 97.7%, 34% 98.9%, 28% 97.4%, 23% 98.7%, 17% 97.5%, 12% 99.1%, 7% 97.6%, 3% 98.5%, 0 97.2%);
+}
+.card.sheet h3 { border-bottom: 1px solid rgba(0,0,0,.55); padding-bottom: calc(var(--lh) * .2); margin-bottom: calc(var(--lh) * .6); }
+
+/* manila library catalogue card, with the hole for the drawer rod */
+.card.catalog {
+  background:
+    linear-gradient(var(--rule-red), var(--rule-red)) no-repeat 0 calc(var(--pad) + var(--lh) * 1.12) / 100% 2px,
+    var(--noise), #eee0bb;
+  background-blend-mode: normal, soft-light, normal;
+  padding-bottom: calc(var(--lh) * 2.2);
+}
+.card.catalog::after {
+  content: ""; position: absolute; left: 50%; bottom: calc(var(--lh) * .55); width: max(14px, calc(18 * var(--u))); aspect-ratio: 1; transform: translateX(-50%);
+  border-radius: 50%; background: var(--mat-deep); box-shadow: inset 0 2px 3px rgba(0,0,0,.6), 0 0 0 1px rgba(120, 96, 50, .35);
+}
+
+/* china-marker underline */
+.marked { background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 12' preserveAspectRatio='none'><path d='M2 7 C 60 3, 120 9, 180 5 S 270 4, 298 8' fill='none' stroke='%23c9291f' stroke-width='3.2' stroke-linecap='round' opacity='.9'/><path d='M40 9 C 110 6, 200 10, 284 6' fill='none' stroke='%23c9291f' stroke-width='1.6' stroke-linecap='round' opacity='.55'/></svg>") no-repeat 0 100% / 100% .5em; padding-bottom: .12em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+
+/* ---------- the rub-down name -------------------------------------- */
+.board {
+  padding: max(20px, calc(40 * var(--u))) max(20px, calc(46 * var(--u))) max(18px, calc(30 * var(--u)));
+  background: var(--noise), var(--board);
+  background-blend-mode: soft-light, normal;
+  box-shadow: 0 1px 1px rgba(0,0,0,.3), 0 calc(18 * var(--u)) calc(30 * var(--u)) calc(-12 * var(--u)) rgba(0,0,0,.6);
+}
+.rub { margin: 0; font: 900 calc(178 * var(--u))/1 "Franklin", sans-serif; letter-spacing: -.035em; color: #111; }
+.rub .line { display: block; position: relative; white-space: nowrap; height: .9em; }
+.rub .line::after { /* non-photo blue baseline, drawn before the letters went down */
+  content: ""; position: absolute; left: -.18em; right: -.3em; top: .872em; height: 1px; background: var(--nonphoto);
+}
+.rub .line::before { content: ""; position: absolute; left: -.18em; right: -.3em; top: .338em; height: 1px; background: var(--nonphoto); opacity: .5; }
+.rub .ch { display: inline-block; position: relative; z-index: 1; transform: translate(var(--tx, 0), var(--ty, 0)) rotate(var(--tr, 0deg)); }
+.rub .crack {
+  color: transparent; -webkit-background-clip: text; background-clip: text;
+  background-image: linear-gradient(var(--ca, 104deg), #111 0 47%, rgba(246,244,236,.9) 47% 47.35%, #111 47.35% 100%);
+}
+.rub .ticks { position: absolute; left: -.18em; top: .69em; display: flex; gap: .55em; }
+.board .caption { margin: calc(26 * var(--u)) 0 0; font-size: max(13px, calc(15 * var(--u))); letter-spacing: .02em; color: var(--ink-soft); display: flex; justify-content: space-between; gap: 1ch; flex-wrap: wrap; filter: url(#ink); }
+
+/* the transfer sheet the letters came from */
+.letraset {
+  padding: calc(18 * var(--u)) calc(20 * var(--u)) calc(14 * var(--u));
+  background: linear-gradient(160deg, rgba(255,255,255,.5), rgba(255,255,255,0) 40%), #dfe8ea;
+  box-shadow: 0 1px 1px rgba(0,0,0,.25), 0 10px 20px -8px rgba(0,0,0,.5);
+}
+.letraset .rows { font: 900 calc(30 * var(--u))/1.1 "Franklin", sans-serif; color: #151515; display: grid; gap: calc(3 * var(--u)); }
+.letraset .row { display: flex; gap: calc(9 * var(--u)); }
+.letraset .row span { display: inline-block; }
+.letraset .used { color: transparent; -webkit-text-stroke: 1px rgba(20, 30, 35, .16); background: radial-gradient(closest-side, rgba(255,255,255,.35), transparent); }
+.letraset .foot { margin-top: calc(10 * var(--u)); display: flex; justify-content: space-between; font: 600 calc(10 * var(--u))/1 "Dymo", sans-serif; letter-spacing: .22em; text-transform: uppercase; color: #5c6b70; }
+
+/* ---------- the light pad ------------------------------------------- */
+.pad {
+  padding: calc(18 * var(--u));
+  border-radius: calc(14 * var(--u));
+  background: linear-gradient(145deg, #45484b, #2a2c2f 55%, #1f2123);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12), 0 0 0 1px rgba(0,0,0,.55),
+    0 calc(26 * var(--u)) calc(40 * var(--u)) calc(-12 * var(--u)) rgba(0,0,0,.65),
+    0 0 calc(150 * var(--u)) calc(30 * var(--u)) rgba(255, 249, 222, .14);
+}
+.pad > .dymo { position: absolute; left: calc(30 * var(--u)); top: calc(-14 * var(--u)); }
+.pad .led { position: absolute; right: calc(26 * var(--u)); bottom: calc(6 * var(--u)); width: 5px; height: 5px; border-radius: 50%; background: #9dff9a; box-shadow: 0 0 6px 2px rgba(140, 255, 140, .55); }
+.panel {
+  position: relative; height: calc(478 * var(--u)); border-radius: 3px;
+  background:
+    repeating-linear-gradient(to right, rgba(0,0,0,.16) 0 1px, transparent 1px calc(10 * var(--u))) 0 0 / 100% 5px no-repeat,
+    repeating-linear-gradient(to right, rgba(0,0,0,.22) 0 1px, transparent 1px calc(50 * var(--u))) 0 0 / 100% 10px no-repeat,
+    repeating-linear-gradient(to bottom, rgba(0,0,0,.16) 0 1px, transparent 1px calc(10 * var(--u))) 0 0 / 5px 100% no-repeat,
+    repeating-linear-gradient(to bottom, rgba(0,0,0,.22) 0 1px, transparent 1px calc(50 * var(--u))) 0 0 / 10px 100% no-repeat,
+    radial-gradient(90% 80% at 50% 46%, #ffffff 0%, #fbfcf7 45%, #eef2ea 100%);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.35), inset 0 0 calc(26 * var(--u)) rgba(214, 224, 206, .9);
+}
+.slides { position: absolute; inset: 0; }
+.slide {
+  --s: calc(130 * var(--u));
+  position: absolute; left: calc(var(--sx) * var(--u)); top: calc(var(--sy) * var(--u));
+  width: var(--s); height: var(--s); padding: 0; border: 0; cursor: zoom-in;
+  border-radius: calc(6 * var(--u));
+  background: linear-gradient(150deg, #fbfaf5, #ecebe4);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.7), 0 0 0 1px rgba(0,0,0,.14), 0 1px 2px rgba(0,0,0,.22);
+  transform: translate(var(--dx, 0px), var(--dy, 0px)) rotate(calc(var(--sr) * 1deg)) scale(var(--lift, 1));
+  transition: box-shadow .2s;
+}
+.slide img {
+  position: absolute; left: 12%; top: 22.5%; width: 76%; height: auto; aspect-ratio: 3 / 2; object-fit: cover;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.55), 0 0 0 calc(2 * var(--u)) rgba(0,0,0,.08);
+  filter: saturate(1.1) brightness(1.05);
+}
+.slide .fr {
+  position: absolute; left: 0; right: 0; bottom: calc(10 * var(--u)); text-align: center;
+  font: 600 max(8px, calc(9.5 * var(--u)))/1 "Dymo", sans-serif; letter-spacing: .16em; color: #6f6c64;
+}
+.slide .ring { position: absolute; left: 16%; right: 16%; bottom: calc(3 * var(--u)); height: auto; overflow: visible; }
+.slide:hover, .slide:focus-visible { box-shadow: inset 0 0 0 1px rgba(255,255,255,.7), 0 0 0 1px rgba(0,0,0,.2), 0 6px 12px -4px rgba(0,0,0,.35); }
+
+.loupe {
+  --D: calc(186 * var(--u));
+  position: absolute; left: 0; top: 0; width: var(--D); height: var(--D); border-radius: 50%;
+  pointer-events: none; z-index: 20;
+  background: radial-gradient(circle at 34% 28%, #6d6f72, #26282a 46%, #0e0f10 72%);
+  box-shadow: 0 0 0 1px rgba(0,0,0,.6), 0 calc(12 * var(--u)) calc(22 * var(--u)) calc(-4 * var(--u)) rgba(0,0,0,.45), 0 2px 3px rgba(0,0,0,.35);
+  will-change: transform;
+}
+.loupe::before { /* knurled grip */
+  content: ""; position: absolute; inset: calc(3 * var(--u)); border-radius: 50%;
+  background: repeating-conic-gradient(rgba(255,255,255,.07) 0 2deg, transparent 2deg 5deg);
+  -webkit-mask: radial-gradient(circle, transparent calc(50% - 9 * var(--u)), #000 calc(50% - 8 * var(--u)));
+          mask: radial-gradient(circle, transparent calc(50% - 9 * var(--u)), #000 calc(50% - 8 * var(--u)));
+}
+.lens {
+  position: absolute; inset: calc(15 * var(--u)); border-radius: 50%; overflow: hidden;
+  background: #f5f7f1;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.7);
+}
+.lens .view { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.lens .view .slides { position: absolute; inset: 0; }
+.lens::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50%;
+  background:
+    radial-gradient(60% 40% at 32% 22%, rgba(255,255,255,.42), transparent 70%),
+    radial-gradient(circle, transparent 58%, rgba(0,0,0,.28) 100%);
+}
+.lens .reticle { position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; z-index: 2; opacity: .5;
+  background: linear-gradient(#b3261e, #b3261e) 50% 0 / 1px 100% no-repeat, linear-gradient(#b3261e, #b3261e) 0 50% / 100% 1px no-repeat; }
+
+.hint { margin: 0; position: absolute; right: calc(34 * var(--u)); bottom: calc(-2 * var(--u)); font: 600 max(10px, calc(11 * var(--u)))/1.2 "Dymo", sans-serif; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.48); }
+
+.marker { pointer-events: none; }
+.marker svg { display: block; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 calc(8 * var(--u)) calc(6 * var(--u)) rgba(0,0,0,.45)); }
+
+/* ---------- prints ---------------------------------------------------- */
+.print { margin: 0; }
+.print .paper-edge {
+  position: relative; padding: calc(12 * var(--u)) calc(12 * var(--u)) calc(34 * var(--u));
+  background: #fbfaf6;
+  box-shadow: 0 1px 1px rgba(0,0,0,.3), 0 calc(20 * var(--u)) calc(30 * var(--u)) calc(-12 * var(--u)) rgba(0,0,0,.65);
+}
+.print.bleed .paper-edge { padding: 0; }
+.print button { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; position: relative; }
+.print img { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+.print button::after { /* gloss */
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(118deg, rgba(255,255,255,0) 30%, rgba(255,255,255,.12) 44%, rgba(255,255,255,0) 58%);
+}
+.print figcaption { position: absolute; left: calc(14 * var(--u)); right: calc(14 * var(--u)); bottom: calc(10 * var(--u)); display: flex; justify-content: space-between; font: 600 max(9px, calc(10.5 * var(--u)))/1 "Dymo", sans-serif; letter-spacing: .2em; color: #75716a; }
+.print.bleed figcaption { color: rgba(255,255,255,.7); bottom: calc(-22 * var(--u)); color: var(--mat-ink); }
+.print .grease { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+
+/* ---------- the write-up ---------------------------------------------- */
+.paper {
+  --fs: max(13.5px, calc(15.5 * var(--u)));
+  position: relative; padding: calc(44 * var(--u)) calc(40 * var(--u)) calc(40 * var(--u));
+  background: var(--noise), #fdfcf9; background-blend-mode: soft-light, normal;
+  font-size: var(--fs); line-height: 1.55;
+  box-shadow: 0 1px 1px rgba(0,0,0,.25), 0 calc(18 * var(--u)) calc(28 * var(--u)) calc(-12 * var(--u)) rgba(0,0,0,.6);
+}
+.paper .under { position: absolute; inset: 0; background: #f4f2ec; z-index: -1; box-shadow: 0 1px 2px rgba(0,0,0,.3); }
+.paper .under.u1 { transform: rotate(2.2deg) translate(6px, 4px); }
+.paper .under.u2 { transform: rotate(-1.4deg) translate(-4px, 8px); background: #efede6; }
+.paper .staple { position: absolute; left: calc(18 * var(--u)); top: calc(20 * var(--u)); width: calc(34 * var(--u)); height: 4px; border-radius: 2px; transform: rotate(-38deg); background: linear-gradient(#e9ecef, #8a9096); box-shadow: 0 1px 1px rgba(0,0,0,.4); }
+.paper .kicker { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0 1.5ch; margin: 0; font: 600 max(10px, calc(11.5 * var(--u)))/1.3 "Franklin", sans-serif; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-soft); }
+.paper h3 { margin: calc(10 * var(--u)) 0 calc(16 * var(--u)); font: 800 max(26px, calc(40 * var(--u)))/.98 "Franklin", sans-serif; letter-spacing: -.02em; }
+.paper .fig { margin: 0 0 calc(16 * var(--u)); border-top: 1px solid rgba(0,0,0,.7); border-bottom: 1px solid rgba(0,0,0,.7); padding: calc(10 * var(--u)) 0; }
+.paper .fig svg { display: block; width: 100%; height: auto; }
+.paper p { margin: 0 0 .8em; filter: url(#ink); }
+.paper .go { font-size: var(--fs); }
+
+/* ---------- reading ---------------------------------------------------- */
+.books { list-style: none; margin: 0; padding: 0; }
+.books li { display: flex; flex-wrap: wrap; align-items: baseline; text-indent: 0; }
+.books li::before { content: none; }
+.books .t { flex: 0 1 auto; }
+.books .lead { flex: 1 1 3ch; overflow: hidden; white-space: nowrap; min-width: 3ch; color: var(--ink-soft); }
+.books .lead::before { content: " . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . "; }
+.books .a { flex: 0 0 auto; }
+.books .rt { flex: 0 0 4ch; text-align: right; color: var(--ribbon); }
+.note { color: var(--ink-soft); }
+
+/* ---------- guitar ----------------------------------------------------- */
+.chips { display: flex; box-shadow: 0 1px 1px rgba(0,0,0,.25), 0 10px 18px -8px rgba(0,0,0,.55); background: #fbfaf5; padding: calc(10 * var(--u)); gap: calc(8 * var(--u)); flex-direction: column; }
+.chips div { display: grid; grid-template-rows: auto auto; gap: 4px; }
+.chips i { display: block; height: calc(54 * var(--u)); min-height: 38px; border: 1px solid rgba(0,0,0,.12); }
+.chips span { font: 600 max(9px, calc(10 * var(--u)))/1.1 "Dymo", sans-serif; letter-spacing: .18em; text-transform: uppercase; color: #6c675e; }
+.pick svg { display: block; width: 100%; height: auto; filter: drop-shadow(0 calc(5 * var(--u)) calc(4 * var(--u)) rgba(0,0,0,.45)); }
+
+/* ---------- contact ----------------------------------------------------- */
+.contact { display: flex; flex-direction: column; align-items: flex-start; gap: max(14px, calc(18 * var(--u))); }
+.contact .dymo { font-size: max(14px, calc(19 * var(--u))); }
+
+/* ---------- viewer ------------------------------------------------------ */
+dialog.viewer {
+  width: fit-content; max-width: 96vw; max-height: 96vh; padding: 0; border: 0; background: transparent; color: #eee; overflow: visible;
+}
+dialog.viewer::backdrop { background: rgba(10, 14, 12, .9); }
+.viewer figure { margin: 0; background: #fbfaf6; padding: min(14px, 2.4vw) min(14px, 2.4vw) 0; box-shadow: 0 30px 60px -20px rgba(0,0,0,.8); }
+.viewer img { width: auto; height: auto; max-width: min(1200px, 96vw - 28px); max-height: calc(96vh - 130px); }
+.viewer figcaption { max-width: min(1200px, 96vw - 28px); }
+.viewer figcaption { display: flex; justify-content: space-between; gap: 2ch; padding: 10px 2px 12px; color: var(--ink-soft); font-size: 14px; line-height: 1.4; }
+.viewer figcaption b { font: 600 12px/1.4 "Dymo", sans-serif; letter-spacing: .2em; color: #8f8b82; white-space: nowrap; }
+.viewer .ctrl { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
+.viewer .ctrl button { cursor: pointer; }
+
+/* past 1680px you can see the edge of the mat, and the desk under it */
+@media (min-width: 1720px) {
+  body { background: var(--noise), #191816; background-blend-mode: soft-light, normal; }
+  .table { margin: 28px auto 60px; border-radius: 10px; box-shadow: 0 0 0 1px rgba(0,0,0,.5), 0 30px 60px -20px rgba(0,0,0,.8); overflow: clip; }
+}
+
+/* ================= desktop: things lie where they were put ================= */
+@media (min-width: 1100px) {
+  .surface { --u: calc(100cqw / 1440); --cell: calc(30 * var(--u)); height: calc(2830 * var(--u)); }
+  .obj {
+    position: absolute; left: calc(var(--x) * var(--u)); top: calc(var(--y) * var(--u)); width: calc(var(--w) * var(--u));
+    z-index: var(--z, 2);
+    transform: translate(var(--dx, 0px), var(--dy, 0px)) rotate(calc(var(--r, 0) * 1deg)) scale(var(--lift, 1));
+    transition: box-shadow .2s;
+  }
+  [data-drag] { cursor: grab; touch-action: none; }
+  [data-drag] button { cursor: zoom-in; }
+  .lifted { --lift: 1.015; }
+  .lifted.print .paper-edge, .lifted.card { box-shadow: 0 2px 3px rgba(0,0,0,.25), 0 calc(40 * var(--u)) calc(50 * var(--u)) calc(-14 * var(--u)) rgba(0,0,0,.55); }
+  .lifted.slide { --lift: 1.06; box-shadow: 0 0 0 1px rgba(0,0,0,.2), 0 14px 20px -6px rgba(0,0,0,.4); z-index: 30; }
+  .panel.looking, .panel.looking .slide { cursor: none; }
+  .mat-print.bl { left: calc(60 * var(--u)); bottom: calc(22 * var(--u)); }
+  .mat-print.br { right: calc(60 * var(--u)); bottom: calc(22 * var(--u)); }
+  .angles { position: absolute; right: 0; bottom: 0; width: calc(600 * var(--u)); height: calc(600 * var(--u)); pointer-events: none; }
+}
+
+/* ================= phone & tablet: a considered vertical collage ================= */
+@media (max-width: 1099.98px) {
+  .surface { padding: 46px max(16px, calc((100% - 600px) / 2)) 70px max(26px, calc((100% - 600px) / 2)); display: flex; flex-direction: column; align-items: stretch; }
+  .surface > .obj { max-width: 600px; width: 100%; margin-left: auto; margin-right: auto; transform: rotate(calc(var(--mr, 0) * 1deg)); z-index: var(--mz, 2); }
+  .angles, .mat-print.br { display: none; }
+  .mat-print.bl { position: relative; margin: 40px auto 0; }
+
+  .board { z-index: 3; }
+  .rub { font-size: min(25vw, 150px); }
+  .letraset { display: none; }
+  .intro { margin-top: -10px; }
+  .pad { margin-top: 44px; }
+  .panel { height: auto; padding: 14px 10px 16px; }
+  .slides { position: relative; inset: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .slide { position: relative; left: auto; top: auto; width: 100%; height: auto; aspect-ratio: 1; --u: calc((min(100vw, 600px) - 42px) / 2 / 130); }
+  .loupe { display: none; }
+  @media (min-width: 640px) {
+    .slides { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .slide { --u: calc((600px - 70px) / 3 / 130); }
+  }
+  .hint { position: static; margin: 12px 4px 0; text-align: right; }
+  .marker { width: 62%; margin: -30px 0 0 auto; z-index: 5; }
+  .marker svg { transform: rotate(-12deg); }
+  .print { margin-top: 30px; }
+  .print.w90 { width: 92%; }
+  .print.left { margin-left: 0; }
+  .print.right { margin-right: 0; }
+  .card, .paper { margin-top: 40px; }
+  .card.college { margin-top: -8px; }
+  .chips { flex-direction: row; width: 100%; margin-top: -6px; }
+  .chips div { flex: 1; }
+  .pick { width: 64px !important; z-index: 8; }
+  .contact { margin-top: 50px; align-items: flex-start; }
+  .reading .books .t { flex-basis: 100%; }
+  .reading .books .a { order: 2; padding-left: 2ch; color: var(--ink-soft); }
+  .reading .books .lead { order: 3; }
+  .reading .books .rt { order: 4; }
+  .hint { position: absolute; top: 4px; right: 16px; bottom: auto; margin: 0; font-size: 9.5px; line-height: 12px; }
+  .pick { margin: 12px 44px -34px auto !important; }
+  .paper .under { display: none; }
+}
+@media (max-width: 480px) {
+  .surface { padding-left: 24px; padding-right: 14px; }
+  .card { --fs: 14px; --lh: 23px; padding-left: 16px; padding-right: 14px; }
+  .paper { padding: 34px 20px 26px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- typewriter ink: slightly uneven edges -->
+    <filter id="ink" x="-2%" y="-2%" width="104%" height="104%">
+      <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="1" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <!-- waxy china-marker stroke -->
+    <filter id="wax" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="9" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.7" result="holes"/>
+      <feComposite in="d" in2="holes" operator="in"/>
+    </filter>
+    <radialGradient id="tort1" cx=".3" cy=".3" r=".8"><stop offset="0" stop-color="#b8661f"/><stop offset=".5" stop-color="#6d3310"/><stop offset="1" stop-color="#2a1206"/></radialGradient>
+    <linearGradient id="waxbody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6e110c"/><stop offset=".28" stop-color="#c7322a"/><stop offset=".42" stop-color="#e6655a"/><stop offset=".62" stop-color="#b3261e"/><stop offset="1" stop-color="#5e0e0a"/></linearGradient>
+    <linearGradient id="waxtip" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a130e"/><stop offset=".4" stop-color="#d23d31"/><stop offset="1" stop-color="#6a100b"/></linearGradient>
+  </defs>
+</svg>
+
+<main class="table" id="table">
+<div class="surface" id="surface">
+  <div class="rulers" id="rulers" aria-hidden="true"></div>
+  <svg class="cuts" id="cuts" aria-hidden="true"></svg>
+  <svg class="angles" viewBox="0 0 600 600" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M600 0 L0 600 M600 180 L180 600 M600 346 L346 600" fill="none" stroke="rgba(212,236,219,.22)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+    <path d="M600 0 L253 600" fill="none" stroke="rgba(212,236,219,.16)" stroke-width="1" stroke-dasharray="6 5" vector-effect="non-scaling-stroke"/>
+    <g font-family="Dymo, sans-serif" font-size="11" letter-spacing="1.5" fill="rgba(226,238,196,.55)"><text x="296" y="316" transform="rotate(-45 296 316)">45&deg;</text><text x="420" y="316" transform="rotate(-60 420 316)">60&deg;</text></g>
+  </svg>
+
+  <!-- ============ the name, rubbed down letter by letter ============ -->
+  <header class="obj board" style="--x:60;--y:60;--w:660;--r:-1.4;--z:4;--mr:-1.2;--mz:3">
+    <span class="tape" style="left:-18px;top:-10px;transform:rotate(-38deg)" aria-hidden="true"></span>
+    <span class="tape" style="right:-20px;top:-8px;transform:rotate(36deg)" aria-hidden="true"></span>
+    <h1 class="rub" aria-label="Gabe Cohen">
+      <span class="line" aria-hidden="true"><span class="ch" style="--tx:.01em;--tr:-1.2deg">g</span><span class="ch" style="--ty:-.012em;--tr:.8deg">a</span><span class="ch" style="--tx:-.012em;--ty:.008em;--tr:-.4deg">b</span><span class="ch" style="--tx:-.006em;--ty:-.018em;--tr:1.6deg">e</span></span>
+      <span class="line" aria-hidden="true"><span class="ch" style="--ty:.012em;--tr:.6deg">c</span><span class="ch" style="--tx:-.01em;--ty:-.006em;--tr:-1.4deg">o</span><span class="ch" style="--tx:-.004em;--ty:.004em;--tr:.3deg">h</span><span class="ch" style="--tx:-.018em;--ty:-.014em;--tr:-.9deg">e</span><span class="ch" style="--tx:-.012em;--ty:.02em;--tr:2deg">n</span></span>
+    </h1>
+    <p class="caption"><span>gabriel cohen, 23</span><span>san francisco</span></p>
+  </header>
+
+  <div class="obj letraset" style="--x:24;--y:486;--w:420;--r:5;--z:1" aria-hidden="true">
+    <div class="rows" id="letraset-rows"></div>
+    <div class="foot"><span>transfer lettering</span><span>libre franklin 900</span></div>
+  </div>
+
+  <section class="obj card intro" style="--x:376;--y:468;--w:420;--r:1.8;--z:5;--mr:1.1" aria-label="About">
+    <div class="typed">
+      <p class="head greet"><span>hey, i'm gabe.</span></p>
+      <p>i'm the cto of <a href="https://www.nero.fan/">nero</a>. outside work: learning how to play guitar, reading, and doing other shit that caught my attention <span class="marked">(right now skiing and photography)</span>.</p>
+    </div>
+  </section>
+
+  <!-- ============ photos: slides on the light pad ============ -->
+  <section class="obj pad" style="--x:786;--y:60;--w:620;--z:2;--mr:0" aria-labelledby="h-photos">
+    <h2 class="dymo" id="h-photos" style="--lr:-2deg">photos</h2>
+    <div class="panel" id="panel">
+      <div class="slides" id="slides">
+        <button class="slide" data-drag style="--sx:18;--sy:22;--sr:-1.4" data-photo="R0000065"><img src="/assets/photos/small/R0000065.webp" width="800" height="533" alt="A brick wall lit red by a car's taillight along a sidewalk at dusk."><span class="fr" aria-hidden="true">R0000065</span></button>
+        <button class="slide" data-drag style="--sx:160;--sy:16;--sr:1" data-photo="R0000067"><img src="/assets/photos/small/R0000067.webp" width="800" height="533" alt="Bay windows of a dark house against a deep blue evening sky."><span class="fr" aria-hidden="true">R0000067</span></button>
+        <button class="slide" data-drag style="--sx:300;--sy:24;--sr:-.5" data-photo="R0000079"><img src="/assets/photos/small/R0000079.webp" width="800" height="533" alt="A cat silhouetted in a warmly lit window at night."><span class="fr" aria-hidden="true">R0000079</span><svg class="ring" viewBox="0 0 100 30" aria-hidden="true"><path d="M10 18 C 8 7, 90 3, 94 14 C 97 25, 18 29, 7 19 C 3 12, 22 6, 40 5" fill="none" stroke="#c9291f" stroke-width="3" stroke-linecap="round" filter="url(#wax)"/></svg></button>
+        <button class="slide" data-drag style="--sx:436;--sy:18;--sr:2.2" data-photo="R0009266"><img src="/assets/photos/small/R0009266.webp" width="800" height="533" alt="Close-up of a van painted as the Mystery Machine, orange-red lettering on teal, blue sky behind."><span class="fr" aria-hidden="true">R0009266</span><svg class="ring" viewBox="0 0 100 30" aria-hidden="true"><path d="M10 18 C 8 7, 90 3, 94 14 C 97 25, 18 29, 7 19 C 3 12, 22 6, 40 5" fill="none" stroke="#c9291f" stroke-width="3" stroke-linecap="round" filter="url(#wax)"/></svg></button>
+        <button class="slide" data-drag style="--sx:22;--sy:172;--sr:1.2" data-photo="R0009301"><img src="/assets/photos/small/R0009301.webp" width="800" height="533" alt="An empty concrete alley between a block wall and a building in hard sun, blue sky above."><span class="fr" aria-hidden="true">R0009301</span></button>
+        <button class="slide" data-drag style="--sx:162;--sy:176;--sr:-2" data-photo="R0009307"><img src="/assets/photos/small/R0009307.webp" width="800" height="533" alt="Looking down at a pair of boots on a yellow sidewalk panel stenciled with the word HOLE."><span class="fr" aria-hidden="true">R0009307</span><svg class="ring" viewBox="0 0 100 30" aria-hidden="true"><path d="M10 18 C 8 7, 90 3, 94 14 C 97 25, 18 29, 7 19 C 3 12, 22 6, 40 5" fill="none" stroke="#c9291f" stroke-width="3" stroke-linecap="round" filter="url(#wax)"/></svg></button>
+        <button class="slide" data-drag style="--sx:302;--sy:168;--sr:.6" data-photo="R0009319"><img src="/assets/photos/small/R0009319.webp" width="800" height="533" alt="A white dog and a golden retriever meeting on a sunny park lawn under a blue sky."><span class="fr" aria-hidden="true">R0009319</span><svg class="ring" viewBox="0 0 100 30" aria-hidden="true"><path d="M10 18 C 8 7, 90 3, 94 14 C 97 25, 18 29, 7 19 C 3 12, 22 6, 40 5" fill="none" stroke="#c9291f" stroke-width="3" stroke-linecap="round" filter="url(#wax)"/></svg></button>
+        <button class="slide" data-drag style="--sx:440;--sy:174;--sr:-1" data-photo="R0009326-preview"><img src="/assets/photos/small/R0009326-preview.webp" width="800" height="533" alt="The lit front steps of a Victorian house at night."><span class="fr" aria-hidden="true">R0009326</span></button>
+        <button class="slide" data-drag style="--sx:26;--sy:324;--sr:-.8" data-photo="R0009331-preview"><img src="/assets/photos/small/R0009331-preview.webp" width="800" height="533" alt="The rounded corner of an old building glowing orange at night."><span class="fr" aria-hidden="true">R0009331</span></button>
+        <button class="slide" data-drag style="--sx:168;--sy:328;--sr:1.6" data-photo="R0009339-preview"><img src="/assets/photos/small/R0009339-preview.webp" width="800" height="533" alt="A red pickup truck parked in front of a lit house at night."><span class="fr" aria-hidden="true">R0009339</span><svg class="ring" viewBox="0 0 100 30" aria-hidden="true"><path d="M10 18 C 8 7, 90 3, 94 14 C 97 25, 18 29, 7 19 C 3 12, 22 6, 40 5" fill="none" stroke="#c9291f" stroke-width="3" stroke-linecap="round" filter="url(#wax)"/></svg></button>
+      </div>
+      <div class="loupe" id="loupe" aria-hidden="true" inert><div class="lens"><div class="view" id="view"></div><span class="reticle"></span></div></div>
+    </div>
+    <p class="hint" id="hint">click a slide to see it big</p>
+    <span class="led" aria-hidden="true"></span>
+  </section>
+
+  <div class="obj marker" style="--x:1110;--y:446;--w:320;--r:-31;--z:7" aria-hidden="true">
+    <svg viewBox="0 0 320 28">
+      <path d="M2 14.5 Q 4 11.2 9 10.4 L 40 5 L 40 23 L 9 18.6 Q 4 17.8 2 14.5 Z" fill="url(#waxtip)"/>
+      <path d="M9 11.5 L 38 7.5" stroke="rgba(255,255,255,.35)" stroke-width="1.2"/>
+      <rect x="40" y="5" width="30" height="18" fill="url(#waxbody)"/>
+      <path d="M70 4 L 316 4 Q 319 4 319 7 L 319 21 Q 319 24 316 24 L 70 24 Z" fill="url(#waxbody)"/>
+      <path d="M70 4 L 77 4 L 73 24 L 70 24 Z M 70 4 L 72 24" fill="rgba(255,255,255,.18)"/>
+      <g stroke="rgba(40,0,0,.55)" stroke-width="1"><path d="M96 4 L 88 24"/><path d="M130 4 L 122 24"/><path d="M164 4 L 156 24"/><path d="M198 4 L 190 24"/><path d="M232 4 L 224 24"/><path d="M266 4 L 258 24"/><path d="M300 4 L 292 24"/></g>
+      <path d="M86 4 L 78 24" stroke="rgba(255,255,255,.75)" stroke-width="1.2"/>
+      <path d="M78 24 q 6 6 16 5" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="1.2"/>
+      <text x="150" y="17.5" font-family="Dymo, sans-serif" font-weight="700" font-size="8.5" letter-spacing="2.4" fill="rgba(0,0,0,.6)">CHINA MARKER</text>
+    </svg>
+  </div>
+
+  <!-- ============ now ============ -->
+  <figure class="obj print w90 right" data-drag style="--x:846;--y:652;--w:470;--r:-2.4;--z:6;--mr:1.6">
+    <div class="paper-edge">
+      <span class="tape" style="left:42%;top:-14px;transform:rotate(-3deg)" aria-hidden="true"></span>
+      <button type="button" data-photo="R0009307"><img src="/assets/photos/small/R0009307.webp" width="800" height="533" alt="Looking down at a pair of boots on a yellow sidewalk panel stenciled with the word HOLE."></button>
+      <figcaption><span>R0009307</span></figcaption>
+    </div>
+  </figure>
+
+  <section class="obj card now has-label" style="--x:84;--y:806;--w:600;--r:-.8;--z:5;--mr:-.8" aria-labelledby="h-now">
+    <h2 class="dymo t-red" id="h-now">now</h2>
+    <div class="typed">
+      <h3><span>cto, <a href="https://www.nero.fan/">nero</a></span><span>since spring 2025</span></h3>
+      <p>we're helping artists make money and go viral on livestreams.</p>
+      <p>i built <a href="https://www.nero.fan/">nero.fan</a> and scaled it to 600k+ monthly users. it processes $500k+ gmv a month <span class="note">(as of early 2026)</span>.</p>
+      <p><span class="marked">this is where most of my time is spent.</span></p>
+    </div>
+  </section>
+
+  <!-- ============ before ============ -->
+  <section class="obj card sheet before has-label" style="--x:772;--y:1030;--w:610;--r:1.1;--z:5;--mr:.9" aria-labelledby="h-before">
+    <h2 class="dymo" id="h-before">before</h2>
+    <div class="typed">
+      <h3><span>flatiron health</span><span>summer 2024 &ndash; winter 2025</span></h3>
+      <p>software engineer. <span class="note">(interned there in 2023.)</span></p>
+      <ul>
+        <li>shipped clinical research products supporting clinical trials.</li>
+        <li>built infrastructure and features for a full-stack patient management system.</li>
+        <li>after 8 months, got my own team building internal sales tools.</li>
+        <li>led ai development initiatives across flatiron.</li>
+      </ul>
+    </div>
+  </section>
+
+  <figure class="obj print bleed w90 left" data-drag style="--x:44;--y:1120;--w:420;--r:3;--z:4;--mr:-2">
+    <div class="paper-edge">
+      <span class="tape" style="left:-24px;top:10px;transform:rotate(-52deg)" aria-hidden="true"></span>
+      <span class="tape" style="right:-22px;bottom:12px;transform:rotate(-50deg)" aria-hidden="true"></span>
+      <button type="button" data-photo="R0009266"><img src="/assets/photos/small/R0009266.webp" width="800" height="533" alt="Close-up of a van painted as the Mystery Machine, orange-red lettering on teal, blue sky behind."></button>
+      <figcaption><span>R0009266</span></figcaption>
+    </div>
+  </figure>
+
+  <section class="obj card college" style="--x:374;--y:1352;--w:380;--r:-1.6;--z:6;--mr:1.4" aria-labelledby="h-college">
+    <div class="typed">
+      <h3 id="h-college"><span>in college</span></h3>
+      <p>built web and mobile apps for <a href="https://tracxn.com/d/companies/daedalus/__4NOiqEy2jDbXg3S4nSjyvtQeg4fSTNIEiMtvLFfVjBs/">daedalus finance</a> (a fintech startup) and <a href="https://www.feniska.com/">feniska</a> (a german pet-tech startup).</p>
+      <p>started a few failed consumer apps.</p>
+    </div>
+  </section>
+
+  <article class="obj paper" style="--x:910;--y:1420;--w:440;--r:-2;--z:6;--mr:-1.2" aria-labelledby="h-tum">
+    <span class="under u2" aria-hidden="true"></span><span class="under u1" aria-hidden="true"></span>
+    <span class="staple" aria-hidden="true"></span>
+    <p class="kicker"><span>technical university of munich</span><span>summer 2022</span></p>
+    <h3 id="h-tum">self-driving cars</h3>
+    <div class="fig" aria-hidden="true">
+      <svg viewBox="0 0 360 170">
+        <g fill="none" stroke="#1b1b1b">
+          <path d="M0 62 H138 M222 62 H360 M0 108 H138 M222 108 H360" stroke-width="1.2"/>
+          <path d="M138 0 V62 M222 0 V62 M138 108 V170 M222 108 V170" stroke-width="1.2"/>
+          <path d="M0 85 H120 M240 85 H360 M180 0 V44 M180 126 V170" stroke-width=".8" stroke-dasharray="6 6"/>
+        </g>
+        <g fill="none" stroke-width="1.6" stroke-linecap="round">
+          <path d="M8 96 C 90 96 150 98 166 124 C 176 140 178 156 176 170" stroke="#1b1b1b"/>
+          <path d="M8 99 C 88 99 146 104 162 128 C 171 142 172 156 171 170" stroke="#b3261e" stroke-dasharray="3 4"/>
+          <path d="M352 74 H 8" stroke="#1b1b1b"/>
+          <path d="M352 71 C 250 71 150 72 8 70" stroke="#b3261e" stroke-dasharray="3 4"/>
+          <path d="M194 2 C 194 50 200 70 240 74 C 290 78 330 76 358 76" stroke="#1b1b1b"/>
+        </g>
+        <g font-family="Dymo, sans-serif" font-size="9" letter-spacing="1.6" fill="#555"><text x="4" y="22">RECORDED &mdash;&mdash;</text><text x="4" y="36" fill="#b3261e">SIMULATED - - -</text></g>
+      </svg>
+    </div>
+    <p>research: translated traffic trajectories from drone footage of german intersections into semantic scenarios for autonomous-vehicle testing, and improved the evaluation loop.</p>
+    <p>it was incredible to spend time living in germany.</p>
+    <p class="go"><a href="/paper.html">read the write-up &rarr;</a></p>
+  </article>
+
+  <!-- ============ reading ============ -->
+  <section class="obj card catalog reading has-label" style="--x:96;--y:1630;--w:690;--r:.6;--z:5;--mr:-.6" aria-labelledby="h-reading">
+    <h2 class="dymo" id="h-reading" style="--lr:1deg">reading</h2>
+    <div class="typed">
+      <h3><span>loved in the past year</span><span>i mostly like reading fiction</span></h3>
+      <ul class="books">
+        <li><a class="t" href="https://www.goodreads.com/book/show/29044.The_Secret_History">the secret history</a><span class="lead" aria-hidden="true"></span><span class="a">donna tartt</span><span class="rt">5/5</span></li>
+        <li><a class="t" href="https://www.goodreads.com/book/show/551520.The_Wisdom_of_Insecurity">the wisdom of insecurity</a><span class="lead" aria-hidden="true"></span><span class="a">alan watts</span><span class="rt">5/5</span></li>
+        <li><a class="t" href="https://www.goodreads.com/book/show/86524.The_Path_to_Power">the path to power</a><span class="lead" aria-hidden="true"></span><span class="a">robert a. caro</span><span class="rt">5/5</span></li>
+        <li><a class="t" href="https://www.goodreads.com/book/show/48927138-unit-testing">unit testing*</a><span class="lead" aria-hidden="true"></span><span class="a">vladimir khorikov</span><span class="rt">5/5</span></li>
+        <li><a class="t" href="https://www.goodreads.com/book/show/40607194-east-of-eden">east of eden</a><span class="lead" aria-hidden="true"></span><span class="a">john steinbeck</span><span class="rt"></span></li>
+        <li><a class="t" href="https://www.goodreads.com/book/show/6192.Disgrace">disgrace</a><span class="lead" aria-hidden="true"></span><span class="a">j. m. coetzee</span><span class="rt">5/5</span></li>
+        <li><a class="t" href="https://www.goodreads.com/book/show/77566.Hyperion">hyperion</a><span class="lead" aria-hidden="true"></span><span class="a">dan simmons</span><span class="rt">4/5</span></li>
+        <li><a class="t" href="https://www.goodreads.com/book/show/60384452-demon-copperhead">demon copperhead</a><span class="lead" aria-hidden="true"></span><span class="a">barbara kingsolver</span><span class="rt"></span></li>
+      </ul>
+      <p class="note">* principles, practices, and patterns. i wish they made us read this in college (but even if they did, i probably would have skipped it).</p>
+      <p><a href="https://www.goodreads.com/user/show/116748355">more on goodreads &rarr;</a></p>
+    </div>
+  </section>
+
+  <!-- ============ guitar ============ -->
+  <figure class="obj print w90 right" data-drag style="--x:880;--y:2020;--w:470;--r:2.2;--z:4;--mr:1.8">
+    <div class="paper-edge">
+      <span class="tape" style="right:18%;top:-13px;transform:rotate(4deg)" aria-hidden="true"></span>
+      <button type="button" data-photo="R0009339-preview"><img src="/assets/photos/small/R0009339-preview.webp" width="800" height="533" alt="A red pickup truck parked in front of a lit house at night."></button>
+      <figcaption><span>R0009339</span></figcaption>
+    </div>
+  </figure>
+
+  <section class="obj card guitar has-label" style="--x:300;--y:2130;--w:560;--r:-1;--z:5;--mr:1" aria-labelledby="h-guitar">
+    <h2 class="dymo" id="h-guitar" style="--lr:-2.5deg">guitar</h2>
+    <div class="typed">
+      <h3><span>still learning</span></h3>
+      <p>a yellow mexican fender stratocaster, black pickguard, cream hsh pickups. i bought her used in the <a href="https://stores.guitarcenter.com/ny/carle-place/157156">carle place guitar center</a> a year after playing guitar.</p>
+      <p>favorite solo: gary moore, <a href="https://www.youtube.com/watch?v=rlgjWuQPaEQ&amp;t=390s">i love you more than you'll ever know</a>, <span class="red">from 6:30</span>. also <a href="https://www.youtube.com/watch?v=JmsUkutNnI0&amp;t=195s">still got the blues</a> and <a href="https://www.youtube.com/watch?v=hIiuv6PwkdQ">parisienne walkways (live)</a>.</p>
+      <p>on repeat: <a href="https://open.spotify.com/artist/23wr9RJZg0PmYvVFyNkQ4j">gary moore</a>, <a href="https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2">the beatles</a>, <a href="https://open.spotify.com/artist/0k17h0D3J5VfsdmQ1iZtE9">pink floyd</a>.</p>
+    </div>
+  </section>
+
+  <div class="obj chips" style="--x:176;--y:2200;--w:150;--r:-5;--z:6;--mr:-1.2" aria-hidden="true">
+    <div><i style="background:#ecc733"></i><span>body</span></div>
+    <div><i style="background:#141414"></i><span>pickguard</span></div>
+    <div><i style="background:#eee4c8"></i><span>pickups</span></div>
+  </div>
+
+  <div class="obj pick" data-drag style="--x:874;--y:2372;--w:78;--r:-28;--z:8" aria-hidden="true">
+    <svg viewBox="0 0 100 112">
+      <defs>
+        <clipPath id="pk"><path d="M50 4 C 80 4 97 19 97 41 C 97 64 71 92 50 108 C 29 92 3 64 3 41 C 3 19 20 4 50 4 Z"/></clipPath>
+        <linearGradient id="pearl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbf6e6"/><stop offset=".45" stop-color="#eee3c6"/><stop offset=".7" stop-color="#f6eedb"/><stop offset="1" stop-color="#dccfae"/></linearGradient>
+        <filter id="swirl"><feTurbulence type="turbulence" baseFrequency=".035 .06" numOctaves="2" seed="5"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 .97  0 0 0 0 .9  0 0 0 .55 -.05"/></filter>
+      </defs>
+      <g clip-path="url(#pk)">
+        <rect width="100" height="112" fill="url(#pearl)"/>
+        <rect width="100" height="112" filter="url(#swirl)" opacity=".8"/>
+        <path d="M14 22 C 28 9 62 6 84 18" stroke="rgba(255,255,255,.8)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      </g>
+      <path d="M50 4 C 80 4 97 19 97 41 C 97 64 71 92 50 108 C 29 92 3 64 3 41 C 3 19 20 4 50 4 Z" fill="none" stroke="rgba(90,70,30,.35)"/>
+    </svg>
+  </div>
+
+  <figure class="obj print bleed w90 left" data-drag style="--x:950;--y:2420;--w:400;--r:-3;--z:3;--mr:-1.6">
+    <div class="paper-edge">
+      <span class="tape" style="left:-20px;top:-6px;transform:rotate(-40deg)" aria-hidden="true"></span>
+      <button type="button" data-photo="R0009319"><img src="/assets/photos/small/R0009319.webp" width="800" height="533" alt="A white dog and a golden retriever meeting on a sunny park lawn under a blue sky."></button>
+      <figcaption><span>R0009319</span></figcaption>
+    </div>
+  </figure>
+
+  <figure class="obj print w90 right" data-drag style="--x:520;--y:2480;--w:360;--r:4.5;--z:3;--mr:2.2">
+    <div class="paper-edge">
+      <span class="tape" style="left:36%;top:-13px;transform:rotate(-6deg)" aria-hidden="true"></span>
+      <button type="button" data-photo="R0000079"><img src="/assets/photos/small/R0000079.webp" width="800" height="533" alt="A cat silhouetted in a warmly lit window at night."></button>
+      <figcaption><span>R0000079</span></figcaption>
+    </div>
+  </figure>
+
+  <!-- ============ contact ============ -->
+  <footer class="obj contact" style="--x:110;--y:2570;--w:420;--z:6" aria-labelledby="h-contact">
+    <h2 class="sr-only" id="h-contact">contact</h2>
+    <a class="dymo t-red" href="mailto:gcohen1928@gmail.com" style="--lr:-1deg">gcohen1928@gmail.com</a>
+    <a class="dymo" href="https://github.com/gcohen1928" style="--lr:1.5deg;margin-left:12%">github</a>
+    <a class="dymo t-blue" href="https://www.linkedin.com/in/gabrielhcohen/" style="--lr:-2.5deg;margin-left:4%">linkedin</a>
+  </footer>
+
+  <p class="mat-print bl" aria-hidden="true">self-healing &middot; 1 cm grid</p>
+  </div>
+</main>
+
+<dialog class="viewer" id="viewer" aria-label="Photo">
+  <figure>
+    <img id="v-img" src="" alt="" width="1600" height="1067">
+    <figcaption><span id="v-alt"></span><b id="v-fr"></b></figcaption>
+  </figure>
+  <div class="ctrl">
+    <button class="dymo" type="button" id="v-prev">&larr; prev</button>
+    <button class="dymo" type="button" id="v-next">next &rarr;</button>
+    <button class="dymo t-red" type="button" id="v-close">close</button>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  const surface = document.getElementById('surface');
+  const desktop = matchMedia('(min-width: 1100px)');
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* --- mat: printed numbers and old knife cuts --- */
+  function cellSize() { return desktop.matches ? surface.clientWidth / 1440 * 30 : 26; }
+  function drawMat() {
+    const c = cellSize(), W = surface.clientWidth, H = surface.clientHeight;
+    const r = document.getElementById('rulers');
+    let h = '';
+    for (let i = 1, x = c; x < W - 6; i++, x += c) h += `<span style="left:${x}px;top:${Math.max(6, c * .22)}px">${i}</span>`;
+    for (let i = 1, y = c; y < H - 6; i++, y += c) h += `<span class="l" style="top:${y}px;left:${Math.max(4, c * .18)}px">${i}</span>`;
+    r.innerHTML = h;
+    // cuts: deterministic, so the mat looks the same every visit
+    let s = 7; const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+    const svg = document.getElementById('cuts');
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    let l = '';
+    for (let i = 0; i < 26; i++) {
+      const x = rnd() * W, y = rnd() * H, a = (rnd() < .6 ? 0 : rnd() < .5 ? Math.PI / 2 : rnd() * Math.PI), len = 30 + rnd() * 160;
+      l += `<line x1="${x}" y1="${y}" x2="${x + Math.cos(a) * len}" y2="${y + Math.sin(a) * len}"/>`;
+    }
+    const y0 = H * .41; l += `<line x1="${W * .04}" y1="${y0}" x2="${W * .52}" y2="${y0 + 2}"/>`;
+    const x0 = W * .66; l += `<line x1="${x0}" y1="${H * .6}" x2="${x0 - 3}" y2="${H * .83}"/>`;
+    svg.innerHTML = l;
+  }
+
+  /* --- the transfer sheet, with the letters of the name already used --- */
+  const rows = ['aaaaabbbcccd', 'ddeeeeeeeeff', 'ggghhhiiiijk', 'llllmmnnnnn', 'oooooppqrrrr', 'sssstttttuuv'];
+  const need = { g: 1, a: 1, b: 1, e: 2, c: 1, o: 1, h: 1, n: 1 };
+  const box = document.getElementById('letraset-rows');
+  if (box) box.innerHTML = rows.map(r => '<div class="row">' + [...r].map(ch => {
+    if (need[ch]) { need[ch]--; return `<span class="used">${ch}</span>`; }
+    return `<span>${ch}</span>`;
+  }).join('') + '</div>').join('');
+
+  /* --- loupe: a real magnifier over the slides --- */
+  const panel = document.getElementById('panel');
+  const slides = document.getElementById('slides');
+  const loupe = document.getElementById('loupe');
+  const view = document.getElementById('view');
+  const MAG = 2.3;
+  let cx = 0, cy = 0, tx = 0, ty = 0, raf = 0;
+  function buildView() {
+    const copy = slides.cloneNode(true);
+    copy.removeAttribute('id');
+    copy.querySelectorAll('button').forEach(b => { b.tabIndex = -1; b.removeAttribute('data-drag'); });
+    view.replaceChildren(copy);
+    view.style.width = panel.clientWidth + 'px';
+    view.style.height = panel.clientHeight + 'px';
+    view.style.background = getComputedStyle(panel).backgroundImage;
+  }
+  function place() {
+    const D = loupe.offsetWidth, L = loupe.firstElementChild.offsetWidth;
+    loupe.style.transform = `translate(${cx - D / 2}px, ${cy - D / 2}px)`;
+    view.style.transform = `translate(${L / 2 - cx * MAG}px, ${L / 2 - cy * MAG}px) scale(${MAG})`;
+  }
+  function tick() {
+    const k = still.matches ? 1 : .32;
+    cx += (tx - cx) * k; cy += (ty - cy) * k;
+    place();
+    raf = (Math.abs(tx - cx) > .3 || Math.abs(ty - cy) > .3) ? requestAnimationFrame(tick) : 0;
+  }
+  function restLoupe() {
+    // resting over the slide of the red truck
+    const s = slides.querySelector('[data-photo="R0009339-preview"]');
+    const pr = panel.getBoundingClientRect(), sr = s.getBoundingClientRect();
+    tx = cx = sr.left - pr.left + sr.width * .56; ty = cy = sr.top - pr.top + sr.height * .5;
+    place();
+  }
+  function setupLoupe() {
+    if (!desktop.matches) return;
+    buildView(); restLoupe();
+  }
+  panel.addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse' || !desktop.matches || dragging) return;
+    const r = panel.getBoundingClientRect();
+    tx = Math.max(0, Math.min(r.width, e.clientX - r.left));
+    ty = Math.max(0, Math.min(r.height, e.clientY - r.top));
+    panel.classList.add('looking');
+    if (!raf) raf = requestAnimationFrame(tick);
+  });
+  panel.addEventListener('pointerleave', () => panel.classList.remove('looking'));
+
+  /* --- dragging things around the table (desktop, mouse or pen) --- */
+  let dragging = false, zTop = 40;
+  document.querySelectorAll('[data-drag]').forEach(el => {
+    el.addEventListener('pointerdown', e => {
+      if (!desktop.matches || e.pointerType === 'touch' || e.button !== 0 || e.target.closest('a')) return;
+      const sx = e.clientX, sy = e.clientY;
+      const ox = parseFloat(el.dataset.dx || 0), oy = parseFloat(el.dataset.dy || 0);
+      let moved = false;
+      const move = ev => {
+        const dx = ev.clientX - sx, dy = ev.clientY - sy;
+        if (!moved) {
+          if (Math.hypot(dx, dy) < 5) return;
+          moved = dragging = true;
+          el.classList.add('lifted'); el.style.zIndex = ++zTop;
+          if (el.classList.contains('slide')) panel.classList.remove('looking');
+        }
+        el.dataset.dx = ox + dx; el.dataset.dy = oy + dy;
+        el.style.setProperty('--dx', ox + dx + 'px'); el.style.setProperty('--dy', oy + dy + 'px');
+      };
+      const up = () => {
+        window.removeEventListener('pointermove', move);
+        window.removeEventListener('pointerup', up);
+        el.classList.remove('lifted');
+        if (moved) {
+          dragging = false;
+          el.dataset.dragged = '1';
+          setTimeout(() => delete el.dataset.dragged, 0);
+          if (el.classList.contains('slide')) buildView();
+        }
+      };
+      window.addEventListener('pointermove', move);
+      window.addEventListener('pointerup', up);
+      e.preventDefault();
+    });
+  });
+
+  /* --- viewer --- */
+  const dlg = document.getElementById('viewer');
+  const photos = [...slides.querySelectorAll('.slide')].map(s => ({ id: s.dataset.photo, alt: s.querySelector('img').alt }));
+  let cur = 0;
+  function show(i) {
+    cur = (i + photos.length) % photos.length;
+    const p = photos[cur];
+    const img = document.getElementById('v-img');
+    img.src = `/assets/photos/${p.id}.webp`; img.alt = p.alt;
+    document.getElementById('v-alt').textContent = p.alt;
+    document.getElementById('v-fr').textContent = p.id.replace('-preview', '') + '  ·  ' + (cur + 1) + '/' + photos.length;
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('button[data-photo]');
+    if (!b || b.closest('.loupe') || b.closest('[data-dragged]')) return;
+    show(photos.findIndex(p => p.id === b.dataset.photo));
+    dlg.showModal();
+  });
+  document.getElementById('v-prev').onclick = () => show(cur - 1);
+  document.getElementById('v-next').onclick = () => show(cur + 1);
+  document.getElementById('v-close').onclick = () => dlg.close();
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') show(cur - 1); if (e.key === 'ArrowRight') show(cur + 1); });
+
+  if (!finePointer.matches) document.getElementById('hint').textContent = 'tap a slide to see it big';
+
+  function layout() { drawMat(); setupLoupe(); }
+  document.fonts.ready.then(layout);
+  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(layout, 120); });
+  layout();
+})();
+</script>
+</body>
+</html>

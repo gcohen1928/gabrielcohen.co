@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gabe — Gabriel Cohen</title>
+<meta name="description" content="Gabriel Cohen, 23, San Francisco. CTO of Nero. A short film in ten of his photographs.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=League+Gothic:wdth@75..100&display=swap" rel="stylesheet">
+<script>
+/* film (scroll-played) or script (static, readable). reduced motion and no-JS get the script. */
+(function () {
+  var d = document.documentElement, m = null;
+  try { m = new URLSearchParams(location.search).get('mode') || localStorage.getItem('gabe:mode'); } catch (e) {}
+  if (m !== 'film' && m !== 'script') m = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'script' : 'film';
+  d.setAttribute('data-mode', m);
+})();
+</script>
+<style>
+@property --key { syntax: '<color>'; inherits: true; initial-value: #e3b341; }
+
+:root {
+  --fg: #f1ede5;
+  --dim: #8e887d;
+  --paper: #f1eee6;
+  --ink: #1b1a17;
+  --key: #e3b341;
+  --gut: clamp(16px, 2.8vw, 40px);
+  --band-h: min(calc(100vw / 2.39), calc(100vh - 270px));
+  --rows: 0.82fr var(--band-h) 1.18fr;
+  --tf: .41;
+  --sub: "Helvetica Neue", Helvetica, Arimo, Arial, sans-serif;
+  --mono: "Courier Prime", "Courier New", Courier, monospace;
+  --title: "League Gothic", "Arial Narrow", Impact, sans-serif;
+}
+@media (max-width: 720px) and (orientation: portrait) {
+  :root { --band-h: 100vw; --rows: 0.66fr var(--band-h) 1.34fr; --tf: .33; }
+  html[data-mode=film] .band img { object-position: var(--posm, 50% 50%); }
+  html[data-mode=film] .opcredit { top: 7%; bottom: auto; left: 7%; font-size: 15px; }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--key); outline-offset: 3px; }
+
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: 12px; top: -60px; z-index: 50; background: #fff; color: #000; padding: 8px 12px; font: 14px var(--mono); }
+.skip:focus { top: 12px; }
+
+/* ---------------------------------------------------------------
+   FILM MODE: the page is a timeline. each .shot is a stretch of
+   scroll; its .frame is pinned to the screen while you're inside it.
+   --------------------------------------------------------------- */
+html[data-mode=film] { background: #000; scrollbar-width: none; }
+html[data-mode=film]::-webkit-scrollbar { display: none; }
+html[data-mode=film] body { background: #000; color: var(--fg); font-family: var(--sub); }
+
+html[data-mode=film] .titlepage,
+html[data-mode=film] .slug,
+html[data-mode=film] .action,
+html[data-mode=film] .cue,
+html[data-mode=film] .sup,
+html[data-mode=film] .script-only,
+html[data-mode=film] .band figcaption { display: none; }
+
+html[data-mode=film] .shot { position: relative; height: calc(var(--n, 4) * 45vh); }
+html[data-mode=film] .frame {
+  position: fixed; inset: 0; z-index: 1;
+  display: grid; grid-template-rows: var(--rows); grid-template-columns: 100%;
+  background: var(--tint, #000);
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .9s ease, visibility 0s linear .9s;
+}
+html[data-mode=film] .shot.active .frame { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity .9s ease; }
+
+html[data-mode=film] .band { grid-row: 2; grid-column: 1; margin: 0; position: relative; overflow: hidden; background: #000; }
+html[data-mode=film] .band img {
+  display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 50% 50%);
+  transition: opacity 1.3s ease;
+}
+html[data-mode=film] .shot[data-state=card] .band img { opacity: 0; transition-duration: .45s; }
+
+/* cue mark: the projectionist's dot that says the reel is about to change. shows on a chapter's last beat */
+html[data-mode=film] .band::after {
+  content: ""; position: absolute; right: 6.5%; top: 9%; width: clamp(9px, 1.05vw, 16px); aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 46% 44%, rgba(255,250,236,.9) 0 50%, rgba(255,250,236,.45) 60%, rgba(255,250,236,0) 72%);
+  mix-blend-mode: screen; filter: blur(.4px); opacity: 0; pointer-events: none;
+}
+html[data-mode=film] .shot[data-cue] .band::after { opacity: 1; }
+
+/* intertitles */
+html[data-mode=film] .card {
+  grid-row: 2; grid-column: 1; place-self: center; z-index: 2; margin: 0;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  visibility: hidden; opacity: 0; transition: opacity .3s ease, visibility 0s linear .3s;
+}
+html[data-mode=film] .card.on { visibility: visible; opacity: 1; transition: opacity .8s ease .35s; }
+.card-num { font: 700 13px/1 var(--mono); letter-spacing: .38em; text-transform: uppercase; }
+.card-name { font-family: var(--title); font-weight: 400; text-transform: uppercase; }
+.card-note { font: 13px/1.3 var(--mono); letter-spacing: .08em; }
+html[data-mode=film] .card-num { color: var(--fg); opacity: .75; margin-bottom: 1.4em; padding-left: .38em; }
+html[data-mode=film] .card-name { color: var(--key); font-size: clamp(64px, 10.4vw, 164px); line-height: .84; letter-spacing: .012em; }
+html[data-mode=film] .card-note { color: var(--dim); margin-top: 1.6em; }
+html[data-mode=film] .title-card .card-name { color: var(--fg); font-size: clamp(96px, 17vw, 260px); letter-spacing: .05em; padding-left: .05em; }
+
+/* the opening credit, set straight onto the yellow panel */
+.opcredit { display: none; }
+html[data-mode=film] .opcredit {
+  display: block; position: absolute; left: 5.2%; bottom: 13%; margin: 0;
+  font: 400 clamp(17px, 1.75vw, 26px)/1 var(--title); letter-spacing: .4em; text-transform: uppercase;
+  color: #15120a; visibility: hidden;
+}
+html[data-mode=film] .shot[data-beat="0"] .opcredit { visibility: visible; }
+
+/* subtitles */
+html[data-mode=film] .dlg { display: contents; }
+html[data-mode=film] .line {
+  grid-row: 3; grid-column: 1; justify-self: center; align-self: start;
+  margin: clamp(14px, 2.7vh, 28px) var(--gut) 0; max-width: 27em;
+  font: 500 clamp(17px, min(1.82vw, 3.1vh), 28px)/1.3 var(--sub); letter-spacing: .004em;
+  text-align: center; text-wrap: balance; color: var(--fg);
+  visibility: hidden;
+}
+html[data-mode=film] .line.on { visibility: visible; }
+.line a { text-decoration-line: underline; text-decoration-thickness: 1.5px; text-decoration-color: var(--key); text-underline-offset: .2em; }
+.line a:hover { color: var(--key); }
+html[data-mode=film] .paren { color: #b9b3a8; font-style: italic; font-weight: 400; }
+
+/* ---- chrome: the burn-in, the slug, the reel ---- */
+.chrome { display: none; }
+html[data-mode=film] .chrome {
+  display: grid; position: fixed; inset: 0; z-index: 5; pointer-events: none;
+  grid-template-rows: var(--rows); grid-template-columns: 100%;
+}
+html[data-mode=film] .chrome > * { pointer-events: auto; }
+.topbar { grid-row: 1; grid-column: 1; align-self: center; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 var(--gut); }
+.slugline { margin: 0; font: 700 13px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--key); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.slugline .sl-n { color: var(--fg); opacity: .55; margin-right: 1.1em; }
+.slugline .sl-n:empty { display: none; }
+.tb-right { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
+.burn { margin: 0; display: flex; gap: 4px; font: 700 13px/1 var(--mono); letter-spacing: .04em; color: #fff; }
+.burn span { background: #000; padding: 5px 7px 4px; box-shadow: 0 0 0 1px rgba(255,255,255,.14); }
+.mode-btn {
+  font: 13px/1 var(--mono); letter-spacing: .04em; color: var(--fg); background: none; border: 0; padding: 6px 0; cursor: pointer;
+  text-decoration: underline; text-decoration-color: rgba(241,237,229,.35); text-underline-offset: .3em;
+}
+.mode-btn:hover { text-decoration-color: var(--key); }
+
+.hint { grid-row: 3; grid-column: 1; align-self: end; justify-self: end; margin: 0 var(--gut) 64px; font: 12px/1 var(--mono); color: var(--dim); letter-spacing: .06em; transition: opacity .4s; }
+html:not([data-act=start]) .hint { opacity: 0; visibility: hidden; }
+
+.reel { grid-row: 3; grid-column: 1; align-self: end; margin: 0 var(--gut) calc(20px + env(safe-area-inset-bottom)); position: relative; }
+.reel ol { list-style: none; margin: 0; padding: 0; display: flex; gap: 2px; }
+.reel li { flex: var(--g, 1) 1 0; min-width: 0; position: relative; }
+.reel a { display: flex; flex-direction: column; gap: 11px; text-decoration: none; color: var(--dim); padding-top: 6px; }
+.reel .rn { align-self: flex-start; font: 700 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+.reel .rl { display: none; }
+.reel li.on .rn, .reel a:hover .rn, .reel a:focus-visible .rn { color: var(--fg); }
+.reel li.on .rn { position: relative; z-index: 2; background: var(--tint, #000); padding-right: .7em; }
+.reel li.on .rl, .reel a:hover .rl, .reel a:focus-visible .rl { display: inline; color: var(--key); font-weight: 400; margin-left: .7em; letter-spacing: .04em; text-transform: lowercase; }
+.reel .strip { display: block; height: 9px; background: #222; opacity: .78; transition: opacity .3s; }
+.reel li.on .strip, .reel a:hover .strip { opacity: 1; }
+.playhead { position: absolute; bottom: -4px; width: 1px; height: 17px; background: #fff; left: 0; pointer-events: none; }
+.playhead::before { content: ""; position: absolute; left: -3px; top: -5px; border: 3.5px solid transparent; border-top: 5px solid #fff; }
+
+/* ---- end credits: they roll because you scroll ---- */
+.credits { position: relative; z-index: 3; }
+html[data-mode=film] .credits { padding: 108vh var(--gut) 34vh; color: var(--fg); }
+html[data-mode=film][data-act=credits] .chrome::before,
+html[data-mode=film][data-act=credits] .chrome::after { content: ""; position: absolute; left: 0; right: 0; pointer-events: none; z-index: -1; }
+html[data-mode=film][data-act=credits] .chrome::before { top: 0; height: calc((100vh - var(--band-h)) * var(--tf) + 36px); background: linear-gradient(#000 72%, rgba(0,0,0,0)); }
+html[data-mode=film][data-act=credits] .chrome::after { bottom: 0; height: 130px; background: linear-gradient(rgba(0,0,0,0), #000 55%); }
+
+.cr-head { text-align: center; margin: 0 0 22vh; }
+.cr-title { font: 400 clamp(84px, 13vw, 200px)/.85 var(--title); letter-spacing: .05em; text-transform: uppercase; margin: 0; padding-left: .05em; }
+.cr-sub { font: 13px/1.4 var(--mono); letter-spacing: .3em; text-transform: uppercase; color: var(--dim); margin: 22px 0 0; padding-left: .3em; }
+.colorscript { margin: 12vh auto 0; max-width: 1100px; }
+.cs-bar { height: clamp(90px, 13vw, 190px); background: #222; }
+.colorscript figcaption { margin-top: 14px; font: 12px/1.4 var(--mono); letter-spacing: .06em; color: var(--dim); text-align: left; }
+
+.block { max-width: 980px; margin: 0 auto 16vh; }
+.block h3 { text-align: center; font: 700 12px/1 var(--mono); letter-spacing: .42em; text-transform: uppercase; color: var(--dim); margin: 0 0 34px; padding-left: .42em; }
+.row { display: grid; grid-template-columns: 1fr 1fr; column-gap: 34px; margin: 0 0 20px; align-items: baseline; }
+.row dt { text-align: right; font: 500 12px/1.35 var(--sub); letter-spacing: .16em; text-transform: uppercase; color: #a39d92; }
+.row dd { margin: 0; text-align: left; }
+.nm { display: block; font: 400 clamp(24px, 2.2vw, 31px)/1.04 var(--title); letter-spacing: .03em; text-transform: uppercase; color: var(--fg); }
+.nm.lc { text-transform: none; letter-spacing: .02em; }
+.nm a { text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .25s; }
+.nm a:hover, .nm a:focus-visible { background-size: 100% 1px; color: #fff; }
+.nt { display: block; margin-top: 6px; font: 13px/1.45 var(--mono); color: #a7a195; max-width: 30em; }
+.nt a { text-decoration-color: rgba(255,255,255,.35); text-underline-offset: .2em; }
+.nt a:hover { color: #fff; }
+
+.shotlist { list-style: none; margin: 0 auto; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; max-width: 980px; }
+.shotlist a { display: block; text-decoration: none; }
+.shotlist img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; opacity: .82; transition: opacity .25s; }
+.shotlist a:hover img, .shotlist a:focus-visible img { opacity: 1; }
+.shotlist span { display: block; margin-top: 7px; font: 11px/1.3 var(--mono); letter-spacing: .06em; color: #a7a195; }
+
+.cr-end { text-align: center; margin-top: 18vh; }
+.cr-end p { font: 12px/1.6 var(--mono); letter-spacing: .24em; text-transform: uppercase; color: var(--dim); margin: 0 0 22px; }
+.cr-end a { font: 13px var(--mono); letter-spacing: .08em; color: var(--fg); text-underline-offset: .3em; }
+
+/* ---------------------------------------------------------------
+   SCRIPT MODE: same content, set as a shooting script on paper.
+   default for reduced motion and no-JS.
+   --------------------------------------------------------------- */
+html:not([data-mode=film]) body { background: var(--paper); color: var(--ink); font: 17px/1.5 var(--mono); }
+html:not([data-mode=film]) { --key: #9b2d1f; --dim: #6f6a60; }
+html:not([data-mode=film]) .opcredit,
+html:not([data-mode=film]) .film-only { display: none; }
+
+.script-bar { display: none; }
+html:not([data-mode]) .script-bar { display: none !important; }
+html:not([data-mode=film]) .script-bar { display: flex; justify-content: flex-end; position: sticky; top: 0; z-index: 10; padding: 12px var(--gut); pointer-events: none; }
+html:not([data-mode=film]) .script-bar .mode-btn { pointer-events: auto; color: var(--ink); background: var(--paper); padding: 8px 12px; border: 1px solid var(--ink); text-decoration: none; }
+html:not([data-mode=film]) .script-bar .mode-btn:hover { background: var(--ink); color: var(--paper); }
+
+.titlepage { max-width: 760px; margin: 0 auto; padding: 8vh 24px 10vh; min-height: 88vh; display: grid; grid-template-rows: 1fr auto; }
+.tp-center { align-self: center; text-align: center; }
+.tp-title { font: 700 17px/1.5 var(--mono); text-transform: uppercase; text-decoration: underline; text-underline-offset: .25em; margin: 0 0 2.4em; letter-spacing: .06em; }
+.tp-center p { margin: 0 0 .2em; }
+.tp-foot { display: flex; justify-content: space-between; gap: 32px; flex-wrap: wrap; font-size: 15px; }
+.tp-foot p { margin: 0; }
+.tp-foot ol { margin: 0; padding: 0; list-style: none; }
+.tp-foot a { text-underline-offset: .2em; }
+
+html:not([data-mode=film]) main { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+html:not([data-mode=film]) main::before { content: "FADE IN:"; display: block; margin: 1em 0 1.5em; }
+html:not([data-mode=film]) .shot { padding-top: .5em; }
+html:not([data-mode=film]) .shot[data-trans]::before { content: attr(data-trans); display: block; text-align: right; margin: 2em 0 1.6em; }
+html:not([data-mode=film]) .slug { font: 700 17px/1.5 var(--mono); text-transform: uppercase; margin: 0 0 1em; position: relative; }
+html:not([data-mode=film]) .slug .scn { position: absolute; left: -3em; width: 2em; text-align: right; }
+html:not([data-mode=film]) .slug::after { content: attr(data-scn); position: absolute; right: -3em; }
+html:not([data-mode=film]) .card { margin: 0 0 1em; text-transform: uppercase; }
+html:not([data-mode=film]) .title-card { margin-top: 1.5em; text-align: center; }
+html:not([data-mode=film]) .card .card-num::after { content: "."; }
+html:not([data-mode=film]) .card .card-name::before { content: "\201C"; }
+html:not([data-mode=film]) .card .card-name::after { content: "\201D"; }
+html:not([data-mode=film]) .card .card-note { text-transform: lowercase; }
+html:not([data-mode=film]) .card .card-note::before { content: "\2014\00a0"; }
+html:not([data-mode=film]) .card-num, html:not([data-mode=film]) .card-name, html:not([data-mode=film]) .card-note { font: inherit; letter-spacing: 0; }
+html:not([data-mode=film]) .band { margin: 1.4em calc(50% - min(520px, 50vw - 16px)); }
+html:not([data-mode=film]) .band img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; background: #ddd8cc; }
+html:not([data-mode=film]) .band figcaption { font-size: 12px; letter-spacing: .08em; color: var(--dim); text-align: right; margin-top: 6px; }
+html:not([data-mode=film]) .action { margin: 0 0 1.2em; }
+html:not([data-mode=film]) .dlg { margin: 0 14% 0 22%; }
+html:not([data-mode=film]) .cue { margin: 0 0 0 18%; text-transform: uppercase; }
+html:not([data-mode=film]) .line { display: inline; margin: 0; }
+html:not([data-mode=film]) .line + .line::before { content: " "; }
+html:not([data-mode=film]) .line a { text-decoration-color: var(--key); }
+html:not([data-mode=film]) .script-only { display: block; }
+.fadeout { text-align: right; margin: 2.4em 0 0; }
+.theend { text-align: center; margin: 3em 0 5em; text-decoration: underline; text-underline-offset: .25em; }
+
+html:not([data-mode=film]) .credits { background: #0c0b0a; color: var(--fg); padding: 16vh var(--gut) 14vh; --key: #e3b341; --dim: #8e887d; }
+html:not([data-mode=film]) .cr-head { margin-bottom: 14vh; }
+
+@media (max-width: 720px) {
+  html:not([data-mode=film]) body { font-size: 15.5px; }
+  html:not([data-mode=film]) .slug .scn { position: static; margin-right: 1em; }
+  html:not([data-mode=film]) .slug::after { display: none; }
+  html:not([data-mode=film]) .dlg { margin: 0 4% 0 10%; }
+  html:not([data-mode=film]) .cue { margin-left: 22%; }
+  html:not([data-mode=film]) .band { margin-left: -24px; margin-right: -24px; }
+  .tp-foot { flex-direction: column; }
+  .row { grid-template-columns: 1fr; text-align: center; row-gap: 6px; }
+  .row dt, .row dd { text-align: center; }
+  .nt { margin-left: auto; margin-right: auto; }
+  .shotlist { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 720px) and (orientation: portrait) {
+  html[data-mode=film] .topbar { align-self: end; margin-bottom: 18px; flex-wrap: wrap; row-gap: 12px; }
+  html[data-mode=film] .line { font-size: 20px; max-width: 20em; margin-top: 24px; }
+  .burn { font-size: 11.5px; }
+  .slugline { font-size: 11.5px; }
+  .reel .rn { font-size: 10px; letter-spacing: 0; }
+  .reel li:not(.on) .rn { visibility: hidden; }
+  .reel li.on .rn { position: relative; z-index: 2; }
+  .hint { margin-bottom: 70px; justify-self: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-mode=film] *, html[data-mode=film] *::before { transition: none !important; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="?mode=script">Read everything as plain text (the script)</a>
+
+<div class="chrome">
+  <div class="topbar">
+    <p class="slugline" aria-hidden="true"><span class="sl-n">01</span><span class="sl-t">EXT. SIDEWALK — DAY</span></p>
+    <div class="tb-right">
+      <button class="mode-btn" type="button" id="script-link">read the script</button>
+      <p class="burn" aria-hidden="true"><span class="burn-clip">R0009307</span><span class="burn-tc">01:00:00:00</span></p>
+    </div>
+  </div>
+  <p class="hint" aria-hidden="true">scroll to play &#8595;</p>
+  <nav class="reel" aria-label="Chapters">
+    <ol>
+      <li data-for="open"><a href="#open"><span class="rn">title</span><span class="strip"></span></a></li>
+      <li data-for="nero"><a href="#nero"><span class="rn">I<span class="rl">nero</span></span><span class="strip"></span></a></li>
+      <li data-for="flatiron"><a href="#flatiron"><span class="rn">II<span class="rl">flatiron health</span></span><span class="strip"></span></a></li>
+      <li data-for="college"><a href="#college"><span class="rn">III<span class="rl">college</span></span><span class="strip"></span></a></li>
+      <li data-for="munich"><a href="#munich"><span class="rn">IV<span class="rl">munich</span></span><span class="strip"></span></a></li>
+      <li data-for="after-hours"><a href="#after-hours"><span class="rn">V<span class="rl">after hours</span></span><span class="strip"></span></a></li>
+      <li data-for="guitar"><a href="#guitar"><span class="rn">VI<span class="rl">the guitar</span></span><span class="strip"></span></a></li>
+      <li data-for="reading"><a href="#reading"><span class="rn">VII<span class="rl">reading</span></span><span class="strip"></span></a></li>
+      <li data-for="say-hi"><a href="#say-hi"><span class="rn">VIII<span class="rl">say hi</span></span><span class="strip"></span></a></li>
+      <li data-for="last-shot"><a href="#last-shot"><span class="rn">fin</span><span class="strip"></span></a></li>
+      <li data-for="credits"><a href="#credits"><span class="rn">credits</span><span class="strip"></span></a></li>
+    </ol>
+    <span class="playhead" aria-hidden="true"></span>
+  </nav>
+</div>
+
+<div class="script-bar"><button class="mode-btn" type="button">&#9654;&#xFE0E; watch the film</button></div>
+
+<header class="titlepage">
+  <div class="tp-center">
+    <h1 class="tp-title">Gabe</h1>
+    <p>shot by</p>
+    <p>Gabriel Cohen</p>
+    <p style="margin-top:2.4em">(a film in ten shots)</p>
+  </div>
+  <div class="tp-foot">
+    <p>Gabriel Cohen<br>San Francisco<br><a href="mailto:gcohen1928@gmail.com">gcohen1928@gmail.com</a><br><a href="https://github.com/gcohen1928">github.com/gcohen1928</a><br><a href="https://www.linkedin.com/in/gabrielhcohen/">linkedin.com/in/gabrielhcohen</a></p>
+    <nav aria-label="Scenes"><ol>
+      <li><a href="#nero">I. Nero</a></li>
+      <li><a href="#flatiron">II. Flatiron Health</a></li>
+      <li><a href="#college">III. College</a></li>
+      <li><a href="#munich">IV. Munich</a></li>
+      <li><a href="#after-hours">V. After hours</a></li>
+      <li><a href="#guitar">VI. The guitar</a></li>
+      <li><a href="#reading">VII. Reading</a></li>
+      <li><a href="#say-hi">VIII. Say hi</a></li>
+      <li><a href="#credits">End credits</a></li>
+    </ol></nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- 1 -->
+  <section class="shot" id="open" style="--posm:50% 50%;--key:#e3b341;--tint:#100d05;--pos:50% 80%">
+    <div class="frame">
+      <h2 class="slug" data-scn="1"><span class="scn">1</span>EXT. SIDEWALK — DAY</h2>
+      <figure class="band">
+        <img src="/assets/photos/R0009307.webp" srcset="/assets/photos/small/R0009307.webp 800w, /assets/photos/R0009307.webp 1600w" sizes="100vw" width="1600" height="1067" alt="Looking down at a pair of boots on a yellow sidewalk panel stenciled with the word HOLE." fetchpriority="high">
+        <p class="opcredit" aria-hidden="true">Gabriel Cohen</p>
+        <figcaption>R0009307</figcaption>
+      </figure>
+      <p class="action" aria-hidden="true">Looking down at a pair of boots on a yellow sidewalk panel, stenciled HOLE.</p>
+      <div class="dlg">
+        <p class="cue">Gabe (V.O.)</p>
+        <p class="ev line">hey, i'm gabe.</p>
+        <p class="ev line">i'm 23 and i live in san francisco.</p>
+        <p class="ev line">this is a short walk through what i've been up to.</p>
+      </div>
+      <p class="ev card title-card"><span class="sup">Title card: </span><span class="card-name">Gabe</span> <span class="card-note">a film in ten shots</span></p>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="shot" id="nero" data-trans="CUT TO:" style="--posm:66% 50%;--key:#f0623a;--tint:#070c0d">
+    <div class="frame">
+      <h2 class="slug" data-scn="2"><span class="scn">2</span>EXT. STREET — DAY</h2>
+      <p class="ev card"><span class="sup">Super: </span><span class="card-num">I</span> <span class="card-name">Nero</span> <span class="card-note">since spring 2025</span></p>
+      <figure class="band">
+        <img src="/assets/photos/R0009266.webp" srcset="/assets/photos/small/R0009266.webp 800w, /assets/photos/R0009266.webp 1600w" sizes="100vw" width="1600" height="1067" loading="lazy" alt="Close up of a van painted as the Mystery Machine, orange-red lettering on teal, under a blue sky.">
+        <figcaption>R0009266</figcaption>
+      </figure>
+      <p class="action" aria-hidden="true">A van painted as the Mystery Machine, close up, against a blue sky.</p>
+      <div class="dlg">
+        <p class="cue">Gabe (V.O.)</p>
+        <p class="ev line">right now i'm the cto of <a href="https://www.nero.fan/">nero</a>.</p>
+        <p class="ev line">we're helping artists make money and go viral on livestreams.</p>
+        <p class="ev line">i built <a href="https://www.nero.fan/">nero.fan</a> and scaled it to 600k+ monthly users.</p>
+        <p class="ev line">it processes $500k+ gmv a month. <span class="paren">(as of early 2026)</span></p>
+        <p class="ev line">this is where most of my time is spent.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="shot" id="flatiron" data-trans="CUT TO:" style="--posm:50% 50%;--key:#72b3ec;--tint:#070a0d">
+    <div class="frame">
+      <h2 class="slug" data-scn="3"><span class="scn">3</span>EXT. ALLEY — DAY</h2>
+      <p class="ev card"><span class="sup">Super: </span><span class="card-num">II</span> <span class="card-name">Flatiron Health</span> <span class="card-note">2023 – winter 2025</span></p>
+      <figure class="band">
+        <img src="/assets/photos/R0009301.webp" srcset="/assets/photos/small/R0009301.webp 800w, /assets/photos/R0009301.webp 1600w" sizes="100vw" width="1600" height="1067" loading="lazy" alt="An empty concrete alley between a block wall and a building, in hard sun under a blue sky.">
+        <figcaption>R0009301</figcaption>
+      </figure>
+      <p class="action" aria-hidden="true">An empty concrete alley between a block wall and a building. Hard sun, blue sky.</p>
+      <div class="dlg">
+        <p class="cue">Gabe (V.O.)</p>
+        <p class="ev line">before that i was a software engineer at flatiron health, summer 2024 to winter 2025.</p>
+        <p class="ev line"><span class="paren">(i interned there in 2023.)</span></p>
+        <p class="ev line">i shipped clinical research products that supported clinical trials,</p>
+        <p class="ev line">and infrastructure and features for a full-stack patient management system.</p>
+        <p class="ev line">after 8 months i got my own team, building internal sales tools.</p>
+        <p class="ev line">i also led ai development initiatives across flatiron.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="shot" id="college" data-trans="CUT TO:" style="--posm:40% 50%;--key:#9dc463;--tint:#070a06;--pos:50% 55%">
+    <div class="frame">
+      <h2 class="slug" data-scn="4"><span class="scn">4</span>EXT. PARK — DAY</h2>
+      <p class="ev card"><span class="sup">Super: </span><span class="card-num">III</span> <span class="card-name">College</span> <span class="card-note">daedalus finance · feniska</span></p>
+      <figure class="band">
+        <img src="/assets/photos/R0009319.webp" srcset="/assets/photos/small/R0009319.webp 800w, /assets/photos/R0009319.webp 1600w" sizes="100vw" width="1600" height="1067" loading="lazy" alt="A white dog and a golden retriever meeting on a sunny park lawn, green grass under a blue sky.">
+        <figcaption>R0009319</figcaption>
+      </figure>
+      <p class="action" aria-hidden="true">A white dog and a golden retriever meet on a sunny park lawn.</p>
+      <div class="dlg">
+        <p class="cue">Gabe (V.O.)</p>
+        <p class="ev line">in college i built web and mobile apps for two startups:</p>
+        <p class="ev line"><a href="https://tracxn.com/d/companies/daedalus/__4NOiqEy2jDbXg3S4nSjyvtQeg4fSTNIEiMtvLFfVjBs/">daedalus finance</a>, a fintech startup,</p>
+        <p class="ev line">and <a href="https://www.feniska.com/">feniska</a>, a german pet-tech startup.</p>
+        <p class="ev line">i also started a few failed consumer apps.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="shot" id="munich" data-trans="CUT TO:" style="--posm:62% 50%;--key:#ea4a36;--tint:#110605">
+    <div class="frame">
+      <h2 class="slug" data-scn="5"><span class="scn">5</span>EXT. SIDEWALK — DUSK</h2>
+      <p class="ev card"><span class="sup">Super: </span><span class="card-num">IV</span> <span class="card-name">Munich</span> <span class="card-note">summer 2022</span></p>
+      <figure class="band">
+        <img src="/assets/photos/R0000065.webp" srcset="/assets/photos/small/R0000065.webp 800w, /assets/photos/R0000065.webp 1600w" sizes="100vw" width="1600" height="1067" loading="lazy" alt="A dusk sidewalk where a brick wall is lit red by a car's taillight.">
+        <figcaption>R0000065</figcaption>
+      </figure>
+      <p class="action" aria-hidden="true">Dusk. A brick wall on a sidewalk, lit red by a car's taillight.</p>
+      <div class="dlg">
+        <p class="cue">Gabe (V.O.)</p>
+        <p class="ev line">in summer 2022 i did research on self-driving cars at the technical university of munich.</p>
+        <p class="ev line">i translated traffic trajectories from drone footage of german intersections</p>
+        <p class="ev line">into semantic scenarios for autonomous-vehicle testing, and improved the evaluation loop.</p>
+        <p class="ev line">the write-up is here: <a href="/paper.html">read the paper</a>.</p>
+        <p class="ev line">it was incredible to spend time living in germany.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="shot" id="after-hours" data-trans="CUT TO:" style="--posm:45% 50%;--key:#6f86ff;--tint:#05071a">
+    <div class="frame">
+      <h2 class="slug" data-scn="6"><span class="scn">6</span>EXT. HOUSE — EVENING</h2>
+      <p class="ev card"><span class="sup">Super: </span><span class="card-num">V</span> <span class="card-name">After Hours</span> <span class="card-note">outside work</span></p>
+      <figure class="band">
+        <img src="/assets/photos/R0000067.webp" srcset="/assets/photos/small/R0000067.webp 800w, /assets/photos/R0000067.webp 1600w" sizes="100vw" width="1600" height="1067" loading="lazy" alt="Bay windows of a dark house against a deep blue evening sky, one window lit.">
+        <figcaption>R0000067</figcaption>
+      </figure>
+      <p class="action" aria-hidden="true">Bay windows of a dark house against a deep blue evening sky.</p>
+      <div class="dlg">
+        <p class="cue">Gabe (V.O.)</p>
+        <p class="ev line">outside work i'm learning how to play guitar, and reading,</p>
+        <p class="ev line">and doing other shit that caught my attention.</p>
+        <p class="ev line">right now that's skiing and photography.</p>
+        <p class="ev line">every shot in this film is a photo i took.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="shot" id="guitar" data-trans="CUT TO:" style="--posm:38% 50%;--key:#f08a35;--tint:#120803">
+    <div class="frame">
+      <h2 class="slug" data-scn="7"><span class="scn">7</span>EXT. CORNER — NIGHT</h2>
+      <p class="ev card"><span class="sup">Super: </span><span class="card-num">VI</span> <span class="card-name">The Guitar</span> <span class="card-note">fender stratocaster</span></p>
+      <figure class="band">
+        <img src="/assets/photos/R0009331-preview.webp" srcset="/assets/photos/small/R0009331-preview.webp 800w, /assets/photos/R0009331-preview.webp 1600w" sizes="100vw" width="1600" height="1067" loading="lazy" alt="The rounded corner of an old building glowing orange at night.">
+        <figcaption>R0009331</figcaption>
+      </figure>
+      <p class="action" aria-hidden="true">The rounded corner of an old building, glowing orange at night.</p>
+      <div class="dlg">
+        <p class="cue">Gabe (V.O.)</p>
+        <p class="ev line">she's a yellow mexican fender stratocaster. black pickguard, cream hsh pickups.</p>
+        <p class="ev line">i bought her used at the <a href="https://stores.guitarcenter.com/ny/carle-place/157156">carle place guitar center</a>, a year after i started playing.</p>
+        <p class="ev line">i love <a href="https://open.spotify.com/artist/23wr9RJZg0PmYvVFyNkQ4j">gary moore</a>, <a href="https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2">the beatles</a>, and <a href="https://open.spotify.com/artist/0k17h0D3J5VfsdmQ1iZtE9">pink floyd</a>.</p>
+        <p class="ev line">favorite solo: gary moore, <a href="https://www.youtube.com/watch?v=rlgjWuQPaEQ&amp;t=390s">“i love you more than you'll ever know,” from 6:30</a>.</p>
+        <p class="ev line">also <a href="https://www.youtube.com/watch?v=JmsUkutNnI0&amp;t=195s">“still got the blues”</a> and <a href="https://www.youtube.com/watch?v=hIiuv6PwkdQ">“parisienne walkways,” live</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="shot" id="reading" data-trans="CUT TO:" style="--posm:62% 50%;--key:#dcaa6e;--tint:#0d0906;--pos:50% 70%">
+    <div class="frame">
+      <h2 class="slug" data-scn="8"><span class="scn">8</span>EXT. WINDOW — NIGHT</h2>
+      <p class="ev card"><span class="sup">Super: </span><span class="card-num">VII</span> <span class="card-name">Reading</span> <span class="card-note">the past year</span></p>
+      <figure class="band">
+        <img src="/assets/photos/R0000079.webp" srcset="/assets/photos/small/R0000079.webp 800w, /assets/photos/R0000079.webp 1600w" sizes="100vw" width="1600" height="1067" loading="lazy" alt="A cat silhouetted in a warmly lit window at night.">
+        <figcaption>R0000079</figcaption>
+      </figure>
+      <p class="action" aria-hidden="true">A cat, silhouetted in a lit window at night.</p>
+      <div class="dlg">
+        <p class="cue">Gabe (V.O.)</p>
+        <p class="ev line">i mostly like reading fiction.</p>
+        <p class="ev line">this past year: <a href="https://www.goodreads.com/book/show/29044.The_Secret_History">the secret history</a>, <a href="https://www.goodreads.com/book/show/40607194-east-of-eden">east of eden</a>, <a href="https://www.goodreads.com/book/show/6192.Disgrace">disgrace</a>, <a href="https://www.goodreads.com/book/show/77566.Hyperion">hyperion</a>, <a href="https://www.goodreads.com/book/show/60384452-demon-copperhead">demon copperhead</a>.</p>
+        <p class="ev line">also <a href="https://www.goodreads.com/book/show/551520.The_Wisdom_of_Insecurity">the wisdom of insecurity</a> and <a href="https://www.goodreads.com/book/show/86524.The_Path_to_Power">the path to power</a>.</p>
+        <p class="ev line">and <a href="https://www.goodreads.com/book/show/48927138-unit-testing">unit testing</a>, by vladimir khorikov. i wish they made us read this in college</p>
+        <p class="ev line"><span class="paren">(but even if they did, i probably would have skipped it).</span></p>
+        <p class="ev line">the full list is in the credits, and on <a href="https://www.goodreads.com/user/show/116748355">goodreads</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="shot" id="say-hi" data-trans="CUT TO:" style="--posm:58% 50%;--key:#efdcb3;--tint:#0c0a07;--pos:50% 70%">
+    <div class="frame">
+      <h2 class="slug" data-scn="9"><span class="scn">9</span>EXT. FRONT STEPS — NIGHT</h2>
+      <p class="ev card"><span class="sup">Super: </span><span class="card-num">VIII</span> <span class="card-name">Say Hi</span></p>
+      <figure class="band">
+        <img src="/assets/photos/R0009326-preview.webp" srcset="/assets/photos/small/R0009326-preview.webp 800w, /assets/photos/R0009326-preview.webp 1600w" sizes="100vw" width="1600" height="1067" loading="lazy" alt="The lit front steps of a Victorian house at night.">
+        <figcaption>R0009326</figcaption>
+      </figure>
+      <p class="action" aria-hidden="true">The lit front steps of a Victorian house at night.</p>
+      <div class="dlg">
+        <p class="cue">Gabe (V.O.)</p>
+        <p class="ev line">that's about it.</p>
+        <p class="ev line">if you want to talk: <a href="mailto:gcohen1928@gmail.com">gcohen1928@gmail.com</a></p>
+        <p class="ev line">i'm also on <a href="https://github.com/gcohen1928">github</a> and <a href="https://www.linkedin.com/in/gabrielhcohen/">linkedin</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section class="shot" id="last-shot" data-trans="DISSOLVE TO:" data-hold="3" style="--posm:50% 50%;--key:#e5543a;--tint:#0d0806;--pos:50% 66%">
+    <div class="frame">
+      <h2 class="slug" data-scn="10"><span class="scn">10</span>EXT. STREET — NIGHT</h2>
+      <figure class="band">
+        <img src="/assets/photos/R0009339-preview.webp" srcset="/assets/photos/small/R0009339-preview.webp 800w, /assets/photos/R0009339-preview.webp 1600w" sizes="100vw" width="1600" height="1067" loading="lazy" alt="A red pickup truck parked in front of a lit house at night.">
+        <figcaption>R0009339</figcaption>
+      </figure>
+      <p class="action" aria-hidden="true">A red pickup truck in front of a lit house at night. Hold on it.</p>
+    </div>
+  </section>
+
+  <p class="script-only fadeout">FADE OUT.</p>
+  <p class="script-only theend">THE END</p>
+</main>
+
+<footer class="credits" id="credits">
+  <div class="cr-head">
+    <p class="cr-title">Gabe</p>
+    <p class="cr-sub">a film in ten shots</p>
+    <figure class="colorscript">
+      <div class="cs-bar" role="img" aria-label="The ten photographs averaged into vertical stripes of color, in order: yellow daylight through teal, green and blue, into red, deep blue and orange night."></div>
+      <figcaption>the whole walk: every shot, averaged into columns of light</figcaption>
+    </figure>
+  </div>
+
+  <section class="block" aria-labelledby="cr-cast">
+    <h3 id="cr-cast">Cast</h3>
+    <dl>
+      <div class="row"><dt>himself</dt><dd><span class="nm">Gabriel Cohen</span><span class="nt">23. lives in san francisco.</span></dd></div>
+      <div class="row"><dt>herself</dt><dd><span class="nm">a yellow mexican fender stratocaster</span><span class="nt">black pickguard, cream hsh pickups. bought used at the <a href="https://stores.guitarcenter.com/ny/carle-place/157156">carle place guitar center</a>.</span></dd></div>
+    </dl>
+  </section>
+
+  <section class="block" aria-labelledby="cr-work">
+    <h3 id="cr-work">Work</h3>
+    <dl>
+      <div class="row"><dt>cto</dt><dd><span class="nm"><a href="https://www.nero.fan/">Nero</a></span><span class="nt">since spring 2025. helping artists make money and go viral on livestreams. built nero.fan: 600k+ monthly users, $500k+ gmv a month (early 2026).</span></dd></div>
+      <div class="row"><dt>software engineer</dt><dd><span class="nm">Flatiron Health</span><span class="nt">summer 2024 – winter 2025; intern in 2023. clinical research products, patient management infrastructure, his own team on internal sales tools, ai initiatives.</span></dd></div>
+      <div class="row"><dt>web &amp; mobile apps</dt><dd><span class="nm"><a href="https://tracxn.com/d/companies/daedalus/__4NOiqEy2jDbXg3S4nSjyvtQeg4fSTNIEiMtvLFfVjBs/">Daedalus Finance</a></span><span class="nm"><a href="https://www.feniska.com/">Feniska</a></span><span class="nt">in college. a fintech startup and a german pet-tech startup.</span></dd></div>
+      <div class="row"><dt>research, self-driving cars</dt><dd><span class="nm">Technical University of Munich</span><span class="nt">summer 2022. <a href="/paper.html">read the paper</a>.</span></dd></div>
+      <div class="row"><dt>also started</dt><dd><span class="nm">a few failed consumer apps</span></dd></div>
+    </dl>
+  </section>
+
+  <section class="block" aria-labelledby="cr-music">
+    <h3 id="cr-music">Music</h3>
+    <dl>
+      <div class="row"><dt>favorite solo</dt><dd><span class="nm"><a href="https://www.youtube.com/watch?v=rlgjWuQPaEQ&amp;t=390s">“I Love You More Than You'll Ever Know”</a></span><span class="nt">gary moore. from 6:30.</span></dd></div>
+      <div class="row"><dt>also</dt><dd><span class="nm"><a href="https://www.youtube.com/watch?v=JmsUkutNnI0&amp;t=195s">“Still Got the Blues”</a></span><span class="nt">gary moore</span></dd></div>
+      <div class="row"><dt>and</dt><dd><span class="nm"><a href="https://www.youtube.com/watch?v=hIiuv6PwkdQ">“Parisienne Walkways” (live)</a></span><span class="nt">gary moore</span></dd></div>
+      <div class="row"><dt>on repeat</dt><dd><span class="nm"><a href="https://open.spotify.com/artist/23wr9RJZg0PmYvVFyNkQ4j">Gary Moore</a></span><span class="nm"><a href="https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2">The Beatles</a></span><span class="nm"><a href="https://open.spotify.com/artist/0k17h0D3J5VfsdmQ1iZtE9">Pink Floyd</a></span></dd></div>
+    </dl>
+  </section>
+
+  <section class="block" aria-labelledby="cr-reading">
+    <h3 id="cr-reading">Reading, the past year</h3>
+    <dl>
+      <div class="row"><dt>donna tartt</dt><dd><span class="nm"><a href="https://www.goodreads.com/book/show/29044.The_Secret_History">The Secret History</a></span><span class="nt">5/5</span></dd></div>
+      <div class="row"><dt>alan watts</dt><dd><span class="nm"><a href="https://www.goodreads.com/book/show/551520.The_Wisdom_of_Insecurity">The Wisdom of Insecurity</a></span><span class="nt">5/5</span></dd></div>
+      <div class="row"><dt>robert a. caro</dt><dd><span class="nm"><a href="https://www.goodreads.com/book/show/86524.The_Path_to_Power">The Path to Power</a></span><span class="nt">5/5</span></dd></div>
+      <div class="row"><dt>vladimir khorikov</dt><dd><span class="nm"><a href="https://www.goodreads.com/book/show/48927138-unit-testing">Unit Testing: Principles, Practices, and Patterns</a></span><span class="nt">5/5. “i wish they made us read this in college (but even if they did, i probably would have skipped it).”</span></dd></div>
+      <div class="row"><dt>john steinbeck</dt><dd><span class="nm"><a href="https://www.goodreads.com/book/show/40607194-east-of-eden">East of Eden</a></span></dd></div>
+      <div class="row"><dt>j. m. coetzee</dt><dd><span class="nm"><a href="https://www.goodreads.com/book/show/6192.Disgrace">Disgrace</a></span><span class="nt">5/5</span></dd></div>
+      <div class="row"><dt>dan simmons</dt><dd><span class="nm"><a href="https://www.goodreads.com/book/show/77566.Hyperion">Hyperion</a></span><span class="nt">4/5</span></dd></div>
+      <div class="row"><dt>barbara kingsolver</dt><dd><span class="nm"><a href="https://www.goodreads.com/book/show/60384452-demon-copperhead">Demon Copperhead</a></span></dd></div>
+      <div class="row"><dt>the rest</dt><dd><span class="nm"><a href="https://www.goodreads.com/user/show/116748355">on Goodreads</a></span></dd></div>
+    </dl>
+  </section>
+
+  <section class="block" aria-labelledby="cr-shots">
+    <h3 id="cr-shots">Shot list</h3>
+    <ol class="shotlist">
+      <li><a href="#open"><img src="/assets/photos/small/R0009307.webp" alt="Boots on a yellow panel stenciled HOLE" loading="lazy" width="800" height="533"><span>01 R0009307</span></a></li>
+      <li><a href="#nero"><img src="/assets/photos/small/R0009266.webp" alt="The Mystery Machine van" loading="lazy" width="800" height="533"><span>02 R0009266</span></a></li>
+      <li><a href="#flatiron"><img src="/assets/photos/small/R0009301.webp" alt="Empty concrete alley in hard sun" loading="lazy" width="800" height="533"><span>03 R0009301</span></a></li>
+      <li><a href="#college"><img src="/assets/photos/small/R0009319.webp" alt="Two dogs meeting on a park lawn" loading="lazy" width="800" height="533"><span>04 R0009319</span></a></li>
+      <li><a href="#munich"><img src="/assets/photos/small/R0000065.webp" alt="Brick wall lit red by a taillight" loading="lazy" width="800" height="533"><span>05 R0000065</span></a></li>
+      <li><a href="#after-hours"><img src="/assets/photos/small/R0000067.webp" alt="Bay windows against a blue evening sky" loading="lazy" width="800" height="533"><span>06 R0000067</span></a></li>
+      <li><a href="#guitar"><img src="/assets/photos/small/R0009331-preview.webp" alt="Building corner glowing orange at night" loading="lazy" width="800" height="533"><span>07 R0009331</span></a></li>
+      <li><a href="#reading"><img src="/assets/photos/small/R0000079.webp" alt="Cat in a lit window at night" loading="lazy" width="800" height="533"><span>08 R0000079</span></a></li>
+      <li><a href="#say-hi"><img src="/assets/photos/small/R0009326-preview.webp" alt="Lit front steps at night" loading="lazy" width="800" height="533"><span>09 R0009326</span></a></li>
+      <li><a href="#last-shot"><img src="/assets/photos/small/R0009339-preview.webp" alt="Red pickup in front of a lit house" loading="lazy" width="800" height="533"><span>10 R0009339</span></a></li>
+    </ol>
+  </section>
+
+  <section class="block" aria-labelledby="cr-contact">
+    <h3 id="cr-contact">Contact</h3>
+    <dl>
+      <div class="row"><dt>email</dt><dd><span class="nm lc"><a href="mailto:gcohen1928@gmail.com">gcohen1928@gmail.com</a></span></dd></div>
+      <div class="row"><dt>github</dt><dd><span class="nm lc"><a href="https://github.com/gcohen1928">gcohen1928</a></span></dd></div>
+      <div class="row"><dt>linkedin</dt><dd><span class="nm lc"><a href="https://www.linkedin.com/in/gabrielhcohen/">gabrielhcohen</a></span></dd></div>
+    </dl>
+  </section>
+
+  <div class="cr-end">
+    <p>photographed by gabriel cohen<br>© MMXXVI</p>
+    <a href="#open">&#8634; play it again</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  /* each photo squashed into 36 vertical stripes (column averages), computed from the photos themselves */
+  var STRIPS = {"R0009307":"7452207c5a248462288a672b906c2e9471309975339b78358d6e32876a3299793994763b7f673a8b703a7a633892753e96793f886e3a95783f846b388f733f8c703d8c72429276408268388a6d388c6e378c6d358e6e34906e348a693084622d7d5c2a7656276f4f23674821","R0009266":"49515c4f5d6d465f7344667b4670864b748857767f5d797e607c7e667e806b7f816e80806f8080717877737b7874767275736f6f6f696f736c71756d6d6f686e69626d695e6f5c53646355665c5164554d635f515f5b4d634c435d5344515041573f354f40334b3f31414533","R0009301":"5e5450594f4b5b534f5f57527e746d89817b837b75807973706d6a7b7670767571797c7882847b8a8d878b918e75807e728486769097799ba57599a57095a25b6a7445464f41434f3937402b2221271f1e241d1b221b19211b18211a191f19181c18171a1615181514161313","R0009319":"1829301a2c321c2f351e333824393d243b402a42452f4749303f3a334d4e5867677377736a706b6b6d6571746c71736784837878786e545549404936525d54595d545f5b4b5c533c414634424837434938444a3a444a394449394247373f44343c3c3037322c40322b352a25","R0000065":"2d2626191618110c0c0f07071a08073d1c1b210e0f16111039352f3d39324b4744605a5a69605e736a646a594f6650435f4f495d50506f504e6c3d3d612e2f5a26287129286f2728692527602124541b1d4917183b1314230e0f1a13131611101e18181a10100b0707171312","R0000067":"180b0a0a070708090a0607080708081c0f0c1916130e0b0a191519221b182c211f4940345f53456d5d516359512d25243d3634282029130f18221a29201a2b1c1727201928221a272c1f2d25161a2a191e2118252924452a2347301f3a33213a35264b312c713a2e7247316f","R0009331":"0303030303030403030403030404030504030504030705040906040b07040e0805100805160b06251007240f072911083014093316093e1b0b8746188040167337147436136f34136e3213693011652d10602b105c280f58270e4f210d481e0b3816092e1207291006230d06","R0000079":"010101020202020202040403080705140d091e140d25170f2618102719112b1c13301f152f1e15120b0702030304040405060606060605060633221761412b65442d68472f6a493167472f5d3f2a61432e73523a72513a4f3929271b14100a06070604030303030303040403","R0009326":"0303020404030404030404030405030606040505030b09060b0906100c081f1a13362d2019160f372a1d2e2217140f0b504337705f51695747725b4670584369533f5b493a45372c665140513f302d21192c231d251c15100c090d0b070a0805070705040402020302020302","R0009339":"120e0918120d1a15101b160e1e170e241b10281d112c21122f23145c4736664b3a432719573c2d5539274e33234b322563442c70523970513a75523a6d4e37684931674b376349365f4431543a285537244a2f20422a1d37281c2a1f162b2016281e14241b1328211a1e1711"};
+
+  var shots = [].slice.call(document.querySelectorAll('.shot'));
+  var credits = document.getElementById('credits');
+  var reelLis = [].slice.call(document.querySelectorAll('.reel li'));
+  var playhead = document.querySelector('.playhead');
+  var slN = document.querySelector('.sl-n'), slT = document.querySelector('.sl-t');
+  var burnClip = document.querySelector('.burn-clip'), burnTc = document.querySelector('.burn-tc');
+
+  var data = shots.map(function (el) {
+    var evs = [].slice.call(el.querySelectorAll('.ev'));
+    var last = evs[evs.length - 1];
+    var hold = el.dataset.hold ? +el.dataset.hold : (last && last.classList.contains('card') ? 0 : 1);
+    var slug = el.querySelector('.slug');
+    return {
+      el: el, evs: evs, n: evs.length + hold, top: 0,
+      key: getComputedStyle(el).getPropertyValue('--key').trim(),
+      tint: getComputedStyle(el).getPropertyValue('--tint').trim(),
+      scn: slug.dataset.scn, slug: slug.lastChild.textContent.trim(),
+      clip: el.querySelector('figcaption').textContent.trim()
+    };
+  });
+
+  /* the reel: a barcode of the film. black where there's a title card, the photo's stripes where there's picture */
+  function stripGradient(d) {
+    var cols = STRIPS[d.clip].match(/.{6}/g), total = d.n, stops = [], beats = [];
+    for (var b = 0; b < total; b++) beats.push(d.evs[b] && d.evs[b].classList.contains('card') ? 'k' : 'p');
+    var i = 0;
+    while (i < total) {
+      var j = i; while (j < total && beats[j] === beats[i]) j++;
+      var a = i / total * 100, z = j / total * 100;
+      if (beats[i] === 'k') stops.push('#000 ' + a.toFixed(2) + '% ' + z.toFixed(2) + '%');
+      else cols.forEach(function (c, k) {
+        var s = a + (z - a) * k / cols.length, e = a + (z - a) * (k + 1) / cols.length;
+        stops.push('#' + c + ' ' + s.toFixed(2) + '% ' + e.toFixed(2) + '%');
+      });
+      i = j;
+    }
+    return 'linear-gradient(90deg,' + stops.join(',') + ')';
+  }
+  data.forEach(function (d, i) { reelLis[i].querySelector('.strip').style.background = stripGradient(d); });
+  reelLis[reelLis.length - 1].querySelector('.strip').style.background = 'repeating-linear-gradient(90deg,#141414 0 5px,#2a2a2a 5px 6px)';
+  (function () {
+    var all = [];
+    data.forEach(function (d) { all = all.concat(STRIPS[d.clip].match(/.{6}/g)); });
+    var cs = document.querySelector('.cs-bar');
+    if (cs) cs.style.background = 'linear-gradient(90deg,' + all.map(function (c, k) {
+      return '#' + c + ' ' + (k / all.length * 100).toFixed(3) + '% ' + ((k + 1) / all.length * 100).toFixed(3) + '%';
+    }).join(',') + ')';
+  })();
+
+  var beat = 400, creditsTop = 0, maxScroll = 1, lastW = 0, lastH = 0;
+
+  function layout() {
+    if (root.dataset.mode !== 'film') { shots.forEach(function (s) { s.style.height = ''; }); return; }
+    beat = Math.round(Math.max(300, root.clientHeight * 0.46));
+    data.forEach(function (d) { d.el.style.height = (d.n * beat) + 'px'; });
+    data.forEach(function (d) { d.top = d.el.offsetTop; });
+    creditsTop = credits.offsetTop;
+    maxScroll = Math.max(1, root.scrollHeight - root.clientHeight);
+    data.forEach(function (d, i) { reelLis[i].style.setProperty('--g', d.n); });
+    reelLis[reelLis.length - 1].style.setProperty('--g', ((maxScroll - creditsTop) / beat).toFixed(2));
+    lastW = root.clientWidth; lastH = root.clientHeight;
+    cur = null; update();
+  }
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  var cur = null, curBeat = -1, rafId = 0;
+
+  function update() {
+    rafId = 0;
+    if (root.dataset.mode !== 'film') return;
+    var y = window.scrollY, idx = -1;
+    for (var i = 0; i < data.length; i++) if (y >= data[i].top - 1) idx = i;
+    if (y >= creditsTop - 1) idx = data.length;
+    var b = 0;
+    if (idx < data.length) {
+      var d = data[idx];
+      b = Math.max(0, Math.min(d.n - 1, Math.floor((y - d.top + 1) / beat)));
+    }
+    if (idx !== cur || b !== curBeat) {
+      data.forEach(function (dd, k) { dd.el.classList.toggle('active', k === idx); });
+      reelLis.forEach(function (li, k) { li.classList.toggle('on', k === idx); });
+      if (idx < data.length) {
+        var d2 = data[idx], ev = d2.evs[b];
+        d2.evs.forEach(function (e, k) { e.classList.toggle('on', k === b); });
+        d2.el.dataset.state = ev && ev.classList.contains('card') ? 'card' : 'lit';
+        d2.el.dataset.beat = b;
+        if (b === d2.n - 1 && idx < data.length - 1 && !ev) d2.el.dataset.cue = ''; else delete d2.el.dataset.cue;
+        root.style.setProperty('--key', d2.key); root.style.setProperty('--tint', d2.tint);
+        slN.textContent = pad(+d2.scn); slT.textContent = d2.slug; burnClip.textContent = d2.clip;
+        root.dataset.act = (idx === 0 && b === 0) ? 'start' : 'started';
+      } else {
+        root.style.setProperty('--key', '#f1ede5'); root.style.setProperty('--tint', '#000');
+        slN.textContent = ''; slT.textContent = 'END CREDITS'; burnClip.textContent = 'CREDITS';
+        root.dataset.act = 'credits';
+      }
+      cur = idx; curBeat = b;
+    }
+    // timecode: every beat of scroll is four seconds of film at 24fps
+    var f = Math.floor(y / beat * 96), s = Math.floor(f / 24);
+    burnTc.textContent = pad(1 + Math.floor(s / 3600)) + ':' + pad(Math.floor(s / 60) % 60) + ':' + pad(s % 60) + ':' + pad(f % 24);
+    var li = reelLis[Math.min(idx, reelLis.length - 1)], frac;
+    if (idx < data.length) frac = (y - data[idx].top) / (data[idx].n * beat);
+    else frac = (y - creditsTop) / Math.max(1, maxScroll - creditsTop);
+    frac = Math.max(0, Math.min(1, frac));
+    playhead.style.left = (li.offsetLeft + frac * li.offsetWidth) + 'px';
+  }
+
+  function onScroll() { if (!rafId) rafId = requestAnimationFrame(update); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', function () {
+    if (root.clientWidth !== lastW || Math.abs(root.clientHeight - lastH) > 140) {
+      var at = currentAnchor(); layout(); jumpTo(at, true);
+    } else onScroll();
+  });
+
+  function currentAnchor() {
+    if (root.dataset.mode === 'film') return cur === null || cur >= data.length ? (cur === null ? null : credits) : data[cur].el;
+    var best = null;
+    shots.concat(credits).forEach(function (s) { if (s.getBoundingClientRect().top < innerHeight * 0.4) best = s; });
+    return best;
+  }
+  function jumpTo(el, keepBeat) {
+    if (!el) return;
+    var y = el.getBoundingClientRect().top + window.scrollY;
+    if (keepBeat && root.dataset.mode === 'film' && curBeat > 0 && el !== credits) y += curBeat * beat;
+    window.scrollTo(0, y);
+  }
+
+  /* space / page keys step one subtitle at a time instead of skipping two */
+  window.addEventListener('keydown', function (e) {
+    if (root.dataset.mode !== 'film' || e.altKey || e.ctrlKey || e.metaKey) return;
+    var t = e.target; if (t && t.closest && t.closest('button, input, textarea, select')) return;
+    var dir = 0;
+    if (e.key === ' ' || e.key === 'Spacebar') dir = e.shiftKey ? -1 : 1;
+    else if (e.key === 'PageDown' || e.key === 'ArrowRight') dir = 1;
+    else if (e.key === 'PageUp' || e.key === 'ArrowLeft') dir = -1;
+    if (!dir) return;
+    var y = window.scrollY;
+    if (dir > 0 && y >= creditsTop - 1) return;
+    if (dir < 0 && y > creditsTop + 1) return;
+    e.preventDefault();
+    var g = Math.floor((y + 1) / beat) + dir;
+    window.scrollTo(0, Math.max(0, Math.min(creditsTop, g * beat)));
+  });
+
+  /* film <-> script */
+  [].forEach.call(document.querySelectorAll('.mode-btn'), function (btn) {
+    btn.addEventListener('click', function () {
+      var at = currentAnchor();
+      var next = root.dataset.mode === 'film' ? 'script' : 'film';
+      root.setAttribute('data-mode', next);
+      try { localStorage.setItem('gabe:mode', next); } catch (e) {}
+      curBeat = 0; layout();
+      if (at) jumpTo(at, false); else window.scrollTo(0, 0);
+    });
+  });
+
+  layout();
+  if (location.hash) { var t = document.getElementById(location.hash.slice(1)); if (t) jumpTo(t, false); }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { update(); });
+})();
+</script>
+</body>
+</html>

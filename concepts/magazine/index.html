@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gabriel Cohen</title>
+<meta name="description" content="A profile of Gabriel Cohen, 23, CTO of Nero in San Francisco. Words and photographs by the subject.">
+<meta name="theme-color" content="#1e1d1b">
+<link rel="icon" href="/favicon.ico">
+<link rel="preload" href="fonts/bodoni-moda-italic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/schibsted-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Bodoni Moda";src:url(fonts/bodoni-moda.woff2) format("woff2");font-weight:400 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Bodoni Moda";src:url(fonts/bodoni-moda-italic.woff2) format("woff2");font-weight:400 900;font-style:italic;font-display:swap}
+@font-face{font-family:"Newsreader";src:url(fonts/newsreader.woff2) format("woff2");font-weight:300 800;font-style:normal;font-display:swap}
+@font-face{font-family:"Newsreader";src:url(fonts/newsreader-italic.woff2) format("woff2");font-weight:300 800;font-style:italic;font-display:swap}
+@font-face{font-family:"Schibsted Grotesk";src:url(fonts/schibsted-grotesk.woff2) format("woff2");font-weight:400 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Schibsted Grotesk";src:url(fonts/schibsted-grotesk-italic.woff2) format("woff2");font-weight:400 900;font-style:italic;font-display:swap}
+
+/* A feature profile, laid out as printed spreads.
+   Desktop: each spread is a fixed 460 x 300 page pair; every size inside is in cqw of the spread,
+   so the composition scales like a PDF. Narrower screens: the same pages, one after another. */
+:root{
+  --paper:#f3f0e8; --ink:#161513; --ink2:#5b574f;
+  --yellow:#f3c317; --night:#0f0e0d; --on-night:#ece8df; --on-night2:#a8a398;
+  --board:#1e1d1b; --mark:#7d796f;
+  --display:"Bodoni Moda","Bodoni 72",Didot,serif;
+  --text:"Newsreader",Georgia,serif;
+  --sans:"Schibsted Grotesk","Helvetica Neue",Arial,sans-serif;
+  /* single-page (phone / tablet) scale */
+  --fs-body:17.5px; --lh-body:1.5; --fs-intro:21px;
+  --fs-cap:12.5px; --fs-run:11px; --fs-toc:13.5px;
+  --fs-stand:21px; --fs-h1:clamp(56px,16vw,116px);
+  --fs-pq:32px; --fs-h2:46px; --fs-xl:76px; --fs-big:128px; --fs-list:21px; --fs-mail:30px;
+  --gut:20px;
+}
+*{box-sizing:border-box}
+html{background:var(--board);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--board);color:var(--ink);font:400 var(--fs-body)/var(--lh-body) var(--text);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-kerning:normal}
+img{display:block;max-width:100%;height:auto}
+figure,p,blockquote,dl,dd,ol,ul{margin:0;padding:0}
+ol,ul{list-style:none}
+h1,h2,h3{margin:0;font-weight:inherit;font-size:inherit}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.16em}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.skip{position:absolute;left:12px;top:-60px;z-index:10;background:var(--yellow);color:var(--ink);font:700 14px var(--sans);padding:10px 14px}
+.skip:focus{top:12px}
+
+/* stocks */
+.paper{background:var(--paper);color:var(--ink)}
+.yellow{background:var(--yellow);color:var(--ink)}
+.night{background:var(--night);color:var(--on-night)}
+
+/* ---------- type ---------- */
+.kicker,.folio,.cap,.sub,.label,.cite{font-family:var(--sans)}
+.kicker{font-size:var(--fs-run);font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.kicker span{font-weight:400;letter-spacing:.08em}
+.folio{font-size:var(--fs-run);letter-spacing:.12em;text-transform:uppercase;display:flex;gap:1.1em;align-items:baseline;white-space:nowrap}
+.folio b{font-family:var(--display);font-size:1.5em;font-weight:500;letter-spacing:0}
+.cap{font-size:var(--fs-cap);line-height:1.35}
+.cap .fr{display:block;margin-top:.3em;font-size:.9em;letter-spacing:.08em;font-variant-numeric:tabular-nums;opacity:.72}
+.cap .n{font-family:var(--display);font-style:italic;font-size:1.5em;line-height:1;margin-right:.2em}
+
+.hed{font-family:var(--display);font-style:italic;font-weight:400;font-size:var(--fs-h1);line-height:.84;letter-spacing:-.025em}
+.hed span{display:block}
+.hed .bl{display:inline-block;width:0;height:0}
+.stand{font-size:var(--fs-stand);line-height:1.26;text-wrap:pretty}
+.stand .lead{font-family:var(--sans);font-weight:700;font-size:.66em;letter-spacing:.1em;text-transform:uppercase}
+.credit{font-family:var(--sans);font-size:var(--fs-cap);letter-spacing:.06em}
+.credit i{font-family:var(--display);font-size:1.45em;letter-spacing:0}
+
+.body p{hyphens:auto;-webkit-hyphens:auto;hyphenate-limit-chars:7 3 3;text-wrap:pretty}
+.body p+p{text-indent:1.3em}
+.sub{font-size:var(--fs-run);font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:1.5em 0 .55em;break-after:avoid}
+.body .sub:first-child{margin-top:0}
+.intro{font-size:var(--fs-intro);line-height:1.3}
+.drop::first-letter{font-family:var(--display);font-weight:500;float:left;font-size:4.1em;line-height:.76;margin:.07em .07em 0 -.03em}
+@supports (initial-letter:3){.drop::first-letter{float:none;initial-letter:3;font-size:inherit;line-height:inherit;margin:0 .1em 0 0}}
+.end{display:inline-block;width:.62em;height:.62em;background:currentColor;margin-left:.3em;vertical-align:baseline}
+
+.pq{font-family:var(--display);font-style:italic;font-weight:400;font-size:var(--fs-pq);line-height:1.02;letter-spacing:-.012em;text-indent:-.34em;text-wrap:balance}
+.cite{display:block;margin-top:.9em;font-style:normal;font-size:var(--fs-run);font-weight:700;letter-spacing:.16em;text-transform:uppercase;text-indent:0}
+
+.h2{font-family:var(--display);font-style:italic;font-weight:400;font-size:var(--fs-h2);line-height:.9;letter-spacing:-.02em}
+.pq-l{font-size:calc(var(--fs-pq)*1.16)}
+.h2.xl{font-size:var(--fs-xl);line-height:.84;letter-spacing:-.025em}
+.label{font-size:var(--fs-run);font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+
+/* photos */
+.ph a{display:block;height:100%;cursor:zoom-in}
+.ph img{width:100%}
+.fill img{height:100%;object-fit:cover}
+.hole{overflow:hidden}
+.hole img{transform:scale(1.07);transform-origin:78% 100%}
+
+/* contents */
+.toc{font-family:var(--sans)}
+.toc ol{display:grid;grid-template-columns:1fr 1fr;column-gap:1.6em;margin-top:.9em}
+.toc li{border-top:1px solid currentColor}
+.toc a{display:flex;gap:.6em;align-items:baseline;text-decoration:none;padding:.36em 0 .44em;font-size:var(--fs-toc);font-weight:500}
+.toc a b{font-family:var(--display);font-style:italic;font-weight:400;font-size:1.45em;min-width:1.35em}
+.toc a:hover span{text-decoration:underline;text-underline-offset:.2em}
+
+/* guitar sidebar */
+.spec{font-family:var(--sans);font-size:var(--fs-cap);line-height:1.3}
+.spec div{display:grid;grid-template-columns:6.8em 1fr;gap:.6em;border-top:1px solid var(--ink);padding:.45em 0 .5em}
+.spec div:last-child{border-bottom:1px solid var(--ink)}
+.spec dt{font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.86em;padding-top:.1em}
+.spec dd{font-family:var(--text);font-size:1.22em;line-height:1.25}
+.said{font-family:var(--display);font-style:italic;font-size:calc(var(--fs-pq)*.62);line-height:1.1;text-indent:-.34em}
+.loves{font-family:var(--display);font-style:italic;font-size:calc(var(--fs-pq)*.62);line-height:1.18}
+.loves a{text-decoration:none;border-bottom:1px solid}
+.big{font-family:var(--display);font-weight:500;font-size:var(--fs-big);line-height:.8;letter-spacing:-.04em;text-decoration:none;display:inline-block}
+.big:hover{text-decoration:none;opacity:.86}
+.solo{font-family:var(--sans);font-size:var(--fs-cap);line-height:1.35}
+.solo strong{display:block;font-family:var(--display);font-style:italic;font-weight:400;font-size:1.9em;line-height:1.05;margin:.2em 0 .45em}
+.solo a{font-weight:600}
+
+/* reading list */
+.books li{display:grid;grid-template-columns:2.2em 1fr auto;gap:.15em .8em;align-items:baseline;border-top:1px solid var(--ink);padding:.42em 0 .46em}
+.books li:last-child{border-bottom:1px solid var(--ink)}
+.books .no{font-family:var(--display);font-style:italic;font-size:1.5em;line-height:1;grid-row:span 2}
+.books .t{font-family:var(--display);font-style:italic;font-size:var(--fs-list);line-height:1.05;text-decoration:none}
+.books .t:hover{text-decoration:underline;text-decoration-thickness:1px}
+.books .a{font-family:var(--sans);font-size:var(--fs-run);letter-spacing:.12em;text-transform:uppercase;grid-column:2}
+.books .r{grid-row:1;grid-column:3;display:flex;gap:3px;align-self:center}
+.books .r i{width:.5em;height:.5em;border:1px solid var(--ink);display:block}
+.books .r i.on{background:var(--ink)}
+.star{font-family:var(--sans);font-weight:700;font-style:normal}
+.note{font-family:var(--sans);font-size:var(--fs-cap);line-height:1.4}
+.note q{font-family:var(--text);font-style:italic;font-size:1.18em}
+
+/* directory */
+.mail{font-family:var(--display);font-style:italic;font-size:var(--fs-mail);line-height:1;letter-spacing:-.01em;text-decoration:none;display:inline-block;border-bottom:2px solid var(--ink);padding-bottom:.12em}
+.mail:hover{background:var(--yellow)}
+.dir{font-family:var(--sans);font-size:var(--fs-cap)}
+.dir div{display:grid;grid-template-columns:7em 1fr;gap:.8em;align-items:baseline;border-top:1px solid var(--ink);padding:.5em 0 .55em}
+.dir div:last-child{border-bottom:1px solid var(--ink)}
+.dir dt{font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.86em}
+.dir dd a{font-family:var(--display);font-style:italic;font-size:1.75em;line-height:1.05;text-decoration:none}
+.dir dd a:hover{text-decoration:underline;text-decoration-thickness:1px}
+.colophon{font-family:var(--sans);font-size:var(--fs-run);line-height:1.5;letter-spacing:.04em}
+
+.fig{display:block;width:100%;height:auto}
+
+/* ================= single-page mode (phones, tablets) ================= */
+@media (max-width:1279.98px){
+  .feature{max-width:720px;margin:0 auto;padding:0 0 40px}
+  .page{position:relative;padding:28px var(--gut) 66px;margin-bottom:10px}
+  .f{position:relative;margin-bottom:26px}
+  .folio{position:absolute;bottom:22px;left:var(--gut);right:var(--gut)}
+  .r>.folio,.folio.rt{justify-content:flex-end}
+  .mb{margin-left:calc(var(--gut)*-1);margin-right:calc(var(--gut)*-1)}
+  .mt{margin-top:-28px}
+  .m-hide{display:none}
+  .hed{margin:22px 0 26px}
+  .pq{margin:28px 0 30px;padding-left:.34em}
+  .body{margin-bottom:26px}
+  .fill img{aspect-ratio:3/2}
+  .alley img{aspect-ratio:4/5;object-position:56% 50%}
+  .sp-a .hole{margin:0;background:var(--yellow)}
+  .sp-a .hole .cap{padding:10px var(--gut) 0}
+  .sp-a .page.r{padding-top:18px}
+  .ph .cap{margin-top:9px}
+  .mb .cap,.mb + .cap{padding:0 var(--gut)}
+  .side .cap{margin-top:9px}
+  .big{margin:6px 0 10px}
+  .fig{margin-top:8px;margin-bottom:-66px}
+  .sp-f{position:relative;margin-bottom:10px;background:var(--night);color:var(--on-night);padding-bottom:66px}
+  .sp-f .cap{padding:12px var(--gut) 0}
+  .sp-f .folio.lt{display:none}
+  .h2{margin:4px 0 22px}
+  .dogs{max-width:78%;margin:8px auto 26px}
+  .cat{margin-top:6px}
+  .sp-d .l>.folio{display:none}
+}
+@media (min-width:640px) and (max-width:1279.98px){
+  :root{--gut:44px}
+  .cols2{columns:2;column-gap:30px}
+  .stand{max-width:30em}
+  .intro{max-width:32em}
+  .page{padding-top:40px}
+  .mt{margin-top:-40px}
+}
+@media (max-width:420px){
+  :root{--gut:16px;--fs-body:17px;--fs-intro:20px;--fs-stand:20px;--fs-pq:29px;--fs-h2:42px;--fs-xl:68px;--fs-big:112px;--fs-list:20px;--fs-mail:26px}
+}
+
+/* ================= spread mode (desktop) ================= */
+@media (min-width:1280px){
+  :root{
+    --fs-body:1.28cqw; --lh-body:1.45; --fs-intro:1.74cqw;
+    --fs-cap:.82cqw; --fs-run:.72cqw; --fs-toc:.94cqw;
+    --fs-stand:1.6cqw; --fs-h1:9.4cqw;
+    --fs-pq:3.05cqw; --fs-h2:5cqw; --fs-xl:8.6cqw; --fs-big:11cqw; --fs-list:1.5cqw; --fs-mail:3.3cqw;
+  }
+  .feature{display:flex;flex-direction:column;align-items:center;gap:30px;padding:4px 0 96px}
+  .sheet{
+    flex:none;width:min(calc(100% - 96px), 1724px);padding:22px;
+    --m:linear-gradient(var(--mark),var(--mark));
+    background:
+      var(--m) 0 22px/15px 1px no-repeat, var(--m) 22px 0/1px 15px no-repeat,
+      var(--m) right 0 top 22px/15px 1px no-repeat, var(--m) right 22px top 0/1px 15px no-repeat,
+      var(--m) 0 calc(100% - 22px)/15px 1px no-repeat, var(--m) 22px 100%/1px 15px no-repeat,
+      var(--m) right 0 bottom 22px/15px 1px no-repeat, var(--m) right 22px bottom 0/1px 15px no-repeat,
+      var(--m) 50% 0/1px 12px no-repeat, var(--m) 50% 100%/1px 12px no-repeat;
+  }
+  .spread{position:relative;width:100%;aspect-ratio:46/30;container-type:inline-size;overflow:hidden}
+  .sheet{scroll-margin-top:4px}
+  [tabindex="-1"]:focus{outline:none}
+  .page{position:absolute;top:0;height:100%;width:50cqw}
+  .page.l{left:0}.page.r{left:50cqw}
+  .f{position:absolute;left:calc(var(--x)*1cqw);top:calc(var(--y)*1cqw);width:calc(var(--w)*1cqw);height:calc(var(--h)*1cqw);z-index:2}
+  .ph{z-index:1}
+  .folio{position:absolute;bottom:2.05cqw;z-index:3}
+  .l>.folio,.folio.lt{left:3.6cqw}
+  .r>.folio,.folio.rt{right:3.6cqw}
+  .d-hide{display:none}
+  .body{column-gap:2cqw}
+  .cols2{columns:2;column-gap:2cqw}
+  .body .pq{margin:.95em 0 1.05em}
+  .ph .cap{position:absolute;top:100%;left:0;width:100%;margin-top:.7cqw}
+  .side{display:grid;grid-template-columns:36cqw 1fr;gap:1.2cqw}
+  .side .cap{padding-top:.1cqw}
+  .bleed-l .cap{left:3.6cqw;width:auto;right:0}
+  .brick .cap{top:0;left:auto;right:calc(100% + 1.4cqw);width:11.2cqw;margin-top:0}
+}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+</head>
+<body>
+<a class="skip" href="#now">Skip to the story</a>
+
+<main>
+<article class="feature" aria-labelledby="hed">
+
+<!-- ===== pp. 22–23  Opener ===== -->
+<div class="sheet">
+<section class="spread sp-a" id="top" aria-label="Opening spread">
+  <header class="page l yellow">
+    <p class="f kicker" style="--x:3.6;--y:3.3;--w:30">Profile <span>&nbsp;/&nbsp; Gabriel Cohen</span></p>
+    <h1 class="f hed" id="hed" style="--x:3.1;--y:5.6;--w:62"><span>Other shit</span><span>that caught<i class="bl"></i></span><span>my attention</span></h1>
+    <p class="f stand" style="--x:3.6;--y:34.6;--w:25.2"><span class="lead">Gabriel Cohen</span> is 23, lives in San Francisco and is the CTO of <a href="https://www.nero.fan/">Nero</a>, which helps artists make money and go viral on livestreams. He is also learning guitar, reads mostly fiction and, right now, skis and takes photographs, including every one in this feature.</p>
+    <p class="f credit" style="--x:3.6;--y:53.6;--w:25.2">Words &amp; photographs <i>by the subject</i></p>
+    <p class="folio"><b>22</b> Gabriel Cohen</p>
+  </header>
+  <figure class="f ph hole fill" style="--x:33.4;--y:20.82;--w:66.6;--h:44.4">
+    <a href="/assets/photos/R0009307.webp"><img src="/assets/photos/R0009307.webp" srcset="/assets/photos/small/R0009307.webp 800w, /assets/photos/R0009307.webp 1600w" sizes="(min-width:1280px) 66vw, 100vw" width="1600" height="1067" alt="Looking straight down at a pair of brown boots and jeans standing on a yellow sidewalk panel stenciled with the word HOLE." fetchpriority="high"></a>
+    <figcaption class="cap d-hide">The subject, looking down.<span class="fr">R0009307</span></figcaption>
+  </figure>
+  <p class="f cap m-hide" style="--x:3.6;--y:58.4;--w:22">&rarr;&nbsp;The subject, looking down.<span class="fr">R0009307</span></p>
+  <nav class="page r yellow" aria-label="In this feature">
+    <div class="f toc" style="--x:16.4;--y:3.3;--w:30">
+      <p class="kicker">In this feature</p>
+      <ol>
+        <li><a href="#now"><b>24</b><span>Nero</span></a></li>
+        <li><a href="#guitar"><b>28</b><span>The yellow Strat</span></a></li>
+        <li><a href="#before"><b>24</b><span>Flatiron Health</span></a></li>
+        <li><a href="#books"><b>29</b><span>Reading list</span></a></li>
+        <li><a href="#munich"><b>25</b><span>Munich, 2022</span></a></li>
+        <li><a href="#after-dark"><b>30</b><span>After dark</span></a></li>
+        <li><a href="#outside"><b>25</b><span>Outside work</span></a></li>
+        <li><a href="#directory"><b>35</b><span>Directory</span></a></li>
+      </ol>
+    </div>
+    <p class="folio d-hide">Profile <b>23</b></p>
+  </nav>
+</section>
+</div>
+
+<!-- ===== pp. 24–25  The feature ===== -->
+<div class="sheet">
+<section class="spread sp-b" aria-label="Pages 24 and 25">
+  <div class="page l paper">
+    <div class="f body" style="--x:3.6;--y:4.4;--w:42.8">
+      <h2 class="sub" id="now">Now</h2>
+      <p class="intro drop">Most of Gabe Cohen’s time goes to <a href="https://www.nero.fan/">Nero</a>, where he has been CTO since the spring of 2025. The company helps artists make money and go viral on livestreams. He built nero.fan and scaled it to more than 600,000 monthly users; by early 2026 it was processing upwards of $500,000 in GMV a month.</p>
+      <blockquote class="pq pq-l"><p>“This is where most<br> of my time is spent.”</p><cite class="cite">On Nero</cite></blockquote>
+      <div class="cols2">
+        <h2 class="sub" id="before">Before</h2>
+        <p>Before that he was a software engineer at Flatiron Health, first as an intern in 2023, then from the summer of 2024 to the winter of 2025. He shipped clinical research products that supported clinical trials, and built infrastructure and features for a full-stack patient management system. Eight months in, he had his own team, building internal sales tools. He also led AI development initiatives across Flatiron.</p>
+        <h2 class="sub">College</h2>
+        <p>In college he built web and mobile apps for <a href="https://tracxn.com/d/companies/daedalus/__4NOiqEy2jDbXg3S4nSjyvtQeg4fSTNIEiMtvLFfVjBs/">Daedalus Finance</a>, a fintech startup, and for <a href="https://www.feniska.com/">Feniska</a>, a pet-tech startup in Germany. He also, in his words, “started a few failed consumer apps.”</p>
+      </div>
+    </div>
+    <p class="folio"><b>24</b> Gabriel Cohen</p>
+  </div>
+  <div class="page r paper">
+    <figure class="f ph fill mb mt" style="--x:3.2;--y:0;--w:46.8;--h:28.6">
+      <a href="/assets/photos/R0009266.webp"><img src="/assets/photos/R0009266.webp" srcset="/assets/photos/small/R0009266.webp 800w, /assets/photos/R0009266.webp 1600w" sizes="(min-width:1280px) 47vw, 100vw" width="1600" height="1067" alt="Close-up of the side of a van painted as the Mystery Machine, orange-red lettering on teal, under a blue sky." loading="lazy"></a>
+      <figcaption class="cap">A van painted as the Mystery Machine.<span class="fr">R0009266</span></figcaption>
+    </figure>
+    <div class="f body cols2" style="--x:3.2;--y:34.2;--w:43.2">
+      <h2 class="sub" id="munich">Munich, 2022</h2>
+      <p>In the summer of 2022 he did research on self-driving cars at the Technical University of Munich. He translated traffic trajectories, taken from drone footage of German intersections, into semantic scenarios for testing autonomous vehicles, and improved the evaluation loop. The write-up, <a href="/paper.html"><i>Automatically Derived Semantic Scenario Instance Descriptions</i></a>, is on this site. “It was incredible to spend time living in Germany,” he says.</p>
+      <h2 class="sub" id="outside">Outside work</h2>
+      <p>He is learning to play guitar, reading, and doing “other shit that caught my attention”: right now, skiing and photography. The guitar is a yellow Stratocaster (<a href="#guitar">p.&nbsp;28</a>). The reading leans to fiction (<a href="#books">p.&nbsp;29</a>). The photographs are the ones in this feature.<span class="end" aria-hidden="true"></span></p>
+    </div>
+    <p class="folio">Profile <b>25</b></p>
+  </div>
+</section>
+</div>
+
+<!-- ===== pp. 26–27  Interlude ===== -->
+<div class="sheet">
+<section class="spread sp-c" aria-label="Pages 26 and 27">
+  <div class="page l night">
+    <figure class="f ph fill alley mb mt" style="--x:0;--y:0;--w:50;--h:65.22">
+      <a href="/assets/photos/R0009301.webp"><img src="/assets/photos/R0009301.webp" srcset="/assets/photos/small/R0009301.webp 800w, /assets/photos/R0009301.webp 1600w" sizes="(min-width:1280px) 50vw, 100vw" width="1600" height="1067" alt="An empty concrete alley between a block wall and a building in hard sun, with blue sky at the far end." loading="lazy"></a>
+      <figcaption class="cap d-hide">An empty concrete alley, hard sun.<span class="fr">R0009301</span></figcaption>
+    </figure>
+    <p class="folio" style="color:#fff"><b>26</b> Gabriel Cohen</p>
+  </div>
+  <div class="page r paper">
+    <figure class="f ph dogs" style="--x:12.2;--y:21.2;--w:25.6;--h:17.07">
+      <a href="/assets/photos/R0009319.webp"><img src="/assets/photos/R0009319.webp" srcset="/assets/photos/small/R0009319.webp 800w, /assets/photos/R0009319.webp 1600w" sizes="(min-width:1280px) 26vw, 80vw" width="1600" height="1067" alt="A white dog and a golden retriever meeting nose to nose on a sunny park lawn, people and blue sky behind." loading="lazy"></a>
+      <figcaption class="cap">A white dog and a golden retriever meet on a park lawn.<span class="fr">R0009319</span></figcaption>
+    </figure>
+    <p class="f cap m-hide" style="--x:3.2;--y:58.6;--w:22">&larr;&nbsp;An empty concrete alley, hard sun.<span class="fr">R0009301</span></p>
+    <p class="folio">Profile <b>27</b></p>
+  </div>
+</section>
+</div>
+
+<!-- ===== pp. 28–29  Sidebars ===== -->
+<div class="sheet">
+<section class="spread sp-d" aria-label="Pages 28 and 29">
+  <aside class="page l yellow" id="guitar" aria-labelledby="guitar-h">
+    <p class="f kicker" style="--x:3.6;--y:3.3;--w:30">Equipment</p>
+    <h2 class="f h2" id="guitar-h" style="--x:3.3;--y:5.4;--w:43">The yellow Strat</h2>
+    <dl class="f spec" style="--x:3.6;--y:13.2;--w:20">
+      <div><dt>Model</dt><dd>Fender Stratocaster</dd></div>
+      <div><dt>Made in</dt><dd>Mexico</dd></div>
+      <div><dt>Finish</dt><dd>Yellow</dd></div>
+      <div><dt>Pickguard</dt><dd>Black</dd></div>
+      <div><dt>Pickups</dt><dd>Cream, HSH</dd></div>
+      <div><dt>Bought</dt><dd>Used, at the <a href="https://stores.guitarcenter.com/ny/carle-place/157156">Carle Place Guitar Center</a></dd></div>
+    </dl>
+    <blockquote class="f said" style="--x:26.4;--y:13.4;--w:20"><p>“I bought her used in the Carle Place Guitar Center a year after playing guitar.”</p></blockquote>
+    <div class="f" style="--x:26.4;--y:25;--w:20">
+      <p class="label">Loves</p>
+      <p class="loves" style="margin-top:.35em"><a href="https://open.spotify.com/artist/23wr9RJZg0PmYvVFyNkQ4j">Gary Moore</a>, <a href="https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2">the Beatles</a>, <a href="https://open.spotify.com/artist/0k17h0D3J5VfsdmQ1iZtE9">Pink Floyd</a></p>
+    </div>
+    <div class="f" style="--x:3.2;--y:33.4;--w:22">
+      <p class="label">The solo, from</p>
+      <a class="big" href="https://www.youtube.com/watch?v=rlgjWuQPaEQ&amp;t=390s" aria-label="6:30: Gary Moore, I Love You More Than You’ll Ever Know, on YouTube">6:30</a>
+    </div>
+    <div class="f solo" style="--x:26.4;--y:35.4;--w:20">
+      <strong>Gary Moore, “I Love You More Than You’ll Ever Know”</strong>
+      Also: <a href="https://www.youtube.com/watch?v=JmsUkutNnI0&amp;t=195s">“Still Got the Blues”</a> and <a href="https://www.youtube.com/watch?v=hIiuv6PwkdQ">“Parisienne Walkways”</a>, live.
+    </div>
+    <svg class="f fig mb" style="--x:0;--y:47.22;--w:50" viewBox="0 0 500 180" role="img" aria-labelledby="fig-t">
+      <title id="fig-t">Drawing of the guitar’s pickups: cream humbucker, single coil and humbucker on a black pickguard, six strings running across them.</title>
+      <path d="M150 180 C 146 150, 150 118, 168 92 C 182 72, 196 60, 222 56 L 326 50 C 352 48, 366 40, 384 28 C 404 15, 432 12, 452 22 C 470 31, 480 48, 490 60 L 500 66 L 500 180 Z" fill="#161513"/>
+      <g fill="#ece2c6">
+        <rect x="196" y="46" width="44" height="104" rx="5"/>
+        <rect x="302" y="48" width="20" height="100" rx="10"/>
+        <rect x="398" y="46" width="44" height="104" rx="5"/>
+      </g>
+      <g fill="#8b8472">
+        <g id="poles"><circle cx="0" cy="66" r="3.4"/><circle cx="0" cy="79" r="3.4"/><circle cx="0" cy="92" r="3.4"/><circle cx="0" cy="105" r="3.4"/><circle cx="0" cy="118" r="3.4"/><circle cx="0" cy="131" r="3.4"/></g>
+        <use href="#poles" x="207"/><use href="#poles" x="229"/><use href="#poles" x="312"/><use href="#poles" x="409"/><use href="#poles" x="431"/>
+      </g>
+      <g stroke="#9d9686" stroke-width="1.2">
+        <line x1="0" y1="66" x2="500" y2="66"/><line x1="0" y1="79" x2="500" y2="79"/><line x1="0" y1="92" x2="500" y2="92"/>
+        <line x1="0" y1="105" x2="500" y2="105"/><line x1="0" y1="118" x2="500" y2="118"/><line x1="0" y1="131" x2="500" y2="131"/>
+      </g>
+      <g font-family="Schibsted Grotesk, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#161513" text-anchor="middle">
+        <text x="218" y="14">H</text><text x="312" y="14">S</text><text x="420" y="4" dy="10" fill="#161513">H</text>
+      </g>
+      <g stroke="#161513" stroke-width="1"><line x1="218" y1="20" x2="218" y2="40"/><line x1="312" y1="20" x2="312" y2="42"/><line x1="420" y1="20" x2="420" y2="40"/></g>
+    </svg>
+    <p class="folio"><b>28</b> Gabriel Cohen</p>
+  </aside>
+  <aside class="page r paper" id="books" aria-labelledby="books-h">
+    <p class="f kicker" style="--x:3.2;--y:3.3;--w:30">Reading</p>
+    <h2 class="f h2" id="books-h" style="--x:2.9;--y:5.4;--w:43">Loved, this past year</h2>
+    <p class="f said" style="--x:3.6;--y:12.4;--w:30">“I mostly like reading fiction.”</p>
+    <ol class="f books" style="--x:3.2;--y:16.6;--w:43.2">
+      <li><span class="no">1</span><a class="t" href="https://www.goodreads.com/book/show/29044.The_Secret_History">The Secret History</a><span class="a">Donna Tartt</span><span class="r" role="img" aria-label="Rated 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></li>
+      <li><span class="no">2</span><a class="t" href="https://www.goodreads.com/book/show/551520.The_Wisdom_of_Insecurity">The Wisdom of Insecurity</a><span class="a">Alan Watts</span><span class="r" role="img" aria-label="Rated 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></li>
+      <li><span class="no">3</span><a class="t" href="https://www.goodreads.com/book/show/86524.The_Path_to_Power">The Path to Power</a><span class="a">Robert A. Caro</span><span class="r" role="img" aria-label="Rated 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></li>
+      <li><span class="no">4</span><a class="t" href="https://www.goodreads.com/book/show/48927138-unit-testing">Unit Testing: Principles, Practices, and Patterns<span class="star">*</span></a><span class="a">Vladimir Khorikov</span><span class="r" role="img" aria-label="Rated 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></li>
+      <li><span class="no">5</span><a class="t" href="https://www.goodreads.com/book/show/40607194-east-of-eden">East of Eden</a><span class="a">John Steinbeck</span></li>
+      <li><span class="no">6</span><a class="t" href="https://www.goodreads.com/book/show/6192.Disgrace">Disgrace</a><span class="a">J. M. Coetzee</span><span class="r" role="img" aria-label="Rated 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></li>
+      <li><span class="no">7</span><a class="t" href="https://www.goodreads.com/book/show/77566.Hyperion">Hyperion</a><span class="a">Dan Simmons</span><span class="r" role="img" aria-label="Rated 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></li>
+      <li><span class="no">8</span><a class="t" href="https://www.goodreads.com/book/show/60384452-demon-copperhead">Demon Copperhead</a><span class="a">Barbara Kingsolver</span></li>
+    </ol>
+    <p class="f note" style="--x:3.2;--y:54.4;--w:34"><span class="star">*</span> <q>I wish they made us read this in college (but even if they did, I probably would have skipped it).</q> More on <a href="https://www.goodreads.com/user/show/116748355">Goodreads</a>.</p>
+    <p class="folio">Profile <b>29</b></p>
+  </aside>
+</section>
+</div>
+
+<!-- ===== pp. 30–31  After dark ===== -->
+<div class="sheet">
+<section class="spread sp-e" id="after-dark" aria-labelledby="dark-h">
+  <div class="page l night">
+    <p class="f kicker" style="--x:3.6;--y:3.3;--w:30">Portfolio</p>
+    <h2 class="f h2 xl" id="dark-h" style="--x:3;--y:5.6;--w:46">After dark</h2>
+    <p class="f credit" style="--x:3.6;--y:15.6;--w:30">Six photographs <i>by the subject</i></p>
+    <figure class="f ph cat mb" style="--x:0;--y:34.02;--w:46.8;--h:31.2">
+      <a href="/assets/photos/R0000079.webp"><img src="/assets/photos/R0000079.webp" srcset="/assets/photos/small/R0000079.webp 800w, /assets/photos/R0000079.webp 1600w" sizes="(min-width:1280px) 47vw, 100vw" width="1600" height="1067" alt="A dark window frame at night; through the lit pane, a cat sits silhouetted on the sill." loading="lazy"></a>
+      <figcaption class="cap d-hide"><span class="n">1</span> A cat, silhouetted in a lit window.<span class="fr">R0000079</span></figcaption>
+    </figure>
+    <p class="f cap m-hide" style="--x:3.6;--y:29.4;--w:24"><span class="n">1</span> A cat, silhouetted in a lit window.<span class="fr">R0000079</span></p>
+    <p class="folio"><b>30</b> Gabriel Cohen</p>
+  </div>
+  <div class="page r night">
+    <div class="f side" style="--x:3.2;--y:4.4;--w:43.2">
+      <figure class="ph"><a href="/assets/photos/R0009331-preview.webp"><img src="/assets/photos/R0009331-preview.webp" srcset="/assets/photos/small/R0009331-preview.webp 800w, /assets/photos/R0009331-preview.webp 1600w" sizes="(min-width:1280px) 36vw, 100vw" width="1600" height="1067" alt="The rounded, ornamented corner of an old building glowing orange under a streetlight against a black night." loading="lazy"></a></figure>
+      <p class="cap"><span class="n">2</span> The rounded corner of an old building, glowing orange.<span class="fr">R0009331</span></p>
+    </div>
+    <div class="f side" style="--x:3.2;--y:30.6;--w:43.2">
+      <figure class="ph"><a href="/assets/photos/R0009326-preview.webp"><img src="/assets/photos/R0009326-preview.webp" srcset="/assets/photos/small/R0009326-preview.webp 800w, /assets/photos/R0009326-preview.webp 1600w" sizes="(min-width:1280px) 36vw, 100vw" width="1600" height="1067" alt="Lamp-lit front steps and railing of a Victorian house at night, the rest in deep shadow." loading="lazy"></a></figure>
+      <p class="cap"><span class="n">3</span> Lit front steps of a Victorian house.<span class="fr">R0009326</span></p>
+    </div>
+    <p class="folio">After dark <b>31</b></p>
+  </div>
+</section>
+</div>
+
+<!-- ===== pp. 32–33  Full bleed ===== -->
+<div class="sheet">
+<section class="spread sp-f night" aria-label="Pages 32 and 33">
+  <figure class="f ph fill" style="--x:0;--y:0;--w:100;--h:65.22">
+    <a href="/assets/photos/R0009339-preview.webp"><img src="/assets/photos/R0009339-preview.webp" srcset="/assets/photos/small/R0009339-preview.webp 800w, /assets/photos/R0009339-preview.webp 1600w" sizes="100vw" width="1600" height="1067" alt="A red pickup truck parked at night in front of a house with lit windows, a bike-lane marking on the street." loading="lazy"></a>
+    <figcaption class="cap d-hide"><span class="n">4</span> A red pickup truck in front of a lit house.<span class="fr">R0009339</span></figcaption>
+  </figure>
+  <p class="f cap m-hide" style="--x:3.6;--y:57.4;--w:24;color:var(--on-night)"><span class="n">4</span> A red pickup truck in front of a lit house.<span class="fr">R0009339</span></p>
+  <p class="folio lt"><b>32</b> Gabriel Cohen</p>
+  <p class="folio rt">After dark <b>33</b></p>
+</section>
+</div>
+
+<!-- ===== pp. 34–35  Directory ===== -->
+<div class="sheet">
+<section class="spread sp-g" aria-label="Pages 34 and 35">
+  <div class="page l night">
+    <figure class="f ph mb mt bleed-l" style="--x:0;--y:0;--w:46.8;--h:31.2">
+      <a href="/assets/photos/R0000067.webp"><img src="/assets/photos/R0000067.webp" srcset="/assets/photos/small/R0000067.webp 800w, /assets/photos/R0000067.webp 1600w" sizes="(min-width:1280px) 47vw, 100vw" width="1600" height="1067" alt="Stacked bay windows of a dark house against a deep blue evening sky, one window lit." loading="lazy"></a>
+      <figcaption class="cap"><span class="n">5</span> Bay windows of a dark house against the evening sky.<span class="fr">R0000067</span></figcaption>
+    </figure>
+    <figure class="f ph brick" style="--x:17.2;--y:38.8;--w:29.2;--h:19.47">
+      <a href="/assets/photos/R0000065.webp"><img src="/assets/photos/R0000065.webp" srcset="/assets/photos/small/R0000065.webp 800w, /assets/photos/R0000065.webp 1600w" sizes="(min-width:1280px) 30vw, 100vw" width="1600" height="1067" alt="A dusk sidewalk beside a brick wall washed red by a car’s taillight, a streetlight glowing down the block." loading="lazy"></a>
+      <figcaption class="cap"><span class="n">6</span> A brick wall lit red by a car’s taillight, at dusk.<span class="fr">R0000065</span></figcaption>
+    </figure>
+    <p class="folio"><b>34</b> Gabriel Cohen</p>
+  </div>
+  <footer class="page r paper" id="directory" aria-labelledby="dir-h">
+    <p class="f kicker" style="--x:3.2;--y:3.3;--w:30">Directory</p>
+    <h2 class="f h2" id="dir-h" style="--x:2.9;--y:5.4;--w:43">Where to find him</h2>
+    <div class="f" style="--x:3.2;--y:16.4;--w:43.2">
+      <p class="label" style="margin-bottom:.9em">Write to</p>
+      <a class="mail" href="mailto:gcohen1928@gmail.com">gcohen1928@gmail.com</a>
+    </div>
+    <dl class="f dir" style="--x:3.2;--y:26.6;--w:43.2">
+      <div><dt>GitHub</dt><dd><a href="https://github.com/gcohen1928" rel="me">gcohen1928</a></dd></div>
+      <div><dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/gabrielhcohen/" rel="me">gabrielhcohen</a></dd></div>
+      <div><dt>Goodreads</dt><dd><a href="https://www.goodreads.com/user/show/116748355">Reading shelf</a></dd></div>
+      <div><dt>Nero</dt><dd><a href="https://www.nero.fan/">nero.fan</a></dd></div>
+      <div><dt>The paper</dt><dd><a href="/paper.html">TUM, 2022</a></dd></div>
+    </dl>
+    <p class="f colophon" style="--x:3.2;--y:56;--w:30">Set in Bodoni Moda, Newsreader and Schibsted Grotesk. All photographs by Gabriel Cohen.<span class="end" aria-hidden="true"></span></p>
+    <p class="folio">Profile <b>35</b></p>
+  </footer>
+</section>
+</div>
+
+</article>
+</main>
+<script>
+/* On desktop every section lives inside a fixed spread, so jump to the top of that spread
+   (the way you'd turn to a page) instead of cutting it off at the heading. */
+(function(){
+  var wide = matchMedia('(min-width:1280px)'), calm = matchMedia('(prefers-reduced-motion: reduce)');
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || !wide.matches) return;
+    var t = document.getElementById(a.getAttribute('href').slice(1));
+    var sheet = t && t.closest('.sheet');
+    if (!sheet) return;
+    e.preventDefault();
+    sheet.scrollIntoView({behavior: calm.matches ? 'auto' : 'smooth', block: 'start'});
+    if (!t.hasAttribute('tabindex')) t.setAttribute('tabindex','-1');
+    t.focus({preventScroll:true});
+    history.pushState(null, '', '#' + t.id);
+  });
+})();
+</script>
+</body>
+</html>

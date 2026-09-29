@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gabriel Cohen — GC-001</title>
+<meta name="description" content="Gabriel Cohen, CTO of Nero, in San Francisco. Side A: work. Side B: everything else.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15.5' fill='%23111'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23bf3718'/%3E%3Ccircle cx='16' cy='16' r='1.2' fill='%23efe6cf'/%3E%3C/svg%3E">
+<link rel="preload" as="font" type="font/woff2" href="fonts/archivo.woff2" crossorigin>
+<link rel="preload" as="image" href="/assets/photos/R0009307.webp">
+<style>
+/* Archivo (variable width + weight) and Fragment Mono, both SIL OFL, self-hosted from Google Fonts. */
+@font-face{font-family:"Archivo";font-style:normal;font-weight:100 900;font-stretch:62% 125%;font-display:swap;src:url(fonts/archivo.woff2) format("woff2")}
+@font-face{font-family:"Archivo";font-style:italic;font-weight:100 900;font-stretch:62% 125%;font-display:swap;src:url(fonts/archivo-italic.woff2) format("woff2")}
+@font-face{font-family:"Fragment Mono";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/fragment-mono.woff2) format("woff2")}
+
+/* Printed in four inks, taken from the guitar and one photograph:
+   body yellow, pickguard black, pickup cream, taillight red (frame 0065). */
+:root{
+  --ink:#12110e;
+  --paper:#ebe2ca;
+  --cream:#efe6cf;
+  --yellow:#f0bb1f;
+  --red:#bf3718;       /* dark enough for cream text at small sizes (4.5:1) */
+  --red-ink:#b3321a;      /* red dark enough for small text on paper */
+  --spine:46px;
+  --gut:clamp(16px, 4.4vw, 72px);
+  --mono:"Fragment Mono", ui-monospace, monospace;
+  --sans:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .38 0 0 0 0 .25 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* blotchy alpha, used to break up ring wear so it reads as abrasion rather than a drawn circle */
+  /* fine speckle: ink that has worn off an old sleeve */
+  --speck:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='1' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -24 17.9'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23s)'/%3E%3C/svg%3E");
+  --blotch:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400' preserveAspectRatio='none'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.018 .03' numOctaves='3' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 3.2 0 0 0 -1.25'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23b)'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--cream);font-family:var(--sans);font-size:17px;line-height:1.5;
+  text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img{display:block;max-width:100%}
+figure{margin:0}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+
+.grain{position:relative;isolation:isolate}
+.grain::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.5;mix-blend-mode:multiply;background-image:var(--noise)}
+
+/* ───────── spine: the fixed nav reads like the spine of the sleeve ───────── */
+.spine{position:fixed;z-index:20;left:0;top:0;bottom:0;width:var(--spine);background:var(--ink);
+  border-right:1px solid rgba(239,230,207,.16);display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:18px 0}
+.spine a{text-decoration:none}
+.spine-id,.spine ul{writing-mode:vertical-rl}
+.spine-id{font-stretch:125%;font-weight:800;font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--cream);white-space:nowrap}
+.spine-id span{font-family:var(--mono);font-weight:400;font-stretch:100%;letter-spacing:.06em;color:var(--yellow);margin-top:1.1em;display:inline-block}
+.spine ul{list-style:none;margin:0;padding:0;display:flex;gap:4px}
+.spine li a{display:block;padding:9px 12px;font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:rgba(239,230,207,.64);white-space:nowrap}
+.spine li a:hover{color:var(--yellow)}
+.spine li a b{font-weight:400;color:var(--yellow)}
+main{margin-left:var(--spine)}
+
+/* ───────── front: sleeve + record ───────── */
+.front{position:relative;height:100svh;min-height:560px;background:#171613}
+html.js .front{height:215svh}
+.stage{position:sticky;top:0;height:100svh;min-height:560px;overflow:hidden;--e:1;--rot:0deg}
+html.js .stage{--e:0;--rot:-270deg}
+.rig{
+  --S:min(calc(100svh - 176px), calc((100vw - var(--spine) - 170px) / 1.55));
+  --rx:-.275; --ry:0; --dx:.6865; --dy:-.02;
+  position:absolute;left:50%;top:50%;width:var(--S);height:var(--S);translate:-50% -50%;
+  transform:translate(calc(var(--S) * var(--rx) * var(--e)), calc(var(--S) * var(--ry) * var(--e)));
+}
+.sleeve{position:absolute;inset:0;z-index:3;overflow:hidden;background:#b8902c;
+  /* the O of HOLE, die-cut through the board */
+  --cut:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 1000' preserveAspectRatio='none'%3E%3Cpath fill-rule='evenodd' d='M0 0H1000V1000H0Z M396.8 373H470.1A66 66 0 0 1 536.1 439V601.3A66 66 0 0 1 470.1 667.3H396.8A66 66 0 0 1 330.8 601.3V439A66 66 0 0 1 396.8 373Z'/%3E%3C/svg%3E");
+  -webkit-mask:var(--cut) 0 0/100% 100% no-repeat;mask:var(--cut) 0 0/100% 100% no-repeat}
+.sleeve img{position:absolute;top:0;left:-23.43%;height:100%;width:auto;max-width:none}
+/* ring wear: where the record has pressed through the board */
+.wear{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;
+  background:radial-gradient(circle at 43.35% 52%, transparent 0 39.6%, rgba(255,250,232,.9) 42%, rgba(255,250,232,.55) 43.2%, transparent 44.6%);
+  -webkit-mask:var(--blotch) 0 0/100% 100%;mask:var(--blotch) 0 0/100% 100%}
+.cut-edge{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.cover-name{position:absolute;left:5.2%;right:5.2%;top:4.4%;margin:0;
+  font-stretch:62%;font-weight:860;text-transform:uppercase;line-height:.84;letter-spacing:-.005em;
+  font-size:calc(var(--S) * .158);color:#1d160b;mix-blend-mode:multiply;white-space:nowrap;
+  -webkit-mask:var(--speck) 0 0/calc(var(--S) * .45);mask:var(--speck) 0 0/calc(var(--S) * .45)}
+.cover-sub,.cover-cat{position:absolute;top:22.6%;margin:0;color:#2a2010;mix-blend-mode:multiply}
+.cover-sub{left:5.2%;font-stretch:125%;font-weight:600;font-size:calc(var(--S) * .0175);letter-spacing:.2em;text-transform:uppercase}
+.cover-cat{right:5.2%;font-family:var(--mono);font-size:calc(var(--S) * .019);letter-spacing:.04em}
+/* the sleeve's open edge throws a little shade onto the record as it comes out */
+.lip{position:absolute;top:0;bottom:0;width:9%;pointer-events:none;
+  left:calc((.9965 - .6865 * var(--e)) / .86 * 100%);
+  background:linear-gradient(90deg, rgba(0,0,0,.6), rgba(0,0,0,0))}
+
+.disc-wrap{position:absolute;z-index:1;left:.35%;top:9%;width:86%;aspect-ratio:1;border-radius:50%;overflow:hidden;
+  transform:translate(calc(var(--S) * var(--dx) * var(--e)), calc(var(--S) * var(--dy) * var(--e)))}
+.disc{position:absolute;inset:0;border-radius:50%;rotate:var(--rot);
+  -webkit-mask:radial-gradient(circle closest-side, transparent 0 2.3%, #000 2.5%);
+          mask:radial-gradient(circle closest-side, transparent 0 2.3%, #000 2.5%);
+  background:
+    radial-gradient(circle closest-side, transparent 0 96.6%, #2a2926 97.2%, #0b0b0a 98.4%, #1d1c1a 99.4%, transparent 100%),
+    radial-gradient(circle closest-side, transparent 0 33%, #121211 33.5% 41.5%, transparent 42%),
+    repeating-radial-gradient(circle closest-side, #0c0c0b 0 .55%, #191816 .7%, #0c0c0b .9%),
+    #0d0d0c;
+  box-shadow:inset 0 0 0 1px rgba(239,230,207,.08)}
+.disc svg{position:absolute;inset:0;width:100%;height:100%}
+.sheen{position:absolute;inset:0;border-radius:50%;pointer-events:none;mix-blend-mode:screen;
+  background:conic-gradient(from 18deg, rgba(255,255,255,0) 0deg, rgba(255,250,235,.16) 24deg, rgba(255,255,255,0) 54deg,
+    rgba(255,255,255,0) 180deg, rgba(255,250,235,.11) 206deg, rgba(255,255,255,0) 238deg, rgba(255,255,255,0) 360deg);
+  -webkit-mask:radial-gradient(circle closest-side, transparent 0 42%, #000 44% 96%, transparent 97%);
+          mask:radial-gradient(circle closest-side, transparent 0 42%, #000 44% 96%, transparent 97%)}
+
+.cap{position:absolute;margin:0;font-family:var(--mono);font-size:11.5px;line-height:1.5;letter-spacing:.03em;color:rgba(239,230,207,.58)}
+.cap-tl{top:22px;left:26px}
+.cap-tr{top:22px;right:26px;text-align:right}
+.cap-b{bottom:20px;left:50%;translate:-50% 0;text-align:center;white-space:nowrap;opacity:calc(1 - var(--e) * 2.2)}
+.cap-b i{font-style:normal;color:var(--yellow)}
+
+/* ───────── back cover ───────── */
+.back{background:var(--paper);color:var(--ink);padding:clamp(28px,5vw,72px) var(--gut) clamp(40px,6vw,96px)}
+.back::after{content:"";position:absolute;pointer-events:none;z-index:-1;left:50%;top:clamp(260px,30vw,460px);
+  width:min(88vw,1120px);aspect-ratio:1;translate:-50% 0;border-radius:50%;mix-blend-mode:soft-light;
+  background:radial-gradient(circle closest-side, transparent 0 94%, rgba(255,253,244,.95) 96.5%, rgba(255,253,244,.6) 98.5%, transparent 100%);
+  -webkit-mask:var(--blotch) 0 0/100% 100%;mask:var(--blotch) 0 0/100% 100%}
+.back-top{display:flex;justify-content:space-between;align-items:flex-end;gap:10px 24px;flex-wrap:wrap;
+  border-bottom:3px solid var(--ink);padding-bottom:14px}
+.back-title{margin:0;font-stretch:125%;font-weight:800;font-size:clamp(24px,3.1vw,44px);line-height:1;letter-spacing:.01em;text-transform:uppercase}
+.back-meta{margin:0;font-family:var(--mono);font-size:12.5px;line-height:1.55;text-align:right}
+.back-meta a{text-decoration-thickness:1px;text-underline-offset:2px}
+
+.sides{display:grid;grid-template-columns:1fr 1fr;column-gap:clamp(28px,5vw,88px);margin-top:clamp(24px,3.4vw,52px)}
+.side-head{display:flex;align-items:flex-end;gap:18px;margin:0 0 6px;border-bottom:1px solid var(--ink);padding-bottom:10px}
+.side-letter{font-stretch:62%;font-weight:900;font-size:clamp(150px,17vw,250px);line-height:.72;letter-spacing:-.03em;margin-bottom:-2px}
+.side-label{display:flex;flex-direction:column;padding-bottom:4px}
+.side-label b{font-stretch:125%;font-weight:700;font-size:12.5px;letter-spacing:.2em;text-transform:uppercase}
+.side-label em{font-style:italic;font-weight:400;font-size:clamp(22px,2.2vw,30px);line-height:1.1}
+.tracks{list-style:none;margin:0;padding:0}
+.trk{position:relative;display:grid;grid-template-columns:3rem 1fr auto;column-gap:14px;align-items:baseline;
+  padding:14px 0 13px;border-bottom:1px solid rgba(18,17,14,.28)}
+.trk-no{font-family:var(--mono);font-size:13px}
+.trk-title{font-stretch:62%;font-weight:800;font-size:clamp(26px,2.55vw,37px);line-height:.98;text-transform:uppercase;letter-spacing:.005em}
+.trk-title a{text-decoration:none}
+.trk-title a::after{content:"";position:absolute;inset:0}
+.trk-dur{font-family:var(--mono);font-size:13.5px;text-align:right;white-space:nowrap}
+.trk-note{grid-column:2 / 4;margin-top:6px;font-size:15px;line-height:1.4;color:rgba(18,17,14,.74)}
+.trk:hover .trk-title,.trk:focus-within .trk-title{color:var(--red-ink)}
+.trk.cue .trk-dur{color:#fff;background:var(--red);padding:1px 6px 0}
+
+.notes{display:grid;grid-template-columns:minmax(180px,3fr) 9fr;column-gap:clamp(28px,5vw,88px);margin-top:clamp(48px,6vw,96px);
+  border-top:3px solid var(--ink);padding-top:16px}
+.notes-head{margin:0;font-stretch:62%;font-weight:900;font-size:clamp(46px,5.4vw,78px);line-height:.86;text-transform:uppercase}
+.notes-by{margin:14px 0 0;font-family:var(--mono);font-size:12.5px;line-height:1.5}
+.notes-body{columns:2;column-gap:clamp(24px,3.4vw,56px);font-size:17px;line-height:1.56}
+.notes-body p{margin:0;text-indent:1.4em}
+.notes-body p.lede{text-indent:0;column-span:all;font-stretch:62%;font-weight:800;font-size:clamp(34px,4vw,56px);line-height:1;margin:0 0 22px}
+.notes-body p.first{text-indent:0}
+.mk{font-family:var(--mono);font-size:.72em;color:var(--red-ink);letter-spacing:.02em;margin-right:.35em}
+.notes-body a{text-decoration-thickness:1px;text-underline-offset:2px}
+.notes-body a:hover{color:var(--red-ink)}
+
+.small-print{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 28px;margin-top:clamp(40px,5vw,72px);
+  padding-top:12px;border-top:1px solid var(--ink);font-family:var(--mono);font-size:11.5px;line-height:1.5}
+.inks{display:flex;gap:6px;align-items:center}
+.inks i{display:inline-block;width:12px;height:12px;border:1px solid var(--ink)}
+
+/* ───────── B1 guitar / B2 6:30 ───────── */
+.bb{padding:clamp(40px,6vw,96px) var(--gut)}
+.kicker{margin:0;font-family:var(--mono);font-size:12.5px;letter-spacing:.03em;color:var(--yellow)}
+.b-title{margin:6px 0 0;font-stretch:62%;font-weight:900;text-transform:uppercase;font-size:clamp(56px,7vw,104px);line-height:.84}
+.guitar{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);column-gap:clamp(28px,5vw,88px);align-items:end}
+.guitar-text p.spec{margin:22px 0 0;font-size:clamp(19px,1.6vw,23px);line-height:1.38;max-width:30ch}
+.guitar-text a{text-decoration-thickness:1px;text-underline-offset:3px}
+.guitar-text a:hover,.solo a:hover{color:var(--yellow)}
+.plate{overflow:hidden}
+.plate svg{display:block;width:100%;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:12px;font-family:var(--mono);font-size:12px;color:rgba(239,230,207,.78)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:13px;height:13px;display:inline-block;box-shadow:inset 0 0 0 1px rgba(239,230,207,.45)}
+
+.solo{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:clamp(24px,4vw,64px);align-items:end;
+  border-top:1px solid rgba(239,230,207,.2);margin-top:clamp(48px,6vw,96px);padding-top:clamp(24px,3vw,40px)}
+.solo-time{display:block;text-decoration:none;color:var(--yellow);font-stretch:62%;font-weight:900;
+  font-size:clamp(150px,31vw,470px);line-height:.74;letter-spacing:-.035em;margin:0 0 -.02em -.04em}
+.solo-time:hover{color:var(--cream)}
+.solo-text{padding-bottom:6px;max-width:38ch}
+.solo-text h2{margin:10px 0 0;font-stretch:62%;font-weight:800;text-transform:uppercase;font-size:clamp(30px,3vw,44px);line-height:.95}
+.solo-text > p{margin:14px 0 0;font-size:17px;line-height:1.45;color:rgba(239,230,207,.86)}
+.solo a{text-decoration-thickness:1px;text-underline-offset:3px}
+.also{margin:18px 0 0;display:grid;grid-template-columns:auto 1fr;column-gap:14px;row-gap:3px;font-family:var(--mono);font-size:12.5px;line-height:1.55;color:rgba(239,230,207,.74)}
+.also dt{color:var(--yellow)}
+.also dd{margin:0}
+
+/* ───────── B3 reading: the company inner sleeve ───────── */
+.reading{background:var(--yellow);color:var(--ink);padding:clamp(40px,6vw,96px) var(--gut)}
+.cat-band{display:grid;grid-template-columns:auto 1fr auto;align-items:end;gap:10px 28px;background:var(--ink);color:var(--cream);padding:16px 20px 15px}
+.cat-band h2{margin:0;font-stretch:62%;font-weight:900;text-transform:uppercase;font-size:clamp(40px,4.4vw,64px);line-height:.84;color:var(--yellow)}
+.cat-band h2 span{font-family:var(--mono);font-weight:400;font-stretch:100%;font-size:12.5px;color:var(--cream);vertical-align:top;margin-right:10px;letter-spacing:.03em}
+.cat-band p{margin:0;font-size:clamp(16px,1.35vw,19px);line-height:1.3}
+.cat-band p.cat-note{font-family:var(--mono);font-size:11.5px;color:rgba(239,230,207,.62);text-align:right}
+.books{list-style:none;margin:clamp(14px,1.6vw,20px) 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(10px,1.4vw,18px)}
+.bk{position:relative;aspect-ratio:1;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(12px,1.3vw,18px);text-decoration:none;
+  background:var(--ink);color:var(--cream);overflow:hidden}
+.bk:hover{outline:3px solid var(--ink);outline-offset:3px}
+.bk-a{font-stretch:125%;font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.bk-t{font-stretch:62%;font-weight:850;text-transform:uppercase;line-height:.86;font-size:calc(var(--fs,1) * clamp(30px,3.3vw,50px));letter-spacing:-.005em}
+.bk-f{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;font-family:var(--mono);font-size:11px}
+.dots{letter-spacing:.12em;font-size:13px}
+.bk.c-cream{background:var(--cream);color:var(--ink)}
+.bk.c-red{background:var(--red);color:var(--cream)}
+.bk.c-line{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.bk.c-ink .bk-t{color:var(--yellow)}
+.footnote{margin:18px 0 0;font-family:var(--mono);font-size:12.5px;line-height:1.55;max-width:74ch}
+.footnote a{text-decoration-thickness:1px;text-underline-offset:2px}
+
+/* ───────── B5 photographs: the insert, as a press proof with its trim marks ───────── */
+.insert{background:var(--paper);color:var(--ink);padding:clamp(56px,7vw,112px) var(--gut)}
+.proof{position:relative}
+.crop{position:absolute;width:28px;height:28px;pointer-events:none;--c:rgba(18,17,14,.8)}
+.crop::before,.crop::after{content:"";position:absolute;background:var(--c)}
+.crop::before{width:18px;height:1px}
+.crop::after{width:1px;height:18px}
+.crop.tl{left:-36px;top:-36px}.crop.tl::before{left:0;bottom:8px}.crop.tl::after{right:8px;top:0}
+.crop.tr{right:-36px;top:-36px}.crop.tr::before{right:0;bottom:8px}.crop.tr::after{left:8px;top:0}
+.crop.bl{left:-36px;bottom:-36px}.crop.bl::before{left:0;top:8px}.crop.bl::after{right:8px;bottom:0}
+.crop.br{right:-36px;bottom:-36px}.crop.br::before{right:0;top:8px}.crop.br::after{left:8px;bottom:0}
+.reg{position:absolute;left:50%;top:-44px;translate:-50% 0;width:22px;height:22px;pointer-events:none}
+.slug{position:absolute;left:0;right:0;bottom:-44px;display:flex;justify-content:space-between;align-items:center;gap:16px;
+  font-family:var(--mono);font-size:10.5px;color:rgba(18,17,14,.66);letter-spacing:.03em}
+.bar{display:flex}
+.bar i{width:14px;height:10px;display:block}
+.frames{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(12,1fr);
+  column-gap:clamp(12px,1.6vw,24px);row-gap:clamp(28px,4vw,64px);align-items:start}
+.frames a{display:block;text-decoration:none}
+.frames img{width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;background:#2a2824}
+.frames a:hover img{outline:3px solid var(--ink);outline-offset:3px}
+.frames figcaption{display:flex;gap:12px;margin-top:8px;font-family:var(--mono);font-size:11.5px;line-height:1.4}
+.frames figcaption b{font-weight:400;color:var(--red-ink)}
+.f1{grid-column:1 / span 8}
+.f-intro{grid-column:9 / span 4;align-self:end}
+.f2{grid-column:1 / span 5;align-self:end}
+.f3{grid-column:6 / span 7}
+.f4{grid-column:3 / span 7}
+.f5{grid-column:1 / span 4}.f6{grid-column:5 / span 4}.f7{grid-column:9 / span 4}
+.f8{grid-column:1 / span 12}
+.f9{grid-column:1 / span 6}.f10{grid-column:7 / span 6}
+.f-intro h2{margin:6px 0 0;font-stretch:62%;font-weight:900;text-transform:uppercase;font-size:clamp(56px,7vw,104px);line-height:.84}
+.f-intro .kicker{color:var(--red-ink)}
+.f-intro p.lead{margin:14px 0 0;font-size:17px;line-height:1.45;max-width:26ch}
+
+/* ───────── credits + the side B label ───────── */
+.credits{padding:clamp(40px,6vw,96px) var(--gut) 28px}
+.credits-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);column-gap:clamp(28px,5vw,88px);align-items:center}
+.credits-h{margin:0 0 18px;font-stretch:62%;font-weight:900;text-transform:uppercase;font-size:clamp(46px,5.4vw,78px);line-height:.86}
+.cr{margin:0}
+.cr div{display:grid;grid-template-columns:minmax(110px,2fr) 5fr;column-gap:24px;padding:12px 0;border-top:1px solid rgba(239,230,207,.2)}
+.cr dt{font-stretch:125%;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(239,230,207,.66);padding-top:4px}
+.cr dd{margin:0;font-size:17px;line-height:1.45}
+.cr a{text-decoration-thickness:1px;text-underline-offset:3px}
+.cr a:hover{color:var(--yellow)}
+.chips{display:flex;flex-wrap:wrap;gap:6px 16px;font-family:var(--mono);font-size:12px;padding-top:3px}
+.chips span{display:inline-flex;align-items:center;gap:7px}
+.chips i{width:13px;height:13px;display:inline-block;box-shadow:inset 0 0 0 1px rgba(239,230,207,.45)}
+
+.endlabel{position:relative;width:100%;max-width:500px;aspect-ratio:1;justify-self:center;container-type:inline-size;color:var(--cream)}
+.endlabel svg{position:absolute;inset:0;width:100%;height:100%}
+.el{position:absolute;left:0;right:0;margin:0;text-align:center}
+.el-side{top:21%;font-stretch:62%;font-weight:900;font-size:13cqw;line-height:.8;text-transform:uppercase;letter-spacing:.01em}
+.el-mid{top:47.2%;display:flex;justify-content:center;gap:15cqw;font-family:var(--mono);font-size:3.1cqw}
+.el-write{top:58.5%;font-stretch:125%;font-weight:700;font-size:2.5cqw;letter-spacing:.24em;text-transform:uppercase}
+.el-mail{top:62.5%}
+.el-mail a{font-stretch:62%;font-weight:800;font-size:7.6cqw;line-height:1;text-decoration-thickness:.12cqw;text-underline-offset:1cqw}
+.el-links{top:72.5%;font-stretch:100%;font-weight:700;font-size:3.9cqw}
+.el-links a{text-underline-offset:.8cqw;padding:0 .6cqw}
+.endlabel a:hover{color:var(--yellow)}
+.endlabel a:focus-visible{outline-color:var(--cream)}
+
+.runout{margin:clamp(48px,6vw,96px) 0 0;display:flex;justify-content:space-between;gap:8px 24px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:11.5px;color:rgba(239,230,207,.62)}
+
+/* ───────── narrow screens ───────── */
+@media (max-width: 900px){
+  .sides,.notes,.guitar,.credits-grid{grid-template-columns:1fr}
+  .side-b{margin-top:48px}
+  .notes-head{margin-bottom:4px}
+  .notes-by{margin-bottom:28px}
+  .notes-body{columns:1}
+  .plate{margin-top:32px}
+  .books{grid-template-columns:repeat(2,1fr)}
+  .cat-band{grid-template-columns:1fr}
+  .cat-band p.cat-note{text-align:left}
+  .endlabel{margin-top:48px}
+}
+@media (max-width: 720px){
+  :root{--spine:0px}
+  .spine{position:absolute;right:0;bottom:auto;width:auto;height:auto;background:transparent;flex-direction:row;flex-wrap:wrap;justify-content:space-between;align-items:center;
+    padding:12px 16px 10px;border-right:0;border-bottom:1px solid rgba(239,230,207,.16);gap:6px 12px}
+  .spine-id,.spine ul{writing-mode:horizontal-tb}
+  .spine ul{flex-wrap:wrap;gap:0 2px;margin-left:-8px}
+  .spine li a{padding:6px 8px}
+  .spine-id span{margin:0 0 0 .8em}
+  .front{min-height:0}
+  html.js .front{height:200svh}
+  .rig{--S:min(calc(100vw - 32px), calc((100svh - 150px) / 1.6));--rx:0;--ry:-.265;--dx:.0665;--dy:.58}
+  .lip{left:0;right:0;bottom:auto;width:auto;height:9%;top:calc((.91 - .58 * var(--e)) / .86 * 100%);background:linear-gradient(180deg, rgba(0,0,0,.6), rgba(0,0,0,0))}
+  .cap-tl,.cap-tr{display:none}
+  .cap-b{bottom:14px}
+  .back-meta{text-align:left}
+  .trk{grid-template-columns:2.4rem 1fr auto;column-gap:10px}
+  .plate svg{width:176%;margin-left:-33%}
+  .solo{grid-template-columns:1fr}
+  .solo-time{font-size:clamp(150px,50vw,300px);margin-bottom:10px}
+  .insert{padding-top:72px;padding-bottom:80px}
+  .crop.tl,.crop.bl{left:-14px}.crop.tr,.crop.br{right:-14px}
+  .crop{width:22px;height:22px}.crop::before{width:12px}.crop::after{height:12px}
+  .crop.tl,.crop.tr{top:-30px}.crop.bl,.crop.br{bottom:-30px}
+  .reg{top:-40px}
+  .slug{bottom:-40px}.slug .slug-t,.slug span:last-child{display:none}
+  .frames{grid-template-columns:1fr;row-gap:28px}
+  .frames > li{grid-column:1 / -1!important}
+  .f-intro{order:-1;margin-bottom:4px}
+  .cr div{grid-template-columns:1fr;row-gap:4px}
+}
+/* short laptop screens: keep the whole spine on screen */
+@media (min-width: 721px) and (max-height: 860px){
+  .spine li a{padding:5px 12px}
+  .spine-id span{display:none}
+}
+@media (min-width: 721px) and (max-height: 640px){
+  .spine-id{display:none}
+  .spine{justify-content:center}
+}
+/* portrait tablets: the record drops out of the bottom, as on phones */
+@media (min-width: 721px) and (max-aspect-ratio: 4/5){
+  .rig{--S:min(calc(100vw - var(--spine) - 96px), calc((100svh - 150px) / 1.6));--rx:0;--ry:-.265;--dx:.0665;--dy:.58}
+  .lip{left:0;right:0;bottom:auto;width:auto;height:9%;top:calc((.91 - .58 * var(--e)) / .86 * 100%);background:linear-gradient(180deg, rgba(0,0,0,.6), rgba(0,0,0,0))}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  html.js .front{height:100svh}
+  html.js .stage{--e:1;--rot:0deg}
+}
+</style>
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+
+<nav class="spine" aria-label="Sections">
+  <a class="spine-id" href="#front">Gabriel Cohen <span>GC–001</span></a>
+  <ul>
+    <li><a href="#back">tracklist</a></li>
+    <li><a href="#notes">notes</a></li>
+    <li><a href="#b1"><b>B1</b> guitar</a></li>
+    <li><a href="#b2"><b>B2</b> 6:30</a></li>
+    <li><a href="#b3"><b>B3</b> reading</a></li>
+    <li><a href="#b5"><b>B5</b> photos</a></li>
+    <li><a href="#credits">credits</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- FRONT COVER -->
+<section id="front" class="front" aria-label="Front cover">
+  <div class="stage" id="stage">
+    <p class="cap cap-tl">GC–001 · 12″ long player · 33⅓</p>
+    <p class="cap cap-tr">side a — work<br>side b — everything else</p>
+
+    <div class="rig">
+      <div class="disc-wrap" aria-hidden="true">
+        <div class="disc">
+          <svg viewBox="0 0 1000 1000">
+            <defs>
+              <path id="arc-top" d="M 382 500 A 118 118 0 0 1 618 500"/>
+              <path id="arc-bot" d="M 364 500 A 136 136 0 0 0 636 500"/>
+              <path id="runout" d="M 500 305 A 195 195 0 1 1 499.9 305"/>
+            </defs>
+            <!-- the quiet bands between tracks: six tracks on side a -->
+            <g fill="none" stroke="rgba(255,250,235,.06)" stroke-width="5">
+              <circle cx="500" cy="500" r="436"/>
+              <circle cx="500" cy="500" r="371"/>
+              <circle cx="500" cy="500" r="330"/>
+              <circle cx="500" cy="500" r="292"/>
+              <circle cx="500" cy="500" r="251"/>
+            </g>
+            <text font-family="Fragment Mono, monospace" font-size="11" fill="rgba(239,230,207,.26)" letter-spacing="2">
+              <textPath href="#runout">GC–001–A1 · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · hole · · · · · · · ·</textPath>
+            </text>
+            <!-- label -->
+            <circle cx="500" cy="500" r="166" fill="#bf3718"/>
+            <circle cx="500" cy="500" r="157" fill="none" stroke="#efe6cf" stroke-width="1.3" opacity=".75"/>
+            <g fill="#efe6cf" font-family="Archivo, sans-serif" text-anchor="middle">
+              <text font-size="21" font-weight="800" letter-spacing="3.2" style="font-stretch:125%"><textPath href="#arc-top" startOffset="50%">GABRIEL COHEN</textPath></text>
+              <text x="500" y="438" font-family="Fragment Mono, monospace" font-size="11.5" letter-spacing="1.5">GC–001–A</text>
+              <text x="413" y="507" font-size="17" font-weight="800" style="font-stretch:62%">33⅓</text>
+              <text x="590" y="507" font-size="17" font-weight="800" letter-spacing="1" style="font-stretch:62%">SIDE A</text>
+              <text x="500" y="560" font-size="10.5" font-weight="600" letter-spacing=".6" style="font-stretch:75%">1 NERO · 2 FLATIRON HEALTH · 3 DAEDALUS FINANCE</text>
+              <text x="500" y="576" font-size="10.5" font-weight="600" letter-spacing=".6" style="font-stretch:75%">4 FENISKA · 5 TU MUNICH</text>
+              <text x="500" y="592" font-size="10.5" font-weight="600" letter-spacing=".6" style="font-stretch:75%">6 A FEW FAILED CONSUMER APPS</text>
+              <text font-family="Fragment Mono, monospace" font-size="10.5" letter-spacing="2.2"><textPath href="#arc-bot" startOffset="50%">SAN FRANCISCO · STEREO</textPath></text>
+            </g>
+          </svg>
+        </div>
+        <div class="sheen"></div>
+        <div class="lip"></div>
+      </div>
+
+      <div class="sleeve grain">
+        <img src="/assets/photos/R0009307.webp" width="1600" height="1067" fetchpriority="high"
+             alt="Front cover: Gabe's photograph looking down at his boots on a yellow sidewalk panel stenciled HOLE. The O is die-cut out of the sleeve, so the red record label shows through it.">
+        <div class="wear"></div>
+        <svg class="cut-edge" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M396.8 373H470.1A66 66 0 0 1 536.1 439V601.3A66 66 0 0 1 470.1 667.3H396.8A66 66 0 0 1 330.8 601.3V439A66 66 0 0 1 396.8 373Z"
+                fill="none" stroke="#f6ecd0" stroke-opacity=".75" stroke-width="1.6" vector-effect="non-scaling-stroke"/>
+        </svg>
+        <h1 class="cover-name">Gabriel Cohen</h1>
+        <p class="cover-sub" aria-hidden="true">CTO, Nero · San Francisco</p>
+        <p class="cover-cat" aria-hidden="true">GC–001</p>
+      </div>
+    </div>
+
+    <p class="cap cap-b" aria-hidden="true">to play, remove record from sleeve <i>↓</i></p>
+  </div>
+</section>
+
+<!-- BACK COVER: tracklist + liner notes -->
+<section id="back" class="back grain" aria-labelledby="back-title">
+  <header class="back-top">
+    <h2 id="back-title" class="back-title">Gabriel Cohen</h2>
+    <p class="back-meta">GC–001 · 33⅓ rpm<br>write: <a href="mailto:gcohen1928@gmail.com">gcohen1928@gmail.com</a></p>
+  </header>
+
+  <div class="sides">
+    <section class="side side-a" aria-labelledby="side-a">
+      <h3 id="side-a" class="side-head"><span class="side-letter" aria-hidden="true">A</span><span class="side-label"><b>Side A</b><em>work</em></span></h3>
+      <ol class="tracks">
+        <li class="trk"><span class="trk-no">A1</span><span class="trk-title"><a href="#a1">Nero</a></span><span class="trk-dur">2025–</span>
+          <span class="trk-note">CTO. helping artists make money and go viral on livestreams.</span></li>
+        <li class="trk"><span class="trk-no">A2</span><span class="trk-title"><a href="#a2">Flatiron Health</a></span><span class="trk-dur">’23–’25</span>
+          <span class="trk-note">software engineer. clinical research, patient management, then my own team.</span></li>
+        <li class="trk"><span class="trk-no">A3</span><span class="trk-title"><a href="#a3">Daedalus Finance</a></span><span class="trk-dur">college</span>
+          <span class="trk-note">web and mobile apps for a fintech startup.</span></li>
+        <li class="trk"><span class="trk-no">A4</span><span class="trk-title"><a href="#a3">Feniska</a></span><span class="trk-dur">college</span>
+          <span class="trk-note">web and mobile apps for a german pet-tech startup.</span></li>
+        <li class="trk"><span class="trk-no">A5</span><span class="trk-title"><a href="#a5">TU Munich</a></span><span class="trk-dur">2022</span>
+          <span class="trk-note">self-driving research: drone footage into test scenarios.</span></li>
+        <li class="trk"><span class="trk-no">A6</span><span class="trk-title"><a href="#a3">A Few Failed Consumer Apps</a></span><span class="trk-dur">college</span>
+          <span class="trk-note">self-released.</span></li>
+      </ol>
+    </section>
+
+    <section class="side side-b" aria-labelledby="side-b">
+      <h3 id="side-b" class="side-head"><span class="side-letter" aria-hidden="true">B</span><span class="side-label"><b>Side B</b><em>everything else</em></span></h3>
+      <ol class="tracks">
+        <li class="trk"><span class="trk-no">B1</span><span class="trk-title"><a href="#b1">Guitar</a></span><span class="trk-dur">HSH</span>
+          <span class="trk-note">a yellow mexican strat. still learning.</span></li>
+        <li class="trk cue"><span class="trk-no">B2</span><span class="trk-title"><a href="#b2">I Love You More Than You’ll Ever Know</a></span><span class="trk-dur">6:30</span>
+          <span class="trk-note">gary moore. the favorite solo starts here.</span></li>
+        <li class="trk"><span class="trk-no">B3</span><span class="trk-title"><a href="#b3">Reading</a></span><span class="trk-dur">8 books</span>
+          <span class="trk-note">mostly fiction.</span></li>
+        <li class="trk"><span class="trk-no">B4</span><span class="trk-title"><a href="#b-else">Skiing</a></span><span class="trk-dur">now</span>
+          <span class="trk-note">right now.</span></li>
+        <li class="trk"><span class="trk-no">B5</span><span class="trk-title"><a href="#b5">Photography</a></span><span class="trk-dur">10 frames</span>
+          <span class="trk-note">also right now.</span></li>
+        <li class="trk"><span class="trk-no">B6</span><span class="trk-title"><a href="#b-else">Other Shit That Caught My Attention</a></span><span class="trk-dur">tbd</span></li>
+      </ol>
+    </section>
+  </div>
+
+  <div class="notes" id="notes">
+    <div>
+      <h3 class="notes-head">Liner<br>notes</h3>
+      <p class="notes-by">by gabe,<br>san francisco</p>
+    </div>
+    <div class="notes-body">
+      <p class="lede">hey, i’m gabe. i’m 23 and i live in san francisco.</p>
+      <p class="first" id="a1"><span class="mk">A1</span>i’m the CTO of <a href="https://www.nero.fan/">nero</a>. we’re helping artists make money and go viral on livestreams. i built nero.fan and scaled it to 600K+ monthly users, and it processes $500K+ in GMV a month (as of early 2026). i’ve been there since spring 2025, and this is where most of my time is spent.</p>
+      <p id="a2"><span class="mk">A2</span>before that i was a software engineer at flatiron health, from summer 2024 to winter 2025, after interning there in 2023. i shipped clinical research products supporting clinical trials, and built infrastructure and features for a full-stack patient management system. after 8 months i got my own team, building internal sales tools, and i led AI development initiatives across flatiron.</p>
+      <p id="a3"><span class="mk">A3 A4 A6</span>in college i built web and mobile apps for <a href="https://tracxn.com/d/companies/daedalus/__4NOiqEy2jDbXg3S4nSjyvtQeg4fSTNIEiMtvLFfVjBs/">daedalus finance</a>, a fintech startup, and <a href="https://www.feniska.com/">feniska</a>, a german pet-tech startup. i also started a few failed consumer apps.</p>
+      <p id="a5"><span class="mk">A5</span>in the summer of 2022 i did research at the technical university of munich on self-driving cars: translating traffic trajectories from drone footage of german intersections into semantic scenarios for autonomous-vehicle testing, and improving the evaluation loop. <a href="/paper.html">the paper write-up is here</a>. it was incredible to spend time living in germany.</p>
+      <p id="b-else"><span class="mk">B</span>outside of work i’m learning how to play guitar, reading, and doing other shit that caught my attention. right now that’s skiing and photography.</p>
+    </div>
+  </div>
+
+  <footer class="small-print">
+    <span>℗ &amp; © 2026 gabriel cohen · all photographs by gabe</span>
+    <span class="inks" role="img" aria-label="Printed in four inks: body yellow, pickguard black, pickup cream, taillight red">printed in
+      <i style="background:var(--yellow)"></i><i style="background:var(--ink)"></i><i style="background:var(--cream)"></i><i style="background:var(--red)"></i></span>
+  </footer>
+</section>
+
+<!-- B1 + B2 -->
+<section class="bb" aria-label="Side B, tracks 1 and 2">
+  <div class="guitar" id="b1">
+    <div class="guitar-text">
+      <p class="kicker">B1</p>
+      <h2 class="b-title">Guitar</h2>
+      <p class="spec">a yellow mexican fender stratocaster, black pickguard, cream HSH pickups. “i bought her used in the <a href="https://stores.guitarcenter.com/ny/carle-place/157156">carle place guitar center</a> a year after playing guitar.”</p>
+    </div>
+    <figure>
+      <div class="plate">
+        <svg viewBox="0 0 1200 460" role="img" aria-labelledby="plate-t">
+          <title id="plate-t">Drawing of the guitar from above: yellow body, black pickguard with eleven screws, and three cream pickups under six strings: humbucker, single coil, humbucker.</title>
+          <defs>
+            <g id="poles"><circle cy="160" r="7"/><circle cy="190" r="7"/><circle cy="220" r="7"/><circle cy="250" r="7"/><circle cy="280" r="7"/><circle cy="310" r="7"/></g>
+            <g id="screw"><circle r="7.5" fill="#d9d1bb"/><path d="M-5 -2.2 L5 2.2" stroke="#7d7564" stroke-width="1.6"/></g>
+          </defs>
+          <rect width="1200" height="460" fill="#f0bb1f"/>
+          <path d="M0 70 H900 C1050 70 1140 150 1140 245 C1140 345 1055 400 930 400 H0 Z" fill="#12110e"/>
+          <g>
+            <use href="#screw" x="60" y="96"/><use href="#screw" x="420" y="96"/><use href="#screw" x="690" y="96"/><use href="#screw" x="905" y="98"/>
+            <use href="#screw" x="1062" y="152"/><use href="#screw" x="1112" y="250"/><use href="#screw" x="1058" y="348"/>
+            <use href="#screw" x="960" y="376"/><use href="#screw" x="690" y="376"/><use href="#screw" x="420" y="376"/><use href="#screw" x="60" y="376"/>
+          </g>
+          <g fill="#efe6cf">
+            <rect x="250" y="125" width="96" height="220" rx="12"/>
+            <rect x="520" y="115" width="46" height="240" rx="23"/>
+            <rect x="790" y="125" width="96" height="220" rx="12"/>
+          </g>
+          <g fill="#a69d88">
+            <use href="#poles" x="277"/><use href="#poles" x="319"/>
+            <use href="#poles" x="543"/>
+            <use href="#poles" x="817"/><use href="#poles" x="859"/>
+          </g>
+          <g stroke="#e9e3d4" stroke-opacity=".8">
+            <line x1="0" x2="1200" y1="160" y2="160" stroke-width="1"/>
+            <line x1="0" x2="1200" y1="190" y2="190" stroke-width="1.3"/>
+            <line x1="0" x2="1200" y1="220" y2="220" stroke-width="1.6"/>
+            <line x1="0" x2="1200" y1="250" y2="250" stroke-width="2"/>
+            <line x1="0" x2="1200" y1="280" y2="280" stroke-width="2.4"/>
+            <line x1="0" x2="1200" y1="310" y2="310" stroke-width="2.8"/>
+          </g>
+          <g font-family="Fragment Mono, monospace" font-size="17" fill="#efe6cf" text-anchor="middle">
+            <text x="298" y="382">H</text><text x="543" y="382">S</text><text x="838" y="382">H</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption class="legend">
+        <span><i style="background:var(--yellow)"></i>body, yellow</span>
+        <span><i style="background:var(--ink)"></i>pickguard, black</span>
+        <span><i style="background:var(--cream)"></i>pickups, cream: humbucker, single, humbucker</span>
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="solo" id="b2">
+    <a class="solo-time" href="https://www.youtube.com/watch?v=rlgjWuQPaEQ&amp;t=390s" aria-label="6:30. Gary Moore, I Love You More Than You’ll Ever Know, from 6:30, on YouTube">6:30</a>
+    <div class="solo-text">
+      <p class="kicker">B2 — favorite solo</p>
+      <h2>I Love You More Than You’ll Ever Know</h2>
+      <p>gary moore. drop the needle at 6:30, <a href="https://www.youtube.com/watch?v=rlgjWuQPaEQ&amp;t=390s">here</a>.</p>
+      <dl class="also">
+        <dt>also</dt><dd><a href="https://www.youtube.com/watch?v=JmsUkutNnI0&amp;t=195s">still got the blues</a>, from 3:15<br><a href="https://www.youtube.com/watch?v=hIiuv6PwkdQ">parisienne walkways</a>, live</dd>
+        <dt>loves</dt><dd><a href="https://open.spotify.com/artist/23wr9RJZg0PmYvVFyNkQ4j">gary moore</a>, <a href="https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2">the beatles</a>, <a href="https://open.spotify.com/artist/0k17h0D3J5VfsdmQ1iZtE9">pink floyd</a></dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- B3 reading -->
+<section class="reading grain" id="b3" aria-labelledby="b3-title">
+  <header class="cat-band">
+    <h2 id="b3-title"><span>B3</span>Reading</h2>
+    <p>books i loved in the past year. i mostly like reading fiction.</p>
+    <p class="cat-note">catalogue nos. are goodreads ids</p>
+  </header>
+  <ul class="books">
+    <li><a class="bk c-ink" href="https://www.goodreads.com/book/show/29044.The_Secret_History"><span class="bk-a">Donna Tartt</span><span class="bk-t" style="--fs:1.05">The Secret History</span><span class="bk-f"><span class="dots" role="img" aria-label="5 out of 5">●●●●●</span><span>GR 29044</span></span></a></li>
+    <li><a class="bk c-cream" href="https://www.goodreads.com/book/show/551520.The_Wisdom_of_Insecurity"><span class="bk-a">Alan Watts</span><span class="bk-t" style="--fs:.92">The Wisdom of Insecurity</span><span class="bk-f"><span class="dots" role="img" aria-label="5 out of 5">●●●●●</span><span>GR 551520</span></span></a></li>
+    <li><a class="bk c-red" href="https://www.goodreads.com/book/show/86524.The_Path_to_Power"><span class="bk-a">Robert A. Caro</span><span class="bk-t" style="--fs:1.05">The Path to Power</span><span class="bk-f"><span class="dots" role="img" aria-label="5 out of 5">●●●●●</span><span>GR 86524</span></span></a></li>
+    <li><a class="bk c-line" href="https://www.goodreads.com/book/show/48927138-unit-testing"><span class="bk-a">Vladimir Khorikov</span><span class="bk-t" style="--fs:.62">Unit Testing: Principles, Practices, and Patterns*</span><span class="bk-f"><span class="dots" role="img" aria-label="5 out of 5">●●●●●</span><span>GR 48927138</span></span></a></li>
+    <li><a class="bk c-cream" href="https://www.goodreads.com/book/show/40607194-east-of-eden"><span class="bk-a">John Steinbeck</span><span class="bk-t" style="--fs:1.25">East of Eden</span><span class="bk-f"><span></span><span>GR 40607194</span></span></a></li>
+    <li><a class="bk c-ink" href="https://www.goodreads.com/book/show/6192.Disgrace"><span class="bk-a">J. M. Coetzee</span><span class="bk-t" style="--fs:1.25">Disgrace</span><span class="bk-f"><span class="dots" role="img" aria-label="5 out of 5">●●●●●</span><span>GR 6192</span></span></a></li>
+    <li><a class="bk c-line" href="https://www.goodreads.com/book/show/77566.Hyperion"><span class="bk-a">Dan Simmons</span><span class="bk-t" style="--fs:1.25">Hyperion</span><span class="bk-f"><span class="dots" role="img" aria-label="4 out of 5">●●●●○</span><span>GR 77566</span></span></a></li>
+    <li><a class="bk c-red" href="https://www.goodreads.com/book/show/60384452-demon-copperhead"><span class="bk-a">Barbara Kingsolver</span><span class="bk-t" style="--fs:1.05">Demon Copperhead</span><span class="bk-f"><span></span><span>GR 60384452</span></span></a></li>
+  </ul>
+  <p class="footnote">* “i wish they made us read this in college (but even if they did, i probably would have skipped it).”<br>
+    the rest is on <a href="https://www.goodreads.com/user/show/116748355">goodreads</a>.</p>
+</section>
+
+<!-- B5 photographs -->
+<section class="insert grain" id="b5" aria-labelledby="b5-title">
+  <div class="proof">
+    <i class="crop tl" aria-hidden="true"></i><i class="crop tr" aria-hidden="true"></i><i class="crop bl" aria-hidden="true"></i><i class="crop br" aria-hidden="true"></i>
+    <svg class="reg" viewBox="0 0 22 22" aria-hidden="true"><g fill="none" stroke="#12110e" stroke-width="1"><circle cx="11" cy="11" r="6.5"/><path d="M11 0V22M0 11H22"/></g><circle cx="11" cy="11" r="3" fill="#12110e"/></svg>
+    <ol class="frames">
+      <li class="f1"><figure><a href="/assets/photos/R0009307.webp"><img src="/assets/photos/small/R0009307.webp" srcset="/assets/photos/small/R0009307.webp 800w, /assets/photos/R0009307.webp 1600w" sizes="(max-width:720px) 100vw, 62vw" width="1600" height="1067" loading="lazy" alt="Looking straight down at a pair of brown boots on a yellow sidewalk panel stenciled with the word HOLE."></a><figcaption><b>9307</b><span>hole. the cover, uncropped.</span></figcaption></figure></li>
+      <li class="f-intro">
+        <p class="kicker">B5 — the insert</p>
+        <h2 id="b5-title">Photo&shy;graphy</h2>
+        <p class="lead">ten frames, all mine, captioned by frame number.</p>
+      </li>
+      <li class="f2"><figure><a href="/assets/photos/R0000065.webp"><img src="/assets/photos/small/R0000065.webp" srcset="/assets/photos/small/R0000065.webp 800w, /assets/photos/R0000065.webp 1600w" sizes="(max-width:720px) 100vw, 40vw" width="1600" height="1067" loading="lazy" alt="A brick wall lit red by a car's taillight along a sidewalk at dusk."></a><figcaption><b>0065</b><span>taillight on brick. the red ink comes from here.</span></figcaption></figure></li>
+      <li class="f3"><figure><a href="/assets/photos/R0009319.webp"><img src="/assets/photos/small/R0009319.webp" srcset="/assets/photos/small/R0009319.webp 800w, /assets/photos/R0009319.webp 1600w" sizes="(max-width:720px) 100vw, 55vw" width="1600" height="1067" loading="lazy" alt="A white dog and a golden retriever meeting on a sunny park lawn under a blue sky."></a><figcaption><b>9319</b><span>two dogs</span></figcaption></figure></li>
+      <li class="f4"><figure><a href="/assets/photos/R0000079.webp"><img src="/assets/photos/small/R0000079.webp" srcset="/assets/photos/small/R0000079.webp 800w, /assets/photos/R0000079.webp 1600w" sizes="(max-width:720px) 100vw, 55vw" width="1600" height="1067" loading="lazy" alt="A cat silhouetted in a lit window at night."></a><figcaption><b>0079</b><span>cat, lit window</span></figcaption></figure></li>
+      <li class="f5"><figure><a href="/assets/photos/R0009266.webp"><img src="/assets/photos/small/R0009266.webp" srcset="/assets/photos/small/R0009266.webp 800w, /assets/photos/R0009266.webp 1600w" sizes="(max-width:720px) 100vw, 32vw" width="1600" height="1067" loading="lazy" alt="Close-up of a van painted as the Mystery Machine, orange-red lettering on teal, blue sky behind."></a><figcaption><b>9266</b><span>the mystery machine</span></figcaption></figure></li>
+      <li class="f6"><figure><a href="/assets/photos/R0000067.webp"><img src="/assets/photos/small/R0000067.webp" srcset="/assets/photos/small/R0000067.webp 800w, /assets/photos/R0000067.webp 1600w" sizes="(max-width:720px) 100vw, 32vw" width="1600" height="1067" loading="lazy" alt="Bay windows of a dark house against a deep blue evening sky."></a><figcaption><b>0067</b><span>bay windows, blue hour</span></figcaption></figure></li>
+      <li class="f7"><figure><a href="/assets/photos/R0009301.webp"><img src="/assets/photos/small/R0009301.webp" srcset="/assets/photos/small/R0009301.webp 800w, /assets/photos/R0009301.webp 1600w" sizes="(max-width:720px) 100vw, 32vw" width="1600" height="1067" loading="lazy" alt="An empty concrete alley between a block wall and a building in hard sun, blue sky above."></a><figcaption><b>9301</b><span>alley, hard sun</span></figcaption></figure></li>
+      <li class="f8"><figure><a href="/assets/photos/R0009339-preview.webp"><img src="/assets/photos/small/R0009339-preview.webp" srcset="/assets/photos/small/R0009339-preview.webp 800w, /assets/photos/R0009339-preview.webp 1600w" sizes="(max-width:720px) 100vw, 92vw" width="1600" height="1067" loading="lazy" alt="A red pickup truck parked in front of a lit house at night."></a><figcaption><b>9339</b><span>red pickup</span></figcaption></figure></li>
+      <li class="f9"><figure><a href="/assets/photos/R0009326-preview.webp"><img src="/assets/photos/small/R0009326-preview.webp" srcset="/assets/photos/small/R0009326-preview.webp 800w, /assets/photos/R0009326-preview.webp 1600w" sizes="(max-width:720px) 100vw, 46vw" width="1600" height="1067" loading="lazy" alt="Lit front steps of a Victorian house at night."></a><figcaption><b>9326</b><span>front steps, night</span></figcaption></figure></li>
+      <li class="f10"><figure><a href="/assets/photos/R0009331-preview.webp"><img src="/assets/photos/small/R0009331-preview.webp" srcset="/assets/photos/small/R0009331-preview.webp 800w, /assets/photos/R0009331-preview.webp 1600w" sizes="(max-width:720px) 100vw, 46vw" width="1600" height="1067" loading="lazy" alt="The rounded corner of an old building glowing orange at night."></a><figcaption><b>9331</b><span>corner, glowing</span></figcaption></figure></li>
+    </ol>
+    <div class="slug" aria-hidden="true">
+      <span class="bar"><i style="background:var(--yellow)"></i><i style="background:#f6d982"></i><i style="background:var(--ink)"></i><i style="background:#7d7a72"></i><i style="background:var(--cream);box-shadow:inset 0 0 0 1px rgba(18,17,14,.3)"></i><i style="background:var(--red)"></i><i style="background:#eba08e"></i></span>
+      <span class="slug-t">GC–001 insert · 4/0 · proof</span>
+      <span>trim</span>
+    </div>
+  </div>
+</section>
+
+<!-- CREDITS + side B label -->
+<section class="credits" id="credits" aria-labelledby="credits-title">
+  <div class="credits-grid">
+    <div>
+      <h2 id="credits-title" class="credits-h">Credits</h2>
+      <dl class="cr">
+        <div><dt>Gabriel Cohen</dt><dd>code, guitar, photographs, words. 23, san francisco.</dd></div>
+        <div><dt>Day job</dt><dd>CTO, <a href="https://www.nero.fan/">nero</a>, since spring 2025.</dd></div>
+        <div><dt>Guitar</dt><dd>fender stratocaster, made in mexico, in yellow. black pickguard, cream HSH pickups. bought used at the <a href="https://stores.guitarcenter.com/ny/carle-place/157156">guitar center in carle place</a>.</dd></div>
+        <div><dt>Research</dt><dd><a href="/paper.html">automatically derived semantic scenario instance descriptions: analyzing &amp; improving the existing approach</a>. technical university of munich, 2022.</dd></div>
+        <div><dt>Reading</dt><dd><a href="https://www.goodreads.com/user/show/116748355">goodreads</a></dd></div>
+        <div><dt>Inks</dt><dd class="chips"><span><i style="background:var(--yellow)"></i>body yellow</span><span><i style="background:var(--ink)"></i>pickguard black</span><span><i style="background:var(--cream)"></i>pickup cream</span><span><i style="background:var(--red)"></i>taillight red</span></dd></div>
+      </dl>
+    </div>
+
+    <div class="endlabel" id="write">
+      <svg viewBox="0 0 1000 1000" aria-hidden="true">
+        <defs>
+          <path id="el-top" d="M 100 500 A 400 400 0 0 1 900 500"/>
+          <path id="el-bot" d="M 72 500 A 428 428 0 0 0 928 500"/>
+        </defs>
+        <circle cx="500" cy="500" r="500" fill="#bf3718"/>
+        <circle cx="500" cy="500" r="468" fill="none" stroke="#efe6cf" stroke-width="3" opacity=".7"/>
+        <circle cx="500" cy="500" r="24" fill="#12110e"/>
+        <g fill="#efe6cf" font-family="Archivo, sans-serif" text-anchor="middle">
+          <text font-size="46" font-weight="800" letter-spacing="10" style="font-stretch:125%"><textPath href="#el-top" startOffset="50%">GABRIEL COHEN</textPath></text>
+          <text font-family="Fragment Mono, monospace" font-size="19" letter-spacing="3"><textPath href="#el-bot" startOffset="50%">1 GUITAR · 2 6:30 · 3 READING · 4 SKIING · 5 PHOTOGRAPHY · 6 OTHER SHIT</textPath></text>
+        </g>
+      </svg>
+      <p class="el el-side">Side B</p>
+      <p class="el el-mid" aria-hidden="true"><span>33⅓</span><span>GC–001–B</span></p>
+      <p class="el el-write">write</p>
+      <p class="el el-mail"><a href="mailto:gcohen1928@gmail.com">gcohen1928@gmail.com</a></p>
+      <p class="el el-links"><a href="https://github.com/gcohen1928">github</a> · <a href="https://www.linkedin.com/in/gabrielhcohen/">linkedin</a></p>
+    </div>
+  </div>
+  <p class="runout"><span>GC–001–B · end of side b</span><span>℗ &amp; © 2026 gabriel cohen</span></p>
+</section>
+
+</main>
+
+<script>
+// Scroll pulls the record out of the sleeve. One custom property drives it; CSS does the rest.
+(() => {
+  const front = document.getElementById('front');
+  const stage = document.getElementById('stage');
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  let queued = false;
+  function update() {
+    queued = false;
+    if (still.matches) { stage.style.removeProperty('--e'); stage.style.removeProperty('--rot'); return; }
+    const r = front.getBoundingClientRect();
+    const run = r.height - innerHeight;
+    const p = run > 0 ? Math.min(1, Math.max(0, -r.top / run)) : 1;
+    const e = ease(Math.min(1, p / .82));
+    stage.style.setProperty('--e', e.toFixed(4));
+    stage.style.setProperty('--rot', ((1 - e) * -270).toFixed(2) + 'deg');
+  }
+  const req = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+  addEventListener('scroll', req, { passive: true });
+  addEventListener('resize', req);
+  still.addEventListener('change', req);
+  update();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gabe Cohen</title>
+<meta name="description" content="Gabe Cohen: CTO of Nero, San Francisco. A proof sheet of ten photographs, with the rest printed underneath.">
+<meta name="theme-color" content="#0d0c0b">
+<link rel="icon" href="/favicon.ico">
+<link rel="preload" href="fonts/sofia-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/sofia-sans-extra-condensed.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* Sofia Sans + Sofia Sans Extra Condensed (Lettersoup, SIL OFL), self-hosted from Google Fonts */
+@font-face{font-family:"Sofia Sans";src:url(fonts/sofia-sans.woff2) format("woff2");font-weight:300 800;font-style:normal;font-display:swap}
+@font-face{font-family:"Sofia Sans";src:url(fonts/sofia-sans-italic.woff2) format("woff2");font-weight:300 800;font-style:italic;font-display:swap}
+@font-face{font-family:"Sofia Sans Extra Condensed";src:url(fonts/sofia-sans-extra-condensed.woff2) format("woff2");font-weight:300 900;font-display:swap}
+
+@property --a{syntax:"<angle>";inherits:false;initial-value:0deg}
+@property --p{syntax:"<percentage>";inherits:false;initial-value:0%}
+
+:root{
+  --paper:#eeebe3;          /* the unexposed border of the sheet */
+  --field:#0d0c0b;          /* exposed paper */
+  --ink:#ebe6db;            /* type printed onto the sheet */
+  --ink-2:#a8a296;          /* 7.6:1 on the field */
+  --rule:rgba(235,230,219,.2);
+  --grease:#d92b20;
+  --print:#f6f4ee;
+  --print-ink:#55504a;      /* 7.3:1 on the print border */
+  --border:22px;
+  --pad:clamp(16px,4.4vw,64px);
+  --gap:clamp(10px,2vw,28px);
+  --sans:"Sofia Sans",system-ui,sans-serif;
+  --cond:"Sofia Sans Extra Condensed","Arial Narrow",sans-serif;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .075 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --fibre:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.6 .9' numOctaves='3' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .22 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--paper);-webkit-text-size-adjust:100%;overflow-x:clip}
+body{margin:0;background:var(--fibre),var(--paper);color:var(--ink);font:400 17px/1.55 var(--sans);overflow-x:clip;
+  font-feature-settings:"kern","liga";text-rendering:optimizeLegibility}
+a{color:inherit;text-decoration-line:underline;text-decoration-color:rgba(235,230,219,.4);text-decoration-thickness:1px;text-underline-offset:.22em}
+a:hover{color:#fff;text-decoration-color:var(--grease);text-decoration-thickness:2px}
+a:focus-visible{outline:3px solid var(--grease);outline-offset:3px;border-radius:1px}
+::selection{background:var(--grease);color:#fff}
+p{margin:0 0 .9em}
+
+/* ---------- the sheet ---------- */
+.sheet{position:relative;isolation:isolate;margin:var(--border) var(--border) 0;padding:calc(var(--pad)*.6) var(--pad) calc(var(--pad)*1.1);overflow:clip;overflow-clip-margin:var(--border)}
+/* the exposed field is laid a hair off square, the way paper sits in a printing frame */
+.sheet::before{content:"";position:absolute;inset:0;z-index:-1;
+  background:var(--grain),radial-gradient(120% 50% at 50% 0%,rgba(255,238,214,.035),transparent 70%),var(--field);
+  transform:rotate(-.07deg);box-shadow:0 0 1px 0 rgba(13,12,11,.6)}
+.label{font:600 13px/1.2 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2)}
+
+/* one grid for the whole sheet: frames and type share the same three columns */
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:var(--gap);row-gap:calc(var(--gap)*.9);
+  grid-template-areas:
+    "name intro index"
+    "label label label"
+    ". . ." ". . ." ". . ."
+    ". print print"
+    "now print print"
+    "before off reading"
+    "before contact reading"}
+
+/* ---------- header, printed in the first band ---------- */
+.name{grid-area:name;margin:0 0 -.06em;align-self:end;font:760 clamp(52px,6.3vw,92px)/.8 var(--cond);letter-spacing:-.008em;color:var(--ink);white-space:nowrap;
+  text-shadow:0 0 .5px rgba(255,250,240,.6)}
+.intro{grid-area:intro;margin:0;align-self:end;font-size:clamp(17px,1.3vw,19px);line-height:1.5;max-width:26em}
+.intro b{font-weight:650;color:#fff}
+.index{grid-area:index;align-self:end;margin:0}
+.index ol{list-style:none;margin:.45rem 0 0;padding:0;display:grid;gap:.05rem;font:600 19px/1.3 var(--cond);letter-spacing:.06em;text-transform:lowercase}
+.index li{display:flex;gap:.8rem}
+.index li i{font-style:normal;color:var(--ink-2);font-variant-numeric:tabular-nums;min-width:1.2em}
+.strip-label{grid-area:label;display:flex;justify-content:space-between;gap:.3rem 1rem;flex-wrap:wrap;margin:calc(var(--gap)*.25) 0 0;padding-top:.65rem;border-top:1px solid var(--rule)}
+.coarse{display:none}
+@media (hover:none),(pointer:coarse){.fine{display:none}.coarse{display:inline}}
+.touch .fine{display:none}.touch .coarse{display:inline}
+
+/* ---------- frames ---------- */
+.frames{display:contents}
+.cell{position:relative;margin:0;display:block}
+.frame{position:relative;aspect-ratio:3/2}
+.shot{display:block;width:100%;height:100%;background:#050505}
+.shot img{display:block;width:100%;height:100%;object-fit:cover;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-user-drag:none}
+.shot:focus-visible{outline:3px solid var(--grease);outline-offset:4px}
+.fn{display:flex;justify-content:space-between;margin:.45rem 0 0;font:600 13px/1 var(--cond);letter-spacing:.16em;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.fn span+span{letter-spacing:.1em;opacity:.8}
+.fn span:first-child{transition:color .15s}
+.cell:hover .fn span:first-child,.cell:focus-within .fn span:first-child{color:var(--ink)}
+
+/* china marker: raster marks, placed in percentages of the frame they sit on */
+.mk{position:absolute;z-index:3;left:var(--l);top:var(--t);width:var(--w);height:auto;max-width:none;pointer-events:none;user-select:none}
+.js .mk.sweep{-webkit-mask:conic-gradient(from var(--from) at var(--at),#000 var(--a),transparent calc(var(--a) + .5deg));mask:conic-gradient(from var(--from) at var(--at),#000 var(--a),transparent calc(var(--a) + .5deg))}
+.js .mk.wipe{--p:var(--p0);-webkit-mask:linear-gradient(var(--dir,90deg),#000 var(--p),transparent calc(var(--p) + 3%));mask:linear-gradient(var(--dir,90deg),#000 var(--p),transparent calc(var(--p) + 3%))}
+.js .on .mk.sweep{--a:361deg;transition:--a var(--t1,.95s) cubic-bezier(.55,.1,.35,1) var(--d,0s)}
+.js .on .mk.wipe{--p:var(--p1);transition:--p var(--t1,.4s) cubic-bezier(.4,.1,.4,1) var(--d,0s)}
+
+/* ---------- type printed on the sheet ---------- */
+.note{margin:0;padding-top:.8rem;border-top:1px solid var(--rule);align-self:start}
+.note > .label{margin:0 0 1.1rem;display:flex;justify-content:space-between;gap:1rem}
+.now{grid-area:now}
+.before{grid-area:before}
+.off{grid-area:off}
+.reading{grid-area:reading}
+.now .lead{font:500 clamp(22px,1.95vw,28px)/1.22 var(--sans);letter-spacing:-.01em;margin:0 0 1.1rem;color:#fff}
+.fig{font-weight:650;color:#fff;white-space:nowrap}
+.muted{color:var(--ink-2)}
+
+.job{margin:0 0 1.5rem}
+.job:last-child{margin-bottom:0}
+.job h3{font:650 21px/1.2 var(--sans);margin:0 0 .15rem;color:#fff}
+.job .meta{font:600 14px/1.35 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin:0 0 .6rem}
+ul.dash{list-style:none;margin:0 0 .8rem;padding:0}
+ul.dash li{padding-left:1.1em;position:relative;margin:0 0 .3rem}
+ul.dash li::before{content:"–";position:absolute;left:0;color:var(--ink-2)}
+.quote{font-style:italic;color:var(--ink)}
+
+.off .lead{font-size:clamp(18px,1.5vw,21px);line-height:1.45;margin-bottom:1.4rem}
+.spec{margin:0 0 1.1rem;display:grid;grid-template-columns:auto minmax(0,1fr);gap:.25rem 1rem}
+.spec dt{font:600 14px/1.75 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.spec dd{margin:0}
+.sub{font:600 14px/1.2 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin:1.3rem 0 .5rem}
+
+.books{list-style:none;margin:0 0 1.1rem;padding:0}
+.books li{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:1rem;padding:.42rem 0;border-bottom:1px solid rgba(235,230,219,.1)}
+.books li:first-child{border-top:1px solid rgba(235,230,219,.1)}
+.books cite{font-style:normal;font-weight:600}
+.books .by{display:block;color:var(--ink-2);font-size:15px}
+.books b{font:600 15px/1.6 var(--cond);letter-spacing:.1em;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.books .aside{grid-column:1/-1;color:var(--ink-2);font-style:italic;font-size:15px;margin-top:.2rem}
+
+/* ---------- the one print on the sheet ---------- */
+.print{grid-area:print;align-self:start;margin:calc(var(--gap)*.5) calc(var(--pad)*-.25) 0 calc(var(--gap)*.4);position:relative;z-index:2;
+  background:var(--fibre),var(--print);padding:clamp(12px,1.7vw,26px) clamp(12px,1.7vw,26px) 0;transform:rotate(-1.1deg);
+  box-shadow:0 1px 1px rgba(0,0,0,.35),0 26px 50px -18px rgba(0,0,0,.85),0 8px 16px -8px rgba(0,0,0,.5)}
+.print img{display:block;width:100%;height:auto}
+.print figcaption{display:flex;justify-content:space-between;gap:1rem;align-items:baseline;padding:.6rem 0 .75rem;font:400 14px/1.3 var(--sans);color:var(--print-ink)}
+.print figcaption b{font:600 14px/1 var(--cond);letter-spacing:.16em;color:var(--print-ink)}
+.contact{grid-area:contact;margin-top:calc(var(--gap)*1.6)}
+.contact .mail{font:500 clamp(20px,1.75vw,25px)/1.3 var(--sans);margin:0 0 .7rem;overflow-wrap:anywhere}
+.contact ul{list-style:none;margin:0;padding:0;font:600 19px/1.5 var(--cond);letter-spacing:.06em}
+
+.foot{display:flex;justify-content:flex-end;gap:2rem;padding:10px var(--border) 12px;font:600 11px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:#6c675e}
+
+/* ---------- loupe ---------- */
+.loupe{position:fixed;left:0;top:0;width:var(--L,230px);height:var(--L,230px);border-radius:50%;z-index:50;pointer-events:none;
+  background-color:#111;background-repeat:no-repeat;
+  box-shadow:0 0 0 8px #151412,0 0 0 9px #3d3934,0 0 0 10px #080808,0 18px 40px rgba(0,0,0,.6),inset 0 0 24px rgba(0,0,0,.45);
+  opacity:0;transition:opacity .12s}
+.loupe.on{opacity:1}
+@media (hover:hover) and (pointer:fine){ .has-loupe .shot{cursor:zoom-in} .has-loupe .shot.looking{cursor:none} }
+
+/* ---------- enlargement ---------- */
+dialog.enl{border:0;padding:0;background:transparent;max-width:none;max-height:none;width:100%;height:100%;color:#1a1916;overflow:hidden}
+dialog.enl::backdrop{background:rgba(8,8,7,.94)}
+.enl .paper{position:absolute;left:50%;top:calc(50% - 26px);transform:translate(-50%,-50%) rotate(-.5deg);
+  background:var(--fibre),var(--print);padding:clamp(10px,2vw,30px) clamp(10px,2vw,30px) 0;
+  width:min(94vw,calc((100vh - 200px)*1.5 + 60px));box-shadow:0 30px 80px rgba(0,0,0,.7)}
+.enl img{display:block;width:100%;height:auto;aspect-ratio:3/2;background:#222}
+.enl .cap{display:flex;justify-content:space-between;gap:1rem;align-items:baseline;padding:.6rem 0 .8rem;font:400 14px/1.4 var(--sans);color:var(--print-ink)}
+.enl .cap b{font:600 14px/1 var(--cond);letter-spacing:.16em;color:var(--print-ink);white-space:nowrap}
+.enl .ctl{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:8px}
+.enl button{font:600 15px/1 var(--cond);letter-spacing:.18em;text-transform:lowercase;background:#1a1816;color:var(--ink);border:1px solid #4a453e;padding:.8em 1.2em;cursor:pointer}
+.enl button:hover{background:var(--grease);border-color:var(--grease);color:#fff}
+.enl button:focus-visible{outline:3px solid var(--grease);outline-offset:2px}
+
+/* ---------- mid widths ---------- */
+@media (max-width:1100px) and (min-width:761px){
+  .off .lead{font-size:18px}
+  .strip-label{letter-spacing:.14em}
+}
+
+/* ---------- phone ---------- */
+@media (max-width:760px){
+  :root{--border:8px;--pad:14px;--gap:10px}
+  body{font-size:16.5px}
+  .sheet{padding-top:22px;padding-bottom:26px}
+  .sheet::before{transform:none}
+  .board{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:14px;grid-template-areas:none}
+  .name,.intro,.index,.strip-label,.now,.before,.off,.reading,.print,.contact{grid-area:auto;grid-column:1/-1}
+  .name{font-size:clamp(58px,19vw,90px);margin:0 0 .6rem}
+  .intro{font-size:17px;margin-bottom:.4rem}
+  .index ol{font-size:19px}
+  .strip-label{margin-top:.6rem;font-size:12px;letter-spacing:.16em}
+  .fn{font-size:11.5px;letter-spacing:.12em;margin-top:.35rem}
+  .fn span+span{display:none}
+  .note{margin-top:1.6rem}
+  .print{margin:1.6rem -2px .6rem;transform:rotate(-1deg)}
+  .foot{justify-content:space-between;padding:10px var(--border) 12px;font-size:10px}
+}
+@media (prefers-reduced-motion:reduce){
+  .js .mk.sweep,.js .mk.wipe{-webkit-mask:none;mask:none}
+  .loupe{transition:none}
+}
+</style>
+</head>
+<body>
+
+<main class="sheet">
+  <div class="board">
+
+    <h1 class="name"><span>gabe</span> <span>cohen</span></h1>
+    <p class="intro"><b>hey, i'm gabe.</b> i'm 23, i live in san francisco, and i'm the cto of <a href="https://www.nero.fan/">nero</a>. this is a proof sheet of ten of my photos. everything else is printed underneath.</p>
+    <nav class="index" aria-label="On this sheet">
+      <p class="label">on this sheet</p>
+      <ol>
+        <li><i>01</i><a href="#now">now: nero</a></li>
+        <li><i>02</i><a href="#before">before: flatiron, munich</a></li>
+        <li><i>03</i><a href="#off">off hours: guitar, books</a></li>
+        <li><i>04</i><a href="#contact">contact</a></li>
+      </ol>
+    </nav>
+
+    <p class="strip-label label"><span>10 frames, in file order</span><span><span class="fine">hover a frame for the loupe, click to enlarge</span><span class="coarse">press and hold a frame for the loupe, tap to enlarge</span></span></p>
+
+    <ol class="frames" role="list" aria-label="Photographs, ten frames">
+      <li class="cell">
+        <div class="frame"><a class="shot" href="/assets/photos/R0000065.webp" data-cap="a brick wall lit red by a car's taillight, on a sidewalk at dusk."><img src="/assets/photos/small/R0000065.webp" width="800" height="533" alt="A brick wall lit red by a car's taillight on a dusk sidewalk."></a></div>
+        <p class="fn"><span>R0000065</span><span>01</span></p>
+      </li>
+      <li class="cell">
+        <div class="frame"><a class="shot" href="/assets/photos/R0000067.webp" data-cap="bay windows of a dark house against a deep blue evening sky."><img src="/assets/photos/small/R0000067.webp" width="800" height="533" alt="Bay windows of a dark house against a deep blue evening sky."></a></div>
+        <p class="fn"><span>R0000067</span><span>02</span></p>
+      </li>
+      <li class="cell">
+        <div class="frame"><a class="shot" href="/assets/photos/R0000079.webp" data-cap="a cat in a lit window at night."><img src="/assets/photos/small/R0000079.webp" width="800" height="533" alt="A cat silhouetted in a lit window at night."></a></div>
+        <p class="fn"><span>R0000079</span><span>03</span></p>
+      </li>
+      <li class="cell">
+        <div class="frame"><a class="shot" href="/assets/photos/R0009266.webp" data-cap="a van painted as the mystery machine, up close."><img src="/assets/photos/small/R0009266.webp" width="800" height="533" alt="A van painted as the Mystery Machine, seen up close under blue sky."></a></div>
+        <p class="fn"><span>R0009266</span><span>04</span></p>
+      </li>
+      <li class="cell">
+        <div class="frame"><a class="shot" href="/assets/photos/R0009301.webp" data-cap="an empty concrete alley between a block wall and a building, hard sun."><img src="/assets/photos/small/R0009301.webp" width="800" height="533" alt="An empty concrete alley between a block wall and a building, in hard sun."></a></div>
+        <p class="fn"><span>R0009301</span><span>05</span></p>
+      </li>
+      <li class="cell marked" id="me">
+        <div class="frame">
+          <a class="shot" href="/assets/photos/R0009307.webp" data-cap="my boots, on a yellow sidewalk panel stenciled HOLE."><img src="/assets/photos/small/R0009307.webp" width="800" height="533" alt="Looking down at my boots on a yellow sidewalk panel stenciled HOLE. The frame is circled in red china marker, with the word me and an arrow pointing at the boots."></a>
+          <img class="mk sweep" src="marks/loop.webp" width="1040" height="754" alt="" aria-hidden="true" style="--l:-16%;--t:-22%;--w:133.333%;--from:292deg;--at:52% 50%">
+          <img class="mk wipe" src="marks/me.webp" width="1040" height="754" alt="" aria-hidden="true" style="--l:-16%;--t:-22%;--w:133.333%;--p0:65%;--p1:87%;--d:.85s">
+          <img class="mk wipe" src="marks/arrow.webp" width="1040" height="754" alt="" aria-hidden="true" style="--l:-16%;--t:-22%;--w:133.333%;--dir:270deg;--p0:25%;--p1:41%;--d:1.3s;--t1:.32s">
+        </div>
+        <p class="fn"><span>R0009307</span><span>06</span></p>
+      </li>
+      <li class="cell">
+        <div class="frame"><a class="shot" href="/assets/photos/R0009319.webp" data-cap="a white dog and a golden retriever meeting on a park lawn."><img src="/assets/photos/small/R0009319.webp" width="800" height="533" alt="A white dog and a golden retriever meeting on a sunny park lawn."></a></div>
+        <p class="fn"><span>R0009319</span><span>07</span></p>
+      </li>
+      <li class="cell">
+        <div class="frame"><a class="shot" href="/assets/photos/R0009326-preview.webp" data-cap="lit front steps of a victorian house at night."><img src="/assets/photos/small/R0009326-preview.webp" width="800" height="533" alt="Lit front steps of a Victorian house at night."></a></div>
+        <p class="fn"><span>R0009326</span><span>08</span></p>
+      </li>
+      <li class="cell">
+        <div class="frame"><a class="shot" href="/assets/photos/R0009331-preview.webp" data-cap="the rounded corner of an old building, glowing orange at night."><img src="/assets/photos/small/R0009331-preview.webp" width="800" height="533" alt="The rounded corner of an old building glowing orange at night."></a></div>
+        <p class="fn"><span>R0009331</span><span>09</span></p>
+      </li>
+      <li class="cell marked">
+        <div class="frame">
+          <a class="shot" href="/assets/photos/R0009339-preview.webp" data-cap="a red pickup truck in front of a lit house at night."><img src="/assets/photos/small/R0009339-preview.webp" width="800" height="533" alt="A red pickup truck parked in front of a lit house at night. The frame is boxed in red china marker; it is printed at the bottom of the page."></a>
+          <img class="mk sweep" src="marks/box.webp" width="915" height="676" alt="" aria-hidden="true" style="--l:-8.667%;--t:-15%;--w:117.333%;--from:300deg;--at:50% 50%">
+        </div>
+        <p class="fn"><span>R0009339</span><span>10</span></p>
+      </li>
+    </ol>
+
+    <figure class="print" aria-labelledby="print-cap">
+      <img src="/assets/photos/R0009339-preview.webp" width="1600" height="1067" loading="lazy" alt="A red pickup truck parked in front of a lit house at night.">
+      <figcaption id="print-cap"><span>work print of the boxed frame</span><b>R0009339</b></figcaption>
+    </figure>
+
+    <section class="note now" id="now" aria-labelledby="now-h">
+      <h2 class="label" id="now-h"><span>now</span><span>since spring 2025</span></h2>
+      <p class="lead">cto of <a href="https://www.nero.fan/">nero</a>. we're helping artists make money and go viral on livestreams.</p>
+      <p>i built <a href="https://www.nero.fan/">nero.fan</a> and scaled it to <span class="fig">600K+ monthly users</span>. it processes <span class="fig">$500K+ GMV a month</span> <span class="muted">(numbers as of early 2026)</span>.</p>
+      <p>this is where most of my time is spent.</p>
+    </section>
+
+    <section class="note before" id="before" aria-labelledby="before-h">
+      <h2 class="label" id="before-h"><span>before</span></h2>
+      <article class="job">
+        <h3>flatiron health</h3>
+        <p class="meta">software engineer<br>summer 2024 – winter 2025 · intern in 2023</p>
+        <ul class="dash">
+          <li>shipped clinical research products supporting clinical trials</li>
+          <li>built infrastructure and features for a full-stack patient management system</li>
+          <li>after 8 months, got my own team building internal sales tools</li>
+          <li>led ai development initiatives across flatiron</li>
+        </ul>
+      </article>
+      <article class="job">
+        <h3>in college</h3>
+        <ul class="dash">
+          <li>built web and mobile apps for <a href="https://tracxn.com/d/companies/daedalus/__4NOiqEy2jDbXg3S4nSjyvtQeg4fSTNIEiMtvLFfVjBs/">daedalus finance</a>, a fintech startup, and <a href="https://www.feniska.com/">feniska</a>, a german pet-tech startup</li>
+          <li>started a few failed consumer apps</li>
+        </ul>
+      </article>
+      <article class="job">
+        <h3>technical university of munich</h3>
+        <p class="meta">research · summer 2022</p>
+        <ul class="dash">
+          <li>self-driving cars: translated traffic trajectories from drone footage of german intersections into semantic scenarios for autonomous-vehicle testing</li>
+          <li>improved the evaluation loop</li>
+        </ul>
+        <p class="quote">it was incredible to spend time living in germany.</p>
+        <p><a href="/paper.html">read the paper →</a></p>
+      </article>
+    </section>
+
+    <section class="note off" id="off" aria-labelledby="off-h">
+      <h2 class="label" id="off-h"><span>off hours</span></h2>
+      <p class="lead">outside work: learning how to play guitar, reading, and doing other shit that caught my attention (right now skiing and <a href="#me">photography</a>).</p>
+      <h3 class="sub">the guitar</h3>
+      <dl class="spec">
+        <dt>body</dt><dd>yellow mexican fender stratocaster</dd>
+        <dt>guard</dt><dd>black</dd>
+        <dt>pickups</dt><dd>cream, HSH</dd>
+        <dt>from</dt><dd>i bought her used in the <a href="https://stores.guitarcenter.com/ny/carle-place/157156">carle place guitar center</a> a year after playing guitar</dd>
+      </dl>
+      <p>i love <a href="https://open.spotify.com/artist/23wr9RJZg0PmYvVFyNkQ4j">gary moore</a>, <a href="https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2">the beatles</a>, and <a href="https://open.spotify.com/artist/0k17h0D3J5VfsdmQ1iZtE9">pink floyd</a>.</p>
+      <p>favorite solo: gary moore, <a href="https://www.youtube.com/watch?v=rlgjWuQPaEQ&amp;t=390s">"i love you more than you'll ever know"</a>, starting at 6:30.</p>
+      <p>also: <a href="https://www.youtube.com/watch?v=JmsUkutNnI0&amp;t=195s">"still got the blues"</a> and <a href="https://www.youtube.com/watch?v=hIiuv6PwkdQ">"parisienne walkways"</a> (live).</p>
+    </section>
+
+    <section class="note reading" aria-labelledby="reading-h">
+      <h2 class="label" id="reading-h"><span>reading</span><span>past year</span></h2>
+      <p>i mostly like reading fiction. books i loved:</p>
+      <ul class="books">
+        <li><span><a href="https://www.goodreads.com/book/show/29044.The_Secret_History"><cite>the secret history</cite></a><span class="by">donna tartt</span></span><b aria-label="rated 5 out of 5">5/5</b></li>
+        <li><span><a href="https://www.goodreads.com/book/show/551520.The_Wisdom_of_Insecurity"><cite>the wisdom of insecurity</cite></a><span class="by">alan watts</span></span><b aria-label="rated 5 out of 5">5/5</b></li>
+        <li><span><a href="https://www.goodreads.com/book/show/86524.The_Path_to_Power"><cite>the path to power</cite></a><span class="by">robert a. caro</span></span><b aria-label="rated 5 out of 5">5/5</b></li>
+        <li><span><a href="https://www.goodreads.com/book/show/48927138-unit-testing"><cite>unit testing: principles, practices, and patterns</cite></a><span class="by">vladimir khorikov</span></span><b aria-label="rated 5 out of 5">5/5</b><span class="aside">"i wish they made us read this in college (but even if they did, i probably would have skipped it)."</span></li>
+        <li><span><a href="https://www.goodreads.com/book/show/40607194-east-of-eden"><cite>east of eden</cite></a><span class="by">john steinbeck</span></span></li>
+        <li><span><a href="https://www.goodreads.com/book/show/6192.Disgrace"><cite>disgrace</cite></a><span class="by">j. m. coetzee</span></span><b aria-label="rated 5 out of 5">5/5</b></li>
+        <li><span><a href="https://www.goodreads.com/book/show/77566.Hyperion"><cite>hyperion</cite></a><span class="by">dan simmons</span></span><b aria-label="rated 4 out of 5">4/5</b></li>
+        <li><span><a href="https://www.goodreads.com/book/show/60384452-demon-copperhead"><cite>demon copperhead</cite></a><span class="by">barbara kingsolver</span></span></li>
+      </ul>
+      <p><a href="https://www.goodreads.com/user/show/116748355">the rest is on goodreads →</a></p>
+    </section>
+
+
+    <section class="note contact" id="contact" aria-labelledby="contact-h">
+      <h2 class="label" id="contact-h"><span>contact</span></h2>
+      <p class="mail"><a href="mailto:gcohen1928@gmail.com">gcohen1928@gmail.com</a></p>
+      <ul>
+        <li><a href="https://github.com/gcohen1928">github</a></li>
+        <li><a href="https://www.linkedin.com/in/gabrielhcohen/">linkedin</a></li>
+        <li><a href="/paper.html">the munich paper</a></li>
+      </ul>
+    </section>
+
+  </div>
+</main>
+<div class="foot" aria-hidden="true"><span>gabrielcohen.co</span><span>sheet 1 of 1</span></div>
+
+<dialog class="enl" aria-label="Enlargement">
+  <div class="paper">
+    <img alt="">
+    <div class="cap"><span class="alt"></span><b class="fn2"></b></div>
+  </div>
+  <div class="ctl">
+    <button type="button" data-go="-1">prev</button>
+    <button type="button" data-close>close</button>
+    <button type="button" data-go="1">next</button>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  root.classList.add('js');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // the china marker goes down when a marked frame comes into view
+  const marked = document.querySelectorAll('.marked');
+  if (still || !('IntersectionObserver' in window)) marked.forEach(m => m.classList.add('on'));
+  else {
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); }
+    }), { threshold: .6 });
+    marked.forEach(m => io.observe(m));
+  }
+
+  const shots = [...document.querySelectorAll('.shot')];
+
+  // loupe: mouse hover, or press and hold on touch
+  const lens = document.createElement('div');
+  lens.className = 'loupe'; lens.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(lens);
+  const aim = (a, x, y, touch) => {
+    const L = touch ? 170 : 230, Z = touch ? 4 : 3, r = a.getBoundingClientRect();
+    const px = Math.min(Math.max(x - r.left, 0), r.width), py = Math.min(Math.max(y - r.top, 0), r.height);
+    let lx = x - L / 2, ly = touch ? y - L - 28 : y - L / 2;
+    if (touch && ly < 8) ly = y + 40;
+    lx = Math.min(Math.max(lx, 8), innerWidth - L - 8);
+    lens.style.setProperty('--L', L + 'px');
+    lens.style.backgroundSize = `${r.width * Z}px ${r.height * Z}px`;
+    lens.style.backgroundPosition = `${L / 2 - px * Z}px ${L / 2 - py * Z}px`;
+    lens.style.transform = `translate(${lx}px, ${ly}px)`;
+  };
+  const show = a => { lens.style.backgroundImage = `url("${a.getAttribute('href')}")`; lens.classList.add('on'); a.classList.add('looking'); };
+  const hide = a => { lens.classList.remove('on'); a && a.classList.remove('looking'); };
+  root.classList.add(matchMedia('(hover: hover) and (pointer: fine)').matches ? 'has-loupe' : 'touch');
+  let held = null, timer = 0, sx = 0, sy = 0, swallow = false;
+  shots.forEach(a => {
+    a.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse' && root.classList.contains('has-loupe')) show(a); });
+    a.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') hide(a); });
+    a.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && root.classList.contains('has-loupe')) aim(a, e.clientX, e.clientY, false); });
+    a.addEventListener('touchstart', e => {
+      const t = e.touches[0]; sx = t.clientX; sy = t.clientY; swallow = false; clearTimeout(timer);
+      timer = setTimeout(() => { held = a; swallow = true; show(a); aim(a, sx, sy, true); }, 280);
+    }, { passive: true });
+    a.addEventListener('touchmove', e => {
+      const t = e.touches[0];
+      if (held === a) { e.preventDefault(); aim(a, t.clientX, t.clientY, true); }
+      else if (Math.hypot(t.clientX - sx, t.clientY - sy) > 8) clearTimeout(timer);
+    }, { passive: false });
+    const end = () => { clearTimeout(timer); if (held) { hide(held); held = null; } };
+    a.addEventListener('touchend', end); a.addEventListener('touchcancel', end);
+    a.addEventListener('contextmenu', e => { if (held || swallow) e.preventDefault(); });
+  });
+
+  // enlargement: a work print, filename on the border
+  const dlg = document.querySelector('dialog.enl');
+  if (!dlg || !dlg.showModal) return;
+  const img = dlg.querySelector('img'), cap = dlg.querySelector('.alt'), fn = dlg.querySelector('.fn2');
+  let i = 0;
+  const open = n => {
+    i = (n + shots.length) % shots.length;
+    const a = shots[i];
+    img.src = a.getAttribute('href'); img.alt = a.querySelector('img').alt;
+    cap.textContent = a.dataset.cap; fn.textContent = a.closest('.cell').querySelector('.fn span').textContent;
+  };
+  shots.forEach((a, n) => a.addEventListener('click', e => {
+    if (swallow) { swallow = false; e.preventDefault(); return; }
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault(); hide(a); open(n); dlg.showModal();
+  }));
+  dlg.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (b && b.dataset.go) open(i + +b.dataset.go);
+    else if ((b && 'close' in b.dataset) || e.target === dlg) dlg.close();
+  });
+  dlg.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') open(i + 1);
+    if (e.key === 'ArrowLeft') open(i - 1);
+  });
+})();
+</script>
+</body>
+</html>
