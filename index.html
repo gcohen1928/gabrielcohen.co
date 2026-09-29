@@ -61,8 +61,7 @@
       align-items: start;
     }
     figure { margin: 0; }
-    .p1 { grid-column: 1 / span 3; }
-    .p2 { grid-column: 4 / span 3; }
+    .p1 { grid-column: 1 / -1; max-width: calc(100svh - 7rem); }
     canvas {
       display: block;
       width: 100%;
@@ -79,7 +78,7 @@
       .wrap { grid-template-columns: minmax(0, 1fr); }
       .text { position: static; }
       .pieces { grid-template-columns: minmax(0, 1fr); }
-      .p1, .p2 { grid-column: 1; }
+      .p1 { grid-column: 1; max-width: none; }
     }
   </style>
 </head>
@@ -93,14 +92,9 @@
       <p>say hi: <a href="mailto:gcohen1928@gmail.com">email</a> · <a href="https://github.com/gcohen1928" rel="me">github</a> · <a href="https://www.linkedin.com/in/gabrielhcohen/" rel="me">linkedin</a></p>
     </section>
 
-    <main class="pieces" aria-label="Two interactive drawings">
+    <main class="pieces" aria-label="An interactive drawing">
       <figure class="p1">
-        <canvas id="torus" aria-label="A slowly turning torus, drawn in dithered black and white. Moving the cursor over it moves the light."></canvas>
-        <figcaption class="mono"><span>torus, one bit</span><span>move to relight</span></figcaption>
-      </figure>
-      <figure class="p2">
         <canvas id="nero" aria-label="The Nero flame logo in 3D, turning slowly, drawn in dithered black and white. Moving the cursor over it moves the light."></canvas>
-        <figcaption class="mono"><span><a href="https://www.nero.fan/">nero</a>, one bit</span><span>move to relight</span></figcaption>
       </figure>
     </main>
 
@@ -196,11 +190,6 @@
         s.ctx.putImageData(img, 0, 0);
       });
     }
-
-    // The torus.
-    const torus = (x, y, z) => Math.hypot(Math.hypot(x, y) - 1, z) - 0.42;
-    torus.ready = true;
-    raymarched(document.getElementById('torus'), { sdf: torus, bound: 1.45, rotate: t => [t * 0.35, t * 0.23] });
 
     // The Nero flame: a 2D distance field computed from the logo image, then swept into round tubes.
     const G = 192, S = 1.3;

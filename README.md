@@ -1,6 +1,6 @@
 # gabrielcohen.co
 
-Gabe Cohen’s personal site. A plain, readable text column next to two interactive drawings: a dithered 1-bit torus and a 3D Nero flame (built from `assets/nero-mark.png`), both lit by the cursor. Canvas + vanilla JS, no libraries, no build step.
+Gabe Cohen’s personal site. A plain, readable text column next to a 3D dithered Nero flame (built from `assets/nero-mark.png`) that the cursor relights. Canvas + vanilla JS, no libraries, no build step.
 
 - `index.html`: the homepage, self-contained (inline CSS and JS)
 - `photos.html`: photos (not linked from the homepage)
