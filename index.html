@@ -49,11 +49,8 @@
     /* Text column */
     .text { position: sticky; top: clamp(1.5rem, 4vw, 3.5rem); align-self: start; }
     h1 { margin: 0 0 2.5rem; font-size: 1.0625rem; font-weight: 600; }
-    .lede { margin: 0 0 2.5rem; font-size: 1.375rem; line-height: 1.35; letter-spacing: -0.005em; }
-    dl { margin: 0; display: grid; grid-template-columns: 5.5rem 1fr; gap: 0.65rem 1rem; }
-    dt { color: var(--soft); padding-top: 0.2rem; }
-    dd { margin: 0; }
-    dd span { color: var(--soft); }
+    .text p { margin: 0 0 1em; }
+    .lede { margin: 0 0 1.4rem !important; font-size: 1.375rem; line-height: 1.35; letter-spacing: -0.005em; }
     cite { font-style: italic; }
 
     /* Pieces */
@@ -65,8 +62,6 @@
     }
     figure { margin: 0; }
     .p1 { grid-column: 1 / -1; max-width: calc(100svh - 7rem); }
-    .p2 { grid-column: 1 / span 4; }
-    .p3 { grid-column: 4 / span 3; margin-top: -2rem; }
     canvas {
       display: block;
       width: 100%;
@@ -75,7 +70,6 @@
       touch-action: pan-y;
       cursor: crosshair;
     }
-    .p2 canvas { aspect-ratio: 4 / 3; }
     figcaption { display: flex; justify-content: space-between; gap: 1rem; margin-top: 0.8rem; padding-top: 0.6rem; border-top: 1px solid var(--line); color: var(--soft); }
     figcaption b { color: var(--ink); font-weight: 600; }
 
@@ -85,7 +79,7 @@
       .wrap { grid-template-columns: minmax(0, 1fr); }
       .text { position: static; }
       .pieces { grid-template-columns: minmax(0, 1fr); }
-      .p1, .p2, .p3 { grid-column: 1; margin-top: 0; max-width: none; }
+      .p1 { grid-column: 1; max-width: none; }
     }
   </style>
 </head>
@@ -94,32 +88,15 @@
     <section class="text">
       <h1>gabe cohen</h1>
       <p class="lede">hey, i’m gabe. i’m 23, i live in san francisco, and i’m the cto of <a href="https://www.nero.fan/">nero</a>, where we help artists make money and go viral on livestreams.</p>
-      <dl>
-        <dt>now</dt>
-        <dd>cto, <a href="https://www.nero.fan/">nero</a> <span>2025–</span></dd>
-        <dt>before</dt>
-        <dd>software engineer, flatiron health <span>2023–25</span><br />a few failed consumer apps<br />self-driving research, tu munich <span>2022</span> · <a href="/paper.html">paper</a></dd>
-        <dt>off hours</dt>
-        <dd>guitar, fiction, skiing</dd>
-        <dt>reading</dt>
-        <dd><cite>the secret history</cite>, <cite>east of eden</cite>, <cite>disgrace</cite> · <a href="https://www.goodreads.com/user/show/116748355">more</a></dd>
-        <dt>elsewhere</dt>
-        <dd><a href="mailto:gcohen1928@gmail.com">email</a> · <a href="https://github.com/gcohen1928" rel="me">github</a> · <a href="https://www.linkedin.com/in/gabrielhcohen/" rel="me">linkedin</a></dd>
-      </dl>
+      <p>before nero i was a software engineer at flatiron health, working on clinical research products. i also started a few consumer apps that failed, and did research on <a href="/paper.html">self-driving cars in munich</a>.</p>
+      <p>outside of work i’m learning how to play guitar, reading (mostly fiction, lately <a href="https://www.goodreads.com/user/show/116748355">the secret history and east of eden</a>), and doing other shit that caught my attention. right now that’s skiing.</p>
+      <p>say hi: <a href="mailto:gcohen1928@gmail.com">email</a> · <a href="https://github.com/gcohen1928" rel="me">github</a> · <a href="https://www.linkedin.com/in/gabrielhcohen/" rel="me">linkedin</a></p>
     </section>
 
-    <main class="pieces" aria-label="Three small interactive drawings">
+    <main class="pieces" aria-label="An interactive drawing">
       <figure class="p1">
         <canvas id="torus" aria-label="A slowly turning torus, drawn in dithered black and white. Moving the cursor over it moves the light."></canvas>
-        <figcaption class="mono"><span><b>no. 1</b> torus, one bit</span><span>move to relight</span></figcaption>
-      </figure>
-      <figure class="p2">
-        <canvas id="field" aria-label="A field of short black strokes that drift like iron filings and swirl around the cursor."></canvas>
-        <figcaption class="mono"><span><b>no. 2</b> field</span><span>it leans toward you</span></figcaption>
-      </figure>
-      <figure class="p3">
-        <canvas id="pond" aria-label="A grid of dots that ripples outward wherever you click."></canvas>
-        <figcaption class="mono"><span><b>no. 3</b> pond</span><span>click it</span></figcaption>
+        <figcaption class="mono"><span>torus, one bit</span><span>move to relight</span></figcaption>
       </figure>
     </main>
 
@@ -215,64 +192,6 @@
       s.ctx.putImageData(img, 0, 0);
     });
 
-    // No. 2: short strokes on a slow flow field; near the cursor they curl around it.
-    piece(document.getElementById('field'), s => {
-      const dpr = Math.min(devicePixelRatio || 1, 2);
-      s.cw = s.canvas.clientWidth; s.ch = s.canvas.clientHeight;
-      s.canvas.width = s.cw * dpr; s.canvas.height = s.ch * dpr;
-      s.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      s.canvas.style.imageRendering = 'auto';
-      s.fx = 0.5; s.fy = 0.5; s.pull = 0;
-    }, (s, t) => {
-      const { ctx, cw, ch } = s, time = t / 1000, gap = Math.max(14, cw / 34);
-      if (s.mx != null) { s.fx += (s.mx - s.fx) * 0.12; s.fy += (s.my - s.fy) * 0.12; }
-      s.pull += ((s.mx != null ? 1 : 0) - s.pull) * 0.05;
-      ctx.fillStyle = `rgb(${PAPER})`; ctx.fillRect(0, 0, cw, ch);
-      ctx.strokeStyle = `rgb(${INK})`; ctx.lineCap = 'round';
-      const cx = s.fx * cw, cy = s.fy * ch, sigma = cw * 0.18;
-      for (let y = gap / 2; y < ch; y += gap) for (let x = gap / 2; x < cw; x += gap) {
-        let ang = Math.sin(x * 0.009 + time * 0.25) * 1.4 + Math.cos(y * 0.011 - time * 0.18) * 1.4 + Math.sin((x + y) * 0.004 + time * 0.1);
-        const ddx = x - cx, ddy = y - cy, w = s.pull * Math.exp(-(ddx * ddx + ddy * ddy) / (2 * sigma * sigma));
-        const swirl = Math.atan2(ddy, ddx) + Math.PI / 2;
-        ang = Math.atan2((1 - w) * Math.sin(ang) + w * Math.sin(swirl), (1 - w) * Math.cos(ang) + w * Math.cos(swirl));
-        const len = gap * (0.3 + 0.35 * w);
-        ctx.lineWidth = 1.1 + 1.4 * w;
-        ctx.beginPath();
-        ctx.moveTo(x - Math.cos(ang) * len, y - Math.sin(ang) * len);
-        ctx.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len);
-        ctx.stroke();
-      }
-    });
-
-    // No. 3: a dot grid; clicks (and the odd passing cursor) drop ripples into it.
-    const pond = piece(document.getElementById('pond'), s => {
-      const dpr = Math.min(devicePixelRatio || 1, 2);
-      s.cw = s.canvas.clientWidth; s.ch = s.canvas.clientHeight;
-      s.canvas.width = s.cw * dpr; s.canvas.height = s.ch * dpr;
-      s.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      s.canvas.style.imageRendering = 'auto';
-      s.ripples = s.ripples || [];
-    }, (s, t) => {
-      const { ctx, cw, ch } = s, gap = Math.max(11, cw / 26), now = t / 1000;
-      if (!reduced && (!s.lastDrip || now - s.lastDrip > 3.2)) { s.lastDrip = now; s.ripples.push({ x: 0.2 + Math.random() * 0.6, y: 0.2 + Math.random() * 0.6, t0: now, a: 0.6 }); }
-      s.ripples = s.ripples.filter(r => now - r.t0 < 4);
-      ctx.fillStyle = `rgb(${PAPER})`; ctx.fillRect(0, 0, cw, ch);
-      ctx.fillStyle = `rgb(${INK})`;
-      for (let y = gap / 2; y < ch; y += gap) for (let x = gap / 2; x < cw; x += gap) {
-        let amp = 0;
-        for (const r of s.ripples) {
-          const age = now - r.t0, d = Math.hypot(x - r.x * cw, y - r.y * ch), front = age * cw * 0.28;
-          amp += r.a * Math.exp(-((d - front) ** 2) / (2 * (gap * 1.3) ** 2)) * Math.exp(-age * 0.9);
-        }
-        const rad = Math.max(0.6, gap * (0.07 + 0.45 * Math.min(amp, 1.1)));
-        ctx.beginPath(); ctx.arc(x, y, rad, 0, Math.PI * 2); ctx.fill();
-      }
-    });
-    pond.onclick = () => pond.ripples.push({ x: pond.mx, y: pond.my, t0: performance.now() / 1000, a: 1 });
-    pond.onmove = () => {
-      const now = performance.now() / 1000;
-      if (!pond.lastMove || now - pond.lastMove > 0.35) { pond.lastMove = now; pond.ripples.push({ x: pond.mx, y: pond.my, t0: now, a: 0.35 }); }
-    };
   })();
   </script>
 </body>
